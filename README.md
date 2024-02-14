@@ -20,7 +20,7 @@ If you want to build with VPC for an authentic experience(not recommended), see 
 ## Packages
 SDL2 SDL2_mixer tcmalloc_minimal rt openal curl ssl z crypto dl pthread fontconfig freetype GL
 
-#### Ubuntu 
+#### Ubuntu & Debian
 ```
 sudo apt install git build-essential cmake libsdl2-mixer-dev libsdl2-dev libgoogle-perftools-dev libopenal-dev libcurlpp-dev libssl-dev libfontconfig1-dev libcurl4-openssl-dev net-tools
 ```
@@ -75,8 +75,14 @@ These belong inside of your `../game/` folder.
 ## Launch
 `./csgo_linux64`
 
+# Goldberg Implementation
 
+You can compile with goldberg steam emulator and play without bloat-king steam!
+Its easy, follow these steps!
 
+1. Download goldberg binaries from here: https://github.com/WH0LEWHALE/goldberg-emu/releases/tag/release or https://gitlab.com/Mr_Goldberg/goldberg_emulator/
+2. Put libsteam_api.so from Goldberg zip linux/x86_64 directory to kisak strike lib/public/linux64 directory.
+3. Put libsteam_api.so from Goldberg zip linux/x86 directory to kisak strike lib/public/linux32 directory.
 
 ## License(s)
 ##### Any contributions made to Kisak-Strike will be considered donations to the public domain.
