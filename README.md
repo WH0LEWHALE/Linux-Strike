@@ -52,7 +52,7 @@ Use Depot Downloader( https://github.com/SteamRE/DepotDownloader ) with your ste
 ```
 CSGO SteamAppID: 730
 CSGO Assets: DepotID: 731 ManifestID: 7043469183016184477
-Windows Binaries: DepotID: 732 4047004309608881181
+Windows Binaries: DepotID: 732 4047004309608881181 (NOT NEEDED IF YOU ARE ON LINUX)
 Linux Binaries: Depot ID: 734 4197642562793798650
 ```
 
