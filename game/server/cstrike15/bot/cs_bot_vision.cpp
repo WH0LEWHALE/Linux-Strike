@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Â© 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -509,13 +509,14 @@ CCSBot::PartInfo CCSBot::m_partInfo[ MAX_PLAYERS ];
 //--------------------------------------------------------------------------------------------------------------
 /**
  * Compute part positions from bone location.
+ * Thanks to @PiMoNFeeD for fixing bot aim issue.
  */
 void CCSBot::ComputePartPositions( CCSPlayer *player )
 {
-	const int headBox = 12;
-	const int gutBox = 9;
-	const int leftElbowBox = 14;
-	const int rightElbowBox = 17;
+	const int headBox = 0;
+	const int gutBox = 4;
+	const int leftElbowBox = 16;
+	const int rightElbowBox = 18;
 	//const int hipBox = 0;
 	//const int leftFootBox = 4;
 	//const int rightFootBox = 8;
