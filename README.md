@@ -84,6 +84,14 @@ Its easy, follow these steps!
 2. Put libsteam_api.so from Goldberg zip linux/x86_64 directory to kisak strike lib/public/linux64 directory.
 3. Put libsteam_api.so from Goldberg zip linux/x86 directory to kisak strike lib/public/linux32 directory.
 
+# Useful Links
+
+1. Valve Resource Format: https://github.com/WH0LEWHALE/ValveResourceFormat
+2. Source Engine Source Code: https://github.com/WH0LEWHALE/source-engine
+3. Crowbar: https://github.com/WH0LEWHALE/Crowbar
+4. HLlib for extracting vpk files: https://github.com/WH0LEWHALE/HLLib
+5. ValvePak: https://github.com/WH0LEWHALE/ValvePak
+
 ## License(s)
 ##### Any contributions made to Kisak-Strike will be considered donations to the public domain.
 
