@@ -4,93 +4,10 @@ Kisak-Strike: Gentoo Offensive(KSGO) is a CSGO port aimed towards Linux enthusia
 It can be built 100% Open-Source with optional Closed-source components.
 
 Want to learn more about the History of Kisak-Strike? See this accompanying blog post: https://lwss.github.io/Kisak-Strike/
-# Current Building Steps
 
-```
-Attention!
+See the wiki page of repository for everything about compiling kisak strike and more...
 
-Kisak-Strike will build into folder ../game/
-Make sure you clone this repo inside an existing folder!
-```
-
-Kisak-Strike uses CMake, the following sections will provide more information.
-
-If you want to build with VPC for an authentic experience(not recommended), see https://gist.github.com/LWSS/9d2cd3205d197545d64fd27ee897fd53 for a rough draft from around when this project started.
-
-## Packages
-SDL2 SDL2_mixer tcmalloc_minimal rt openal curl ssl z crypto dl pthread fontconfig freetype GL
-
-#### Ubuntu & Debian
-```
-sudo apt install git build-essential cmake libsdl2-mixer-dev libsdl2-dev libgoogle-perftools-dev libopenal-dev libcurlpp-dev libssl-dev libfontconfig1-dev libcurl4-openssl-dev net-tools
-```
-#### Fedora
-```
-sudo dnf install git SDL2-devel SDL2_mixer-devel gperftools-devel openal-soft-devel libcurl-devel openssl-devel fontconfig-devel freetype-devel cmake gcc g++ mesa-libGL-devel mesa-libGLU-devel
-```
-#### Arch
-```
-sdl2 sdl2_mixer gperftools openal libcurl-compat openssl fontconfig freetype2 mesa cmake gcc base-devel
-```
-
-#### Gentoo
-```
-media-libs/libsdl2 media-libs/sdl2-mixer dev-util/google-perftools media-libs/openal net-misc/curl dev-libs/openssl media-libs/fontconfig media-libs/freetype media-libs/mesa dev-util/cmake sys-devel/gcc
-```
-
-## BUILD - cmake/make
-See the wiki page for building options: https://github.com/SwagSoftware/Kisak-Strike/wiki/CMake
-
- #### Basic Usage
-```
-cd ./cmake-build
-cmake .. <VARIOUS OPTIONS HERE>
-make -j<NUM_THREADS>
-```
-## POSTBUILD - Acquire Original Game Files
-Use Depot Downloader( https://github.com/SteamRE/DepotDownloader ) with your steam account. The depotdownloader built-into Steam was broken earlier this year and this is the only option currently.
-```
-CSGO SteamAppID: 730
-CSGO Assets: DepotID: 731 ManifestID: 7043469183016184477
-Windows Binaries: DepotID: 732 4047004309608881181 (NOT NEEDED IF YOU ARE ON LINUX)
-Linux Binaries: Depot ID: 734 4197642562793798650
-```
-
-* Copy over all files from the 731 assets depot (manifest: 7043469183016184477)
-* Copy over *only needed* files from the 734 linux binary depot (manifest: 4197642562793798650)
-    * ./bin/map_publish/* - (FOLDER which seems to contain some vgui assets)
-    * ./csgo.sh
-    * [OPTIONAL]./game/bin/linux64/libphonon3d.so -- If you want HRTF 3D sound
-    * [OPTIONAL]./game/bin/linux64/vphysics_client.so -- If you want Valve-Original physics engine. (It runs a bit better than the rebuild, but is closed-source)
-    * [OPTIONAL]./game/bin/linux64/scaleformui_client.so -- If you want the ScaleformUI for some reason.
-
-## POSTBUILD - Acquire Additional Kisak-Strike Files
-Head over to the Files Repo: https://github.com/SwagSoftware/Kisak-Strike-Files
-These belong inside of your `../game/` folder.
-
-
-## Current Nonfree blobs
-* ${LIBPUBLIC}/libsteam_api.so  - Left for Convenience, can be removed in the future.
-
-## Launch
-`./csgo_linux64`
-
-# Goldberg Implementation
-
-You can compile with goldberg steam emulator and play without bloat-king steam!
-Its easy, follow these steps!
-
-1. Download goldberg binaries from here: https://github.com/WH0LEWHALE/goldberg-emu/releases/tag/release or https://gitlab.com/Mr_Goldberg/goldberg_emulator/
-2. Put libsteam_api.so from Goldberg zip linux/x86_64 directory to kisak strike lib/public/linux64 directory.
-3. Put libsteam_api.so from Goldberg zip linux/x86 directory to kisak strike lib/public/linux32 directory.
-
-# Useful Links
-
-1. Valve Resource Format: https://github.com/WH0LEWHALE/ValveResourceFormat
-2. Source Engine Source Code: https://github.com/WH0LEWHALE/source-engine
-3. Crowbar: https://github.com/WH0LEWHALE/Crowbar
-4. HLlib for extracting vpk files: https://github.com/WH0LEWHALE/HLLib
-5. ValvePak: https://github.com/WH0LEWHALE/ValvePak
+Here you can go to wiki: https://github.com/WH0LEWHALE/Kisak-Strike/wiki
 
 ## License(s)
 ##### Any contributions made to Kisak-Strike will be considered donations to the public domain.
