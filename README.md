@@ -9,10 +9,7 @@ It can be built 100% Open-Source with optional Closed-source components.
     - Here you can go to wiki: https://github.com/WH0LEWHALE/Linux-Strike/wiki
 
 ## License(s)
-##### Any contributions made to Kisak-Strike will be considered donations to the public domain.
-
-##### The following Inherited License from Source SDK also applies.
-
+```
 SOURCE 1 SDK LICENSE
 
 Source SDK Copyright(c) Valve Corp.  
@@ -35,7 +32,7 @@ include this LICENSE file and thirdpartylegalnotices.txt.
   Any distribution of the SDK or a substantial portion of the SDK must include the above 
 copyright notice and the following: 
 
-    DISCLAIMER OF WARRANTIES.  THE SOURCE SDK AND ANY 
+   DISCLAIMER OF WARRANTIES.  THE SOURCE SDK AND ANY 
     OTHER MATERIAL DOWNLOADED BY LICENSEE IS PROVIDED 
     "AS IS".  VALVE AND ITS SUPPLIERS DISCLAIM ALL 
     WARRANTIES WITH RESPECT TO THE SDK, EITHER EXPRESS 
@@ -43,7 +40,7 @@ copyright notice and the following:
     WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, 
     TITLE AND FITNESS FOR A PARTICULAR PURPOSE.  
 
-    LIMITATION OF LIABILITY.  IN NO EVENT SHALL VALVE OR 
+  LIMITATION OF LIABILITY.  IN NO EVENT SHALL VALVE OR 
     ITS SUPPLIERS BE LIABLE FOR ANY SPECIAL, INCIDENTAL, 
     INDIRECT, OR CONSEQUENTIAL DAMAGES WHATSOEVER 
     (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF 
@@ -56,4 +53,4 @@ copyright notice and the following:
        
 If you would like to use the SDK for a commercial purpose, please contact Valve at 
 sourceengine@valvesoftware.com.
-
+```
