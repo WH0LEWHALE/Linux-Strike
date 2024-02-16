@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: The TF Game rules object
 //
@@ -205,13 +205,14 @@ static GGWeaponAliasName ggWeaponAliasNameList[] =
 {
 	//pistols
 	{ WEAPON_DEAGLE, "deagle" },
-	{ WEAPON_DEAGLE, "revolver" },
+	{ WEAPON_REVOLVER, "revolver" },
 	{ WEAPON_ELITE, "elite" },
 	{ WEAPON_FIVESEVEN, "fiveseven" },
 	{ WEAPON_GLOCK, "glock" },
 	{ WEAPON_TEC9, "tec9" },
+	{ WEAPON_CZ75A, "cz75" },
+	{ WEAPON_USP_SILENCER, "usp_silencer" },
 	{ WEAPON_HKP2000, "hkp2000" },
-	{ WEAPON_HKP2000, "usp_silencer" },
 	{ WEAPON_P250, "p250" },
 
 	//rifles
@@ -220,7 +221,7 @@ static GGWeaponAliasName ggWeaponAliasNameList[] =
 	{ WEAPON_FAMAS, "famas" },
 	{ WEAPON_GALILAR, "galilar" },
 	{ WEAPON_M4A1, "m4a1" },
-	{ WEAPON_M4A1, "m4a1_silencer" },
+	{ WEAPON_M4A1_SILENCER, "m4a1_silencer" },
 	{ WEAPON_SG556, "sg556" },
 
 	//mgs

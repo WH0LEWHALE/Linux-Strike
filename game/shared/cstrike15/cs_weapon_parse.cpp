@@ -55,10 +55,9 @@ struct WeaponNameInfo
 WeaponNameInfo s_weaponNameInfo[] =
 {
 	{ WEAPON_DEAGLE,			"weapon_deagle" },
-	{ WEAPON_DEAGLE,			"weapon_revolver" },
+	{ WEAPON_REVOLVER,			"weapon_revolver" },
 	{ WEAPON_ELITE,				"weapon_elite" },
 	{ WEAPON_FIVESEVEN,			"weapon_fiveseven" },
-	{ WEAPON_FIVESEVEN,			"weapon_cz75a" },
 	{ WEAPON_GLOCK,				"weapon_glock" },
 	{ WEAPON_P228,				"weapon_p228" },
 	{ WEAPON_USP,				"weapon_usp" },
@@ -89,7 +88,9 @@ WeaponNameInfo s_weaponNameInfo[] =
 	{ WEAPON_NEGEV,				"weapon_negev" },
 	{ WEAPON_SAWEDOFF,			"weapon_sawedoff" },
 	{ WEAPON_TEC9,				"weapon_tec9" },
-	{ WEAPON_TEC9,				"weapon_cz75a" },
+	{ WEAPON_USP_SILENCER,	    "weapon_usp_silencer" },
+	{ WEAPON_M4A1_SILENCER,	    "weapon_m4a1_silencer" },
+	{ WEAPON_CZ75A,				"weapon_cz75a" },
 	{ WEAPON_TASER,				"weapon_taser" },
 
 	{ WEAPON_HKP2000,			"weapon_hkp2000" },
