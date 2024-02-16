@@ -1,13 +1,12 @@
-# Kisak-Strike
-Kisak-Strike: Gentoo Offensive(KSGO) is a CS:GO port aimed towards Linux enthusiasts. 
+# Linux-Strike
+Linux Strike: Mint Offensive(KSGO) is a CS:GO port aimed towards Linux enthusiasts. 
+* Fork of Kisak Strike
 
 It can be built 100% Open-Source with optional Closed-source components.
 **(YOU DONT NEED THE CLOSED-SOURCE STUFF!)**
 
 - See the wiki page of repository for everything about compiling kisak strike and more...
-    - Here you can go to wiki: https://github.com/WH0LEWHALE/Kisak-Strike/wiki
-
-Want to learn more about the History of Kisak-Strike? See this accompanying blog post: https://lwss.github.io/Kisak-Strike/
+    - Here you can go to wiki: https://github.com/WH0LEWHALE/Linux-Strike/wiki
 
 ## License(s)
 ##### Any contributions made to Kisak-Strike will be considered donations to the public domain.
