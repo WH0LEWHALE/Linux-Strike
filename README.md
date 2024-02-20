@@ -7,7 +7,7 @@ Fork of Kisak Strike
 
 It can be built 100% Open-Source with optional Closed-source components.
 
- See the wiki page of repository for everything about compiling linux strike and more: https://github.com/WH0LEWHALE/Linux-Strike/wiki
+ See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/WH0LEWHALE/Linux-Strike/wiki
 
 <h1 align="center">License(s)</h3>
 
