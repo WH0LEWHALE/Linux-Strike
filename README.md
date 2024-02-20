@@ -1,15 +1,18 @@
-# Linux-Strike
-Linux Strike: Mint Offensive(KSGO) is a CS:GO port aimed towards Linux enthusiasts. 
-* Fork of Kisak Strike
+![New Project (1)](https://github.com/WH0LEWHALE/Linux-Strike/assets/146978592/9a608248-31d7-458d-a0c7-a338a1e4c497)
+<h1 align="center">Linux-Strike</h3>
+
+<h5 align="center">Linux Strike: Mint Offensive(KSGO) is a CS:GO port aimed towards Linux enthusiasts. 
+
+Fork of Kisak Strike
 
 It can be built 100% Open-Source with optional Closed-source components.
 
-- See the wiki page of repository for everything about compiling linux strike and more...
-    - Here you can go to wiki: https://github.com/WH0LEWHALE/Linux-Strike/wiki
+ See the wiki page of repository for everything about compiling linux strike and more: https://github.com/WH0LEWHALE/Linux-Strike/wiki
 
-## License(s)
+<h1 align="center">License(s)</h3>
+
 ```
-SOURCE 1 SDK LICENSE
+SOURCE 1 SDK LICENSE:
 
 Source SDK Copyright(c) Valve Corp.  
 
