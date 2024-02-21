@@ -1,5 +1,6 @@
 ![New Project (1)](https://github.com/WH0LEWHALE/Linux-Strike/assets/146978592/9a608248-31d7-458d-a0c7-a338a1e4c497)
-<h1>Linux-Strike</h1>
+
+<h1> Linux-Strike </h1>
 
 * Linux Strike: Mint Offensive(KSGO) is a CS:GO port aimed towards Linux enthusiasts. 
 * Fork of Kisak Strike
@@ -11,7 +12,7 @@
  - Now when you control the bots, guns will not get lost.
  - Bots will now aim more accurately.
 
-<h1 align="center">License(s)</h3>
+<h1 align="center"> License(s) </h1>
 
 ```
 SOURCE 1 SDK LICENSE:
