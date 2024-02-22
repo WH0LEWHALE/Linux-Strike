@@ -9,8 +9,8 @@
 
  # Fixed Bugs
 
- - Now when you control the bots, guns will not get lost.
- - Bots will now aim more accurately.
+ - Now when you control the bots, guns will not get lost. [f8527c5f](https://github.com/WH0LEWHALE/Linux-Strike/commit/f8527c5fd815b3cba885fcf7371901ad82c29964)
+ - Bots will now aim more accurately. [687a271](https://github.com/WH0LEWHALE/Linux-Strike/commit/687a27169abe41cd8d4d2e81003303eb341f48bd)
 
 <h1 align="center"> License(s) </h1>
 
