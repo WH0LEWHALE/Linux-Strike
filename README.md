@@ -6,7 +6,7 @@
 * Fork of Kisak Strike
 * It can be built 100% Open-Source with optional Closed-source components.
 * See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/WH0LEWHALE/Linux-Strike/wiki
-* Alternatively, you can check out this Kisak Strike Fork Branch that has **alot of fixes** about physics and gameplay: https://github.com/yumirak/kisak-strike/tree/devel2
+* Alternatively, you can check out this Kisak Strike Fork Branch that has **too many improvements**: https://github.com/yumirak/kisak-strike/tree/devel2
 
  # Fixed Bugs
 
