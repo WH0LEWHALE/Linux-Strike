@@ -1,16 +1,14 @@
-![New Project (1)](https://github.com/WH0LEWHALE/Linux-Strike/assets/146978592/9a608248-31d7-458d-a0c7-a338a1e4c497)
-
 <h1> Linux-Strike </h1>
 
 * Linux Strike: Mint Offensive(LS:MO) is a CS:GO port aimed towards Linux enthusiasts. 
 * Fork of Kisak Strike
 * It can be built 100% Open-Source with optional Closed-source components.
-* See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/WH0LEWHALE/Linux-Strike/wiki
+* ~~See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/WH0LEWHALE/Linux-Strike/wiki~~
 
  # Fixed Bugs
 
- - Now when you control the bots, guns will not get lost. [f8527c5f](https://github.com/WH0LEWHALE/Linux-Strike/commit/f8527c5fd815b3cba885fcf7371901ad82c29964)
- - Bots will now aim more accurately. [687a271](https://github.com/WH0LEWHALE/Linux-Strike/commit/687a27169abe41cd8d4d2e81003303eb341f48bd)
+ - Now when you control the bots, guns will not get lost.
+ - Bots will now aim more accurately.
 
 <h1 align="center"> License(s) </h1>
 
