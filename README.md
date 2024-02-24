@@ -1,12 +1,12 @@
 
-![New Project (1)](https://github.com/zwexy/Linux-Strike/assets/76629678/9e820a54-dffc-4a6b-b231-1a304fd5e252)
+![New Project (1)](https://github.com/Nimmbouz/Linux-Strike/assets/76629678/9e820a54-dffc-4a6b-b231-1a304fd5e252)
 
 <h1> Linux-Strike </h1>
 
 * Linux Strike: Mint Offensive(LS:MO) is a CS:GO port aimed towards Linux enthusiasts. 
 * Fork of Kisak Strike
 * It can be built 100% Open-Source with optional Closed-source components.
-* See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/zwexy/Linux-Strike/wiki
+* See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/Nimmbouz/Linux-Strike/wiki
 
  # Fixed Bugs
 
