@@ -9,6 +9,7 @@
 
  - Now when you control the bots, guns will not get lost.
  - Bots will now aim more accurately.
+ - Fixed Molotov issue.
 
 <h1 align="center"> License(s) </h1>
 
