@@ -12,7 +12,10 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 
  - Now when you control the bots, guns will not get lost.
  - Bots will now aim more accurately.
- - Fixed Molotov issue.
+ - Fixed Molotov issue. <br>
+ Also, [You can check out this repository](https://github.com/yumirak/kisak-strike/tree/devel2) For implementing & fixing some bugs and errors that has in your fork/copy, Because that repository has alot of fixes including: VGUI Elements, Audio fixing(Can't Create Mixer Issue) and more.
+
+
 
 <h1 align="center"> License(s) </h1>
 
