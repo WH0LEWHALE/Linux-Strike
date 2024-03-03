@@ -51,6 +51,7 @@ add_subdirectory(utils/jpeglib)
 add_subdirectory(unitlib)
 add_subdirectory(videocfg)
 add_subdirectory(vtf)
+add_subdirectory(engine/voice_codecs/minimp3) # This will fix the Issues about audio.
 
 add_subdirectory(avi)
 add_subdirectory(bitmap) #also does bitmap_byteswap
