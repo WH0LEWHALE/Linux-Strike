@@ -15,8 +15,6 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
  - Fixed Molotov issue. <br>
  - Cant Create Mixer issues fixed, now game can find sounds.
 
- Also, [You can check out this repository](https://github.com/yumirak/kisak-strike/tree/devel2) For implementing & fixing some bugs and errors that has in your fork/copy, Because that repository has alot of fixes including: VGUI Elements and more.
-
 
 
 <h1 align="center"> License(s) </h1>
