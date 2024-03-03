@@ -4,7 +4,6 @@
 <h1> Linux-Strike </h1>
 
 * Linux Strike: Mint Offensive(LS:MO) is a CS:GO port aimed towards Linux enthusiasts.<br>
-Fork of Kisak Strike<br>
 It can be built 100% Open-Source with optional Closed-source components.<br>
 * See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/WH0LEWHALE/Linux-Strike/wiki
 
