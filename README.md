@@ -2,9 +2,9 @@
 ![New Project (1)](https://github.com/WH0LEWHALE/Linux-Strike/assets/76629678/9e820a54-dffc-4a6b-b231-1a304fd5e252)
 
 <h1> Linux-Strike </h1>
-
-# This project is abandoned
-
+---
+**This project is abandoned, you can still access it.**
+---
 * Linux Strike: Mint Offensive(LS:MO) is a CS:GO port aimed towards Linux enthusiasts.<br>
 It can be built 100% Open-Source with optional Closed-source components.<br>
 * See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/P0L3NARUBA/Linux-Strike/wiki
