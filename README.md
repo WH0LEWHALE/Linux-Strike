@@ -7,7 +7,7 @@
 It can be built 100% Open-Source with optional Closed-source components.<br>
 * See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/P0L3NARUBA/Linux-Strike/wiki
 
- # Fixed Bugs
+ # Fixed Bugs & Additions
 
  - Now when you control the bots, guns will not get lost.
  - Bots will now aim more accurately.
