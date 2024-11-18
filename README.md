@@ -20,7 +20,8 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
    - **EX:** Window Frames
 - Game crashing at some maps, should fix it
 - Underwater effects are missing or needs to be fixed
-- Some in-game ui enhancements.
+- Some in-game UI enhancements
+- Remove code/item leftovers.
 
 
 <h1 align="center"> License(s) </h1>
