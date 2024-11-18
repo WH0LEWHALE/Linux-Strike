@@ -14,6 +14,12 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
  - Fixed Molotov issue. <br>
  - Cant Create Mixer issues fixed, now game can find sounds.
 
+# TO-DO
+
+- Fix some breakable constrains fly away like window frames etc.
+- Game crashing at some maps, should fix it
+- Underwater effects are missing or needs to be fixed
+- Some in-game ui enhancements.
 
 
 <h1 align="center"> License(s) </h1>
