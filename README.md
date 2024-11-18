@@ -7,14 +7,14 @@
 It can be built 100% Open-Source with optional Closed-source components.<br>
 * See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/P0L3NARUBA/Linux-Strike/wiki
 
- # Fixed Bugs & Additions
+ <h1 align="center"> Fixed Bugs & Additions </h1>
 
  - Now when you control the bots, guns will not get lost.
  - Bots will now aim more accurately.
  - Fixed Molotov issue. <br>
  - Cant Create Mixer issues fixed, now game can find sounds.
 
-# TO-DO
+<h1 align="center"> TO-DO </h1>
 
 - Fix some breakable constrains fly away.
    - **EX:** Window Frames
