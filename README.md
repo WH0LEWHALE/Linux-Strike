@@ -24,7 +24,7 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 - Remove code/item leftovers.
 
 **<p align="center">
-If you want to contribute to our repo, don't even hesitate.
+If you want to contribute to our repo, don't even hesitate.<br>
 Just fork the Repository and start modifying the code.</p>**
 
 
