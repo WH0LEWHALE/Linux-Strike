@@ -23,6 +23,10 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 - Some in-game UI enhancements
 - Remove code/item leftovers.
 
+**If you want to contribute to our repo, don't even hesitate.<br>
+Just fork the Repository and start modifying the code.**
+
+
 
 <h1 align="center"> License(s) </h1>
 
