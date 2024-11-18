@@ -16,7 +16,8 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 
 # TO-DO
 
-- Fix some breakable constrains fly away like window frames etc.
+- Fix some breakable constrains fly away.
+   - **EX:** Window Frames
 - Game crashing at some maps, should fix it
 - Underwater effects are missing or needs to be fixed
 - Some in-game ui enhancements.
