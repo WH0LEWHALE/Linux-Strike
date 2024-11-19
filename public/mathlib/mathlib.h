@@ -532,7 +532,7 @@ void inline SinCos( float radians, float * RESTRICT sine, float * RESTRICT cosin
 		fstp DWORD PTR [edx]
 		fstp DWORD PTR [eax]
 	}
-#elif defined( GNUC ) && !defined( __e2k__ )
+#elif defined( GNUC ) && !defined( __e2k__ ) && !defined( PLATFORM_ARM )
     //lwss - remove 'register' keyword
 	//register double __cosr, __sinr;
 	double __cosr, __sinr;
@@ -1682,7 +1682,7 @@ FORCEINLINE int RoundFloatToInt(float f)
 		fld f
 		fistp nResult
 	}
-#elif defined( GNUC ) && !defined( __e2k__ )
+#elif defined( GNUC ) && !defined( __e2k__ ) && !defined( PLATFORM_ARM )
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
 	);
@@ -1729,7 +1729,7 @@ FORCEINLINE unsigned char RoundFloatToByte(float f)
 		fld f
 		fistp nResult
 	}
-#elif defined( GNUC ) && !defined( __e2k__ )
+#elif defined( GNUC ) && !defined( __e2k__ ) && !defined( PLATFORM_ARM )
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
 	);
@@ -1776,7 +1776,7 @@ FORCEINLINE unsigned long RoundFloatToUnsignedLong(float f)
 		fistp       qword ptr nResult
 	}
 	return *((unsigned long*)nResult);
-#elif defined( COMPILER_GCC ) && !defined( __e2k__ )
+#elif defined( COMPILER_GCC ) && !defined( __e2k__ ) && !defined( PLATFORM_ARM )
 	unsigned char nResult[8];
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
@@ -2335,7 +2335,7 @@ float CalcDistanceToLineSegment2D( Vector2D const &P, Vector2D const &vLineA, Ve
 float CalcDistanceSqrToLineSegment2D( Vector2D const &P, Vector2D const &vLineA, Vector2D const &vLineB, float *t=0 );
 
 // Init the mathlib
-void MathLib_Init( float gamma = 2.2f, float texGamma = 2.2f, float brightness = 0.0f, int overbright = 2.0f, bool bAllow3DNow = true, bool bAllowSSE = true, bool bAllowSSE2 = true, bool bAllowMMX = true );
+void MathLib_Init( float gamma = 2.2f, float texGamma = 2.2f, float brightness = 0.0f, int overbright = 2.0f, bool bAllowSSE = true, bool bAllowSSE2 = true, bool bAllowMMX = true );
 bool MathLib_MMXEnabled( void );
 bool MathLib_SSEEnabled( void );
 bool MathLib_SSE2Enabled( void );

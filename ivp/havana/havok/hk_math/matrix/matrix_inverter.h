@@ -29,7 +29,6 @@ public:
 		{
 			for ( int i = 0 ; i < num_rows; i ++ ){
 				hk_real f = pr_in[i];
-				//HK_CHECK( hk_Math::fabs(f) >> HK_FLOAT_EPS);
 
 				f = 1.0f / f;
 				{ // scale this row

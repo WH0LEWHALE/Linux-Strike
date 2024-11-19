@@ -23,8 +23,8 @@ if( LINUXALL )
 endif()
 
 #target_sources(${OUTLIBNAME} PRIVATE "convert_x360.cpp")
-if( WINDOWS )
-    #$File	"s3tc_decode.cpp" 	[$WINDOWS]
+if( WIN32 )
+    target_sources(${OUTLIBNAME} PRIVATE "s3tc_decode.cpp")
 endif()
 target_sources(${OUTLIBNAME} PRIVATE "vtf.cpp")
 #$File	"vtf_x360.cpp"		[$X360]

@@ -5,10 +5,7 @@
 class hk_QTransform
 {
 	public:
-
-		HK_DECLARE_NONVIRTUAL_CLASS_ALLOCATOR(HK_MEMORY_CLASS_CONSTRAINT, hk_QTransform)
-
-		inline hk_QTransform();
+		inline hk_QTransform() = default;
 			//:
 
 		inline hk_QTransform(const hk_Vector3& axis, hk_real angle,

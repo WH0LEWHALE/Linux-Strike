@@ -1,9 +1,4 @@
-
-hk_Vector4::hk_Vector4()
-{
-}
-
- hk_Vector4::hk_Vector4(hk_real a, hk_real b, hk_real c, hk_real d)
+hk_Vector4::hk_Vector4(hk_real a, hk_real b, hk_real c, hk_real d)
 {
 	x = a;
 	y = b;
@@ -123,12 +118,12 @@ void hk_Vector4::operator=(const hk_Vector4& v)
 
  hk_real hk_Vector4::length4() const
 {
-	return hk_Math::sqrt_inv(x*x + y*y + z*z + w*w);
+	return hk_Math::fast_rsqrt(x*x + y*y + z*z + w*w);
 }
 
  hk_real hk_Vector4::length_inv4() const
 {
-	return hk_Math::sqrt_inv(x*x + y*y + z*z + w*w);
+	return hk_Math::fast_rsqrt(x*x + y*y + z*z + w*w);
 }
 
  hk_real hk_Vector4::length_squared4() const

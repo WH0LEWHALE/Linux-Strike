@@ -10,17 +10,12 @@
 #ifndef _IVP_OBJECT_INCLUDED
 #define _IVP_OBJECT_INCLUDED
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 
 class IVP_Environment;
 class IVP_Template_Object;
 class IVP_Template_Cluster;
 class IVP_Polygon;
 class IVP_Ball;
-class IVP_Cluster;
 
 
 /********************************************************************************
@@ -37,6 +32,8 @@ enum IVP_OBJECT_TYPE {
     IVP_OBJECT
 };
 
+
+class IVP_Cluster;
 
 /************************************************************************************************
  *	Name:	    	IVP_Object   	

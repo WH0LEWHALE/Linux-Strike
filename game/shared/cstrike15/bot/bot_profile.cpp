@@ -9,9 +9,9 @@
 
 #include "cbase.h"
 
-#pragma warning( disable : 4530 )					// STL uses exceptions, but we are not compiling with them - ignore warning
-
 #define DEFINE_DIFFICULTY_NAMES
+
+#pragma warning( disable : 4530 )					// STL uses exceptions, but we are not compiling with them - ignore warning
 #include "bot_profile.h"
 #include "shared_util.h"
 
@@ -24,7 +24,6 @@
 
 
 BotProfileManager *TheBotProfiles = NULL;
-
 
 //--------------------------------------------------------------------------------------------------------
 /**

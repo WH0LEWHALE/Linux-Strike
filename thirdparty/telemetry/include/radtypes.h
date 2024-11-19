@@ -171,7 +171,7 @@
 
 #define __RAD32__ // we have no non-at-least-32-bit cpus any more
 
-#if defined(__arm__) || defined( _M_ARM )
+#if defined(__arm__) || defined(__aarch64__) || defined( _M_ARM )
   #define __RADARM__ 1
   #define __RADDETECTEDPROC__ __RADARM__
   #define __RADLITTLEENDIAN__

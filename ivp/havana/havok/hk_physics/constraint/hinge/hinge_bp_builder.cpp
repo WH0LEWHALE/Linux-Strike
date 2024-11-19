@@ -14,18 +14,7 @@ void hk_Hinge_BP_Builder::set_axis_ws( hk_Rigid_Body *a, hk_Rigid_Body *b, const
 	n_axis.normalize();
 	m_hinge_bp.m_axis_os[ 0 ].m_direction.set_rotated_inv_dir( a->get_cached_transform(), n_axis );
 	m_hinge_bp.m_axis_os[ 1 ].m_direction.set_rotated_inv_dir( b->get_cached_transform(), n_axis );
-	
 }
-
-//lwss add - rebuilt from debug bins
-void hk_Hinge_BP_Builder::set_axis_perp_os(int obj_index, const hk_Vector3 &perp_os)
-{
-    float normalizedLength = 1.0f / sqrtf(perp_os.length_squared());
-    m_hinge_bp.m_axis_perp_os[ obj_index ].x = (perp_os.x * normalizedLength);
-    m_hinge_bp.m_axis_perp_os[ obj_index ].y = (perp_os.y * normalizedLength);
-    m_hinge_bp.m_axis_perp_os[ obj_index ].z = (perp_os.z * normalizedLength);
-}
-//lwss end
 
 void hk_Hinge_BP_Builder::set_angular_motor(hk_real angular_velocity, hk_real max_torque)
 {
@@ -45,4 +34,11 @@ void hk_Hinge_BP_Builder::set_joint_friction(hk_real friction)
 void hk_Hinge_BP_Builder::set_tau( hk_real tau)
 {
 	m_hinge_bp.m_tau = tau;
+}
+
+void hk_Hinge_BP_Builder::set_axis_perp_os(int body, const hk_Vector3& axis_os)
+{
+	hk_Vector3 n_axis = axis_os;
+	n_axis.normalize();
+	m_hinge_bp.m_axis_perp_os[body] = n_axis;
 }

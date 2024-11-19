@@ -53,9 +53,7 @@
 #include "filesystem/IQueuedLoader.h"
 #include "tier2/fileutils.h"
 #include "filesystem.h"
-#include "tier2/p4helpers.h"
 #include "tier2/tier2.h"
-#include "p4lib/ip4.h"
 #include "ctype.h"
 #include "ifilelist.h"
 #include "tier0/icommandline.h"
@@ -5470,67 +5468,6 @@ static char * BufferReplace( char *buf, char const *szFindData, char const *szNe
 	return NULL;
 }
 
-
-class CP4Requirement
-{
-public:
-	CP4Requirement();
-	~CP4Requirement();
-
-protected:
-	bool m_bLoadedModule;
-	CSysModule *m_pP4Module;
-};
-
-CP4Requirement::CP4Requirement() :
-	m_bLoadedModule( false ),
-	m_pP4Module( NULL )
-{
-	if ( p4 )
-		return;
-
-	// load the p4 lib
-	m_pP4Module = Sys_LoadModule( "p4lib" );
-	m_bLoadedModule = true;
-		
-	if ( m_pP4Module )
-	{
-		CreateInterfaceFn factory = Sys_GetFactory( m_pP4Module );
-		if ( factory )
-		{
-			p4 = ( IP4 * )factory( P4_INTERFACE_VERSION, NULL );
-
-			if ( p4 )
-			{
-				extern CreateInterfaceFn g_fnMatSystemConnectCreateInterface;
-				p4->Connect( g_fnMatSystemConnectCreateInterface );
-				p4->Init();
-			}
-		}
-	}
-
-	if ( !p4 )
-	{
-		Warning( "Can't load p4lib.dll\n" );
-	}
-}
-
-CP4Requirement::~CP4Requirement()
-{
-	if ( m_bLoadedModule && m_pP4Module )
-	{
-		if ( p4 )
-		{
-			p4->Shutdown();
-			p4->Disconnect();
-		}
-
-		Sys_UnloadModule( m_pP4Module );
-		m_pP4Module = NULL;
-		p4 = NULL;
-	}
-}
-
 static ConVar mat_texture_list_content_path( "mat_texture_list_content_path", "", FCVAR_ARCHIVE, "The content path to the materialsrc directory. If left unset, it'll assume your content directory is next to the currently running game dir." );
 
 CON_COMMAND_F( mat_texture_list_txlod_sync, "'reset' - resets all run-time changes to LOD overrides, 'save' - saves all changes to material content files", FCVAR_DONTRECORD )
@@ -5563,10 +5500,6 @@ CON_COMMAND_F( mat_texture_list_txlod_sync, "'reset' - resets all run-time chang
 	}
 	else if ( !stricmp( szCmd, "save" ) )
 	{
-		CP4Requirement p4req;
-		if ( !p4 )
-			g_p4factory->SetDummyMode( true );
-
 		for ( int k = 0; k < s_OverrideMap.GetNumStrings(); ++ k )
 		{
 			char const *szTx = s_OverrideMap.String( k );
@@ -5640,15 +5573,10 @@ CON_COMMAND_F( mat_texture_list_txlod_sync, "'reset' - resets all run-time chang
 				SetBufferValue( ( char * ) bufTxtFileBuffer.Base(), "maxheight", chMaxHeight );
 				bufTxtFileBuffer.SeekPut( CUtlBuffer::SEEK_HEAD, strlen( ( char * ) bufTxtFileBuffer.Base() ) );
 
-				// Check out or add the file
-				g_p4factory->SetOpenFileChangeList( "Texture LOD Autocheckout" );
-				CP4AutoEditFile autop4_edit( szTextureContentPath );
-
 				// Save the file contents
 				if ( g_pFullFileSystem->WriteFile( szTextureContentPath, 0, bufTxtFileBuffer ) )
 				{
 					Msg(" '%s' : saved.\n", szTextureContentPath );
-					CP4AutoAddFile autop4_add( szTextureContentPath );
 				}
 				else
 				{
@@ -5683,16 +5611,12 @@ CON_COMMAND_F( mat_texture_list_txlod_sync, "'reset' - resets all run-time chang
 				// Save the file contents
 				if ( g_pFullFileSystem->WriteFile( szTxtFileName, 0, bufTxtFileBuffer ) )
 				{
-					g_p4factory->SetOpenFileChangeList( "Texture LOD Autocheckout" );
-					CP4AutoEditFile autop4_edit( szTextureContentPath );
-
 					sprintf( chCommand, "/C psdinfo -write \"%s\" < \"%s\"", szTextureContentPath, szTxtFileName );
 					Sleep( 200 );
 					ShellExecute( NULL, NULL, "cmd.exe", chCommand, NULL, SW_HIDE );
 					Sleep( 200 );
 
 					Msg(" '%s' : saved.\n", szTextureContentPath );
-					CP4AutoAddFile autop4_add( szTextureContentPath );
 				}
 				else
 				{

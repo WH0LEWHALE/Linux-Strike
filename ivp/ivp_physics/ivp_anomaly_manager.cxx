@@ -21,6 +21,9 @@ IVP_Anomaly_Limits::IVP_Anomaly_Limits(IVP_BOOL delete_this_if_env_is_deleted_in
     max_velocity = 2000.0f;
     max_angular_velocity_per_psi = IVP_FLOAT(IVP_PI * 0.5f);
     max_collisions_per_psi = 70000;
+	max_collision_checks_per_psi = 1000;
+	min_friction_mass = 10.0;
+	max_friction_mass = 2500.0;
 }
 
 
@@ -107,12 +110,15 @@ void IVP_Anomaly_Manager::solve_inter_penetration_simple( IVP_Real_Object *obj0,
     }
 }
 
-void IVP_Anomaly_Manager::inter_penetration(IVP_Mindist *mindist, IVP_Real_Object *obj0, IVP_Real_Object *obj1){
+// TODO(nillerusr) in the decompiler output, this function is different, but this should not affect the result
+void IVP_Anomaly_Manager::inter_penetration(IVP_Mindist *mindist, IVP_Real_Object *obj0, IVP_Real_Object *obj1, IVP_DOUBLE speedChange){
+	
 	IVP_Real_Object *my_objects[2];
 	my_objects[0]=obj0;
 	my_objects[1]=obj1;
 	int swapped=0;
-
+	
+	
 	if( obj1->get_core()->physical_unmoveable ) {
 		swapped=1;
 	}

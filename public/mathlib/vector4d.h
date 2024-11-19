@@ -16,7 +16,11 @@
 #include <math.h>
 #include <float.h>
 #if !defined( PLATFORM_PPC ) && !defined( _PS3 )
-#include <xmmintrin.h>	// for sse
+	#if defined( PLATFORM_ARM )
+		#include "sse2neon.h"
+	#else
+		#include <xmmintrin.h>	// for sse
+	#endif
 #endif
 #include "tier0/basetypes.h"	// For vec_t, put this somewhere else?
 #include "tier0/dbg.h"

@@ -22,7 +22,7 @@ class hk_Blueprint
 		inline unsigned int get_size() const;  
 			//: returns the blueprint data chunk size
 
-		inline hk_size_t size_of() const;  
+		inline size_t size_of() const;
 			//: returns the size of the blueprint including the header
 
 	protected:

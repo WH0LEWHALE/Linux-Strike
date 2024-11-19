@@ -230,7 +230,7 @@ float CCaptionSequencer::GetAlpha()
 CSubtitlePanel::CSubtitlePanel( vgui::Panel *pParent, const char *pCaptionFile, int nPlaybackHeight ) : 
 	vgui::Panel( pParent, "SubtitlePanel" ) 
 {
-	SetScheme( "basemodui_scheme" );
+	SetScheme( "ClientScheme" );
 	SetProportional( true );
 
 	int nParentWide = pParent->GetWide();
@@ -241,7 +241,7 @@ CSubtitlePanel::CSubtitlePanel( vgui::Panel *pParent, const char *pCaptionFile, 
 
 	m_hFont = vgui::INVALID_FONT;
 
-	vgui::HScheme hScheme = vgui::scheme()->GetScheme( "basemodui_scheme" );
+	vgui::HScheme hScheme = vgui::scheme()->GetScheme( "ClientScheme" );
 	vgui::IScheme *pNewScheme = vgui::scheme()->GetIScheme( hScheme );
 	if ( pNewScheme )
 	{	

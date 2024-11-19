@@ -74,7 +74,6 @@
     #include "networkstringtable_gamedll.h"
     #include "func_bomb_target.h"
     #include "func_hostage_rescue.h"
-	#include "dedicated_server_ugc_manager.h"
     #include "vstdlib/vstrtools.h"
     #include "platforminputdevice.h"
     #include "cs_entity_spotting.h"
@@ -88,8 +87,6 @@
 #endif
 
 #include "gametypes.h"
-#include "cs_workshop_manager.h"
-#include "ugc_file_info_manager.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1749,6 +1746,12 @@ ConVar mp_hostages_takedamage(
 	"0", 
 	FCVAR_REPLICATED | FCVAR_RELEASE, 
 	"Whether or not hostages can be hurt." );
+
+ConVar mp_hostages_moveable(
+	"mp_hostages_moveable",
+	"0",
+	FCVAR_REPLICATED | FCVAR_RELEASE,
+	"Whether or not hostages can move.");
 
 ConVar mp_hostages_rescuetowin( 
 	"mp_hostages_rescuetowin", 
@@ -10304,12 +10307,6 @@ void ServerThinkReplayUploader()
 				{
 					Msg( "CHANGELEVEL: Not changing level, %s is false, %s is %s %s\n", mp_match_end_restart.GetName(), mp_match_end_changelevel.GetName(), mp_match_end_changelevel.GetBool() ? "true" : "false", !bNextLevelDiffers ? "and next is the same" : "" );
 				}
-#if defined GAME_DLL 
-				if ( engine->IsDedicatedServer() && DedicatedServerWorkshop().CurrentLevelNeedsUpdate() )
-				{
-					bWantsChangeLevel = true;	// if current level is out of date, we need to change level no matter the settings.
-				}
-#endif 
 
 				if ( IsQueuedMatchmaking() && ( m_eQueuedMatchmakingRematchState == k_EQueuedMatchmakingRematchState_VoteToRematchFailed_Done ) )
 				{
@@ -10353,16 +10350,6 @@ void ServerThinkReplayUploader()
                     }
 
                     m_bPickNewTeamsOnReset = true;
-
-
-
-#if defined ( GAME_DLL )
-					// If we're taking this path, tell the server ugc manager to check for updates now and force a real change level should we need one.
-					if ( engine->IsDedicatedServer() )
-					{
-						DedicatedServerWorkshop().CheckIfCurrentLevelNeedsUpdate();
-					}
-#endif
                 }
 
                 // Don't run this code again
@@ -17297,26 +17284,6 @@ const wchar_t* CCSGameRules::GetFriendlyMapName( const char* szShortName )
     if ( szTranslated )
         return szTranslated;
 
-	char szPath[MAX_PATH];
-	V_strcpy_safe( szPath, szShortName );
-	V_FixSlashes( szPath, '/' ); // internal path strings use forward slashes, make sure we compare like that.
-	if ( V_strstr( szPath, "workshop/" ) )
-	{
-		PublishedFileId_t ullId = GetMapIDFromMapPath( szPath );
-		const PublishedFileInfo_t *pInfo = WorkshopManager().GetPublishedFileInfoByID( ullId );
-		static wchar_t wszMapName[128];
-		if ( pInfo )
-		{
-			g_pVGuiLocalize->ConvertANSIToUnicode(pInfo->m_rgchTitle, wszMapName, sizeof(wszMapName));
-			return wszMapName;
-		}
-		else
-		{
-			g_pVGuiLocalize->ConvertANSIToUnicode( V_GetFileName( szShortName ), wszMapName, sizeof(wszMapName));
-			return wszMapName;
-		}
-	}
-
     static wchar_t wszMapName[128];
     g_pVGuiLocalize->ConvertANSIToUnicode(szShortName, wszMapName, sizeof(wszMapName));
     return wszMapName;
@@ -18205,216 +18172,6 @@ float CCSGameRules::CheckTotalSmokedLength( float flSmokeRadiusSq, Vector vecGre
 	
 	return 0;
 }
-
-#if defined( CLIENT_DLL )
-
-//-----------------------------------------------------------------------------
-// Enforce certain values on the specified convar.
-//-----------------------------------------------------------------------------
-void EnforceCompetitiveCVar( const char *szCvarName, float fMinValue, float fMaxValue = FLT_MAX, int iArgs = 0, ... )
-{
-    // Doing this check first because OK values might be outside the min/max range
-    ConVarRef competitiveConvar(szCvarName);
-    float fValue = competitiveConvar.GetFloat();
-    va_list vl;
-    va_start(vl, iArgs);
-    for( int i=0; i< iArgs; ++i )
-    {
-        if( (int)fValue == va_arg(vl,int) )
-            return;
-    }
-    va_end(vl);
-
-    if ( fValue < fMinValue || fValue > fMaxValue )
-    {
-        float fNewValue = MAX( MIN( fValue, fMaxValue ), fMinValue );
-        competitiveConvar.SetValue( fNewValue );
-        DevMsg( "Convar %s was out of range and forced to %.2f. Valid values are between %.2f and %.2f. To remove the restriction set sv_competitive_minspec 0 on the server.\n", szCvarName, fNewValue, fMinValue, fMaxValue );
-    }
-	else
-	{
-		competitiveConvar.SetValue( fValue );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// An interface used by ENABLE_COMPETITIVE_CONVAR macro that lets the classes
-// defined in the macro to be stored and acted on.
-//-----------------------------------------------------------------------------
-class ICompetitiveConvar
-{
-public:
-    virtual void BackupConvar() = 0;
-    virtual void EnforceRestrictions() = 0;
-    virtual void RestoreOriginalValue() = 0;
-    virtual void InstallChangeCallback() = 0;
-};
-
-//-----------------------------------------------------------------------------
-// A manager for all enforced competitive convars.
-//-----------------------------------------------------------------------------
-class CCompetitiveCvarManager : public CAutoGameSystem
-{
-public:
-    typedef CUtlVector<ICompetitiveConvar*> CompetitiveConvarList_t;
-    static void AddConvarToList( ICompetitiveConvar* pCVar )
-    {
-        GetConvarList()->AddToTail( pCVar );
-    }
-
-    static void BackupAllConvars()
-    {
-        FOR_EACH_VEC( *GetConvarList(), i )
-        {
-            (*GetConvarList())[i]->BackupConvar();
-        }
-    }
-
-    static void EnforceRestrictionsOnAllConvars()
-    {
-        FOR_EACH_VEC( *GetConvarList(), i )
-        {
-            (*GetConvarList())[i]->EnforceRestrictions();
-        }
-    }
-
-    static void RestoreAllOriginalValues()
-    {
-        FOR_EACH_VEC( *GetConvarList(), i )
-        {
-            (*GetConvarList())[i]->RestoreOriginalValue();
-        }
-    }
-
-    static CompetitiveConvarList_t* GetConvarList()
-    {
-        if( !s_pCompetitiveConvars )
-        {
-            s_pCompetitiveConvars = new CompetitiveConvarList_t();
-        }
-        return s_pCompetitiveConvars;
-    }
-
-    static KeyValues* GetConVarBackupKV()
-    {
-        if( !s_pConVarBackups )
-        {
-            s_pConVarBackups = new KeyValues("ConVarBackups");
-        }
-        return s_pConVarBackups;
-    }
-
-    virtual bool Init() 
-    { 
-        FOR_EACH_VEC( *GetConvarList(), i )
-        {
-            (*GetConvarList())[i]->InstallChangeCallback();
-        }
-        return true;
-    }
-
-    virtual void Shutdown()
-    {
-        FOR_EACH_VEC( *GetConvarList(), i )
-        {
-            delete (*GetConvarList())[i];
-        }
-        delete s_pCompetitiveConvars; 
-        s_pCompetitiveConvars = 0;
-        s_pConVarBackups->deleteThis(); 
-        s_pConVarBackups = 0;
-    }
-
-    CCompetitiveCvarManager()
-    {
-        s_pCompetitiveConvars = 0;
-        s_pConVarBackups = 0;
-    }
-private:
-    static CompetitiveConvarList_t* s_pCompetitiveConvars;
-    static KeyValues* s_pConVarBackups;
-};
-static CCompetitiveCvarManager *s_pCompetitiveCvarManager = new CCompetitiveCvarManager();
-CCompetitiveCvarManager::CompetitiveConvarList_t* CCompetitiveCvarManager::s_pCompetitiveConvars = 0;
-KeyValues* CCompetitiveCvarManager::s_pConVarBackups = 0;
-
-//-----------------------------------------------------------------------------
-// Macro to define restrictions on convars with "sv_competitive_minspec 1"
-// Usage: ENABLE_COMPETITIVE_CONVAR( convarName, minValue, maxValue, optionalValues, opVal1, opVal2, ...
-//-----------------------------------------------------------------------------
-#define ENABLE_COMPETITIVE_CONVAR( convarName, ... ) \
-class CCompetitiveMinspecConvar##convarName : public ICompetitiveConvar { \
-public: \
-    CCompetitiveMinspecConvar##convarName(){ CCompetitiveCvarManager::AddConvarToList(this);} \
-    static void on_changed_##convarName( IConVar *var, const char *pOldValue, float flOldValue ){ \
-        if( sv_competitive_minspec.GetBool() ) { \
-            EnforceCompetitiveCVar( #convarName , __VA_ARGS__  ); }\
-        else {\
-            CCompetitiveCvarManager::GetConVarBackupKV()->SetFloat( #convarName, ConVarRef( #convarName ).GetFloat() ); } } \
-    virtual void BackupConvar() { CCompetitiveCvarManager::GetConVarBackupKV()->SetFloat( #convarName, ConVarRef( #convarName ).GetFloat() ); } \
-    virtual void EnforceRestrictions() { EnforceCompetitiveCVar( #convarName , __VA_ARGS__  ); } \
-    virtual void RestoreOriginalValue() { ConVarRef(#convarName).SetValue(CCompetitiveCvarManager::GetConVarBackupKV()->GetFloat( #convarName ) ); } \
-    virtual void InstallChangeCallback() { static_cast<ConVar*>(ConVarRef( #convarName ).GetLinkedConVar())->InstallChangeCallback( CCompetitiveMinspecConvar##convarName::on_changed_##convarName); } \
-}; \
-static CCompetitiveMinspecConvar##convarName *s_pCompetitiveConvar##convarName = new CCompetitiveMinspecConvar##convarName();
-
-//-----------------------------------------------------------------------------
-// Callback function for sv_competitive_minspec convar value change.
-//-----------------------------------------------------------------------------
-void sv_competitive_minspec_changed_f( IConVar *var, const char *pOldValue, float flOldValue )
-{
-    ConVar *pCvar = static_cast<ConVar*>(var);
-
-    if( pCvar->GetBool() == true && flOldValue == 0.0f )
-    {
-        // Backup the values of each cvar and enforce new ones
-        CCompetitiveCvarManager::BackupAllConvars();
-        CCompetitiveCvarManager::EnforceRestrictionsOnAllConvars();
-    }
-    else if( pCvar->GetBool() == false && flOldValue != 0.0f )
-    {
-        // If sv_competitive_minspec is disabled, restore old client values
-        CCompetitiveCvarManager::RestoreAllOriginalValues();
-    }
-}
-
-#endif
-
-static ConVar sv_competitive_minspec( "sv_competitive_minspec",
-                                     "1",
-                                     FCVAR_REPLICATED | FCVAR_NOTIFY | FCVAR_RELEASE,
-                                     "Enable to force certain client convars to minimum/maximum values to help prevent competitive advantages."
-#ifdef CLIENT_DLL
-                                     ,sv_competitive_minspec_changed_f
-#endif
-                                     );
-
-#ifdef CLIENT_DLL
-
-#if defined( _GAMECONSOLE )
-
-// ENABLE_COMPETITIVE_CONVAR( convar, range minimum, range maximum, number of additional distinct valid values, distinct valid values... );
-
-ENABLE_COMPETITIVE_CONVAR( fps_max, 29, FLT_MAX, 1, 0 );	// force fps_max above 59. One additional value (0) works
-#else
-ENABLE_COMPETITIVE_CONVAR( fps_max, 59, FLT_MAX, 1, 0 );	// force fps_max above 59. One additional value (0) works
-#endif
-ENABLE_COMPETITIVE_CONVAR( cl_interp_ratio, 1, 2 );			// force cl_interp_ratio from 1 to 2
-ENABLE_COMPETITIVE_CONVAR( cl_interp, 0, 0.031 );			// force cl_interp from 0.0152 to 0.031
-ENABLE_COMPETITIVE_CONVAR( cl_updaterate, 10, 150 );		// force cl_updaterate from 10 to 150
-ENABLE_COMPETITIVE_CONVAR( cl_cmdrate, 10, 150 );			// force cl_cmdrate from 10 to 150
-ENABLE_COMPETITIVE_CONVAR( rate, 20480, 786432 );			// force rate above min rate and below max rate
-ENABLE_COMPETITIVE_CONVAR( viewmodel_fov, 54, 68 );			// force viewmodel fov to be between 54 and 68
-ENABLE_COMPETITIVE_CONVAR( viewmodel_offset_x, -2, 2.5 );		// restrict viewmodel positioning
-ENABLE_COMPETITIVE_CONVAR( viewmodel_offset_y, -2, 2 );
-ENABLE_COMPETITIVE_CONVAR( viewmodel_offset_z, -2, 2 );
-ENABLE_COMPETITIVE_CONVAR( cl_bobcycle, 0.98, 0.98 );		// tournament standard
-
-// replaced with sv_max_allowed_net_graph convar
-//ENABLE_COMPETITIVE_CONVAR( net_graph, 0, 1 )				// tournament standard
-
-#endif
-
 
 #ifdef GAME_DLL
     CCSPlayer* FindPlayerFromAccountID( uint32 account_id )

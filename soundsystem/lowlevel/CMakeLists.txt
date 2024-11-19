@@ -22,8 +22,20 @@ include(${CMAKE_MODULE_PATH}/source_lib_base.cmake)
 #	}
 #}
 
-#$File	"device_dsound.cpp" [$WINDOWS]
-#$File	"device_xaudio2.cpp" [$WINDOWS]
+if( MSVC AND WIN32 )
+	include_directories(${SRCDIR}/thirdparty/dxsdk/include)
+	#if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	#	target_link_libraries(${OUTLIBNAME} ${SRCDIR}/thirdparty/dxsdk/lib/x64/dsound.lib ${SRCDIR}/thirdparty/dxsdk/lib/x64/dxguid.lib)
+	#else()
+	#	target_link_libraries(${OUTLIBNAME} ${SRCDIR}/thirdparty/dxsdk/lib/x86/dsound.lib ${SRCDIR}/thirdparty/dxsdk/lib/x86/dxguid.lib)
+	#endif()
+endif()
+
+if( WIN32 )
+    target_sources(${OUTLIBNAME} PRIVATE "device_dsound.cpp")
+	target_sources(${OUTLIBNAME} PRIVATE "device_xaudio2.cpp")
+	target_sources(${OUTLIBNAME} PRIVATE "windows_audio.cpp")
+endif()
 if( LINUXALL )
     target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
 endif()
@@ -34,6 +46,3 @@ endif()
 target_sources(${OUTLIBNAME} PRIVATE "device_null.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "mix.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "simple_filter.cpp")
-if( WINDOWS )
-    #$File	"windows_audio.cpp" [$WINDOWS]
-endif()

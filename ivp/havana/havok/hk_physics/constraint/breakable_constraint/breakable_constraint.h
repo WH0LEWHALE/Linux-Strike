@@ -29,6 +29,18 @@ class hk_Breakable_Constraint : public hk_Constraint
 		void write_to_blueprint( hk_Breakable_Constraint_BP * );
 		void FireEventIfBroken();
 
+		virtual const char* get_constraint_type()
+		{
+			// get the real constraint's type
+			return m_real_constraint->get_constraint_type();
+		}
+
+		virtual int get_constraint_dof()
+		{
+			// get the real constraint's DOF
+			return m_real_constraint->get_constraint_dof();
+		}
+
 	protected:
 
 		void init_breakable_constraint(const hk_Breakable_Constraint_BP *);
@@ -37,6 +49,7 @@ class hk_Breakable_Constraint : public hk_Constraint
 
 		hk_real m_linear_strength;
 		hk_real m_angular_strength;
+		hk_real m_bodyMassScale[2];
 		bool	m_is_broken;
 };
 

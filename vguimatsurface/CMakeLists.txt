@@ -32,14 +32,15 @@ target_sources(${OUTBINNAME} PRIVATE "MatSystemSurface.cpp")
 #File from mathlib.. fuck it, this single file won't link for some reason. It is a very simple file, so i'm duplicating it here.
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/mathlib/halton.cpp")
 
-if( WINDOWS )
+if( WIN32 )
+	target_sources(${OUTBINNAME} PRIVATE "memorybitmap.cpp")
     #$File	"memorybitmap.cpp"						[$WINDOWS]
     #$File	"$SRCDIR\vgui2\src\htmlwindow.cpp"		[$WINDOWS]
 endif()
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/vgui2/src/vgui_key_translation.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/vgui_controls/vgui_controls.cpp")
 
-target_link_libraries(${OUTBINNAME} vgui_controls_client vgui_surfacelib_client dmxloader_client tier2_client tier3_client mathlib_client bitmap_client libtier0_client libvstdlib_client )
+target_link_libraries(${OUTBINNAME} vgui_controls_client vgui_surfacelib_client dmxloader_client tier2_client tier3_client mathlib_client bitmap_client libtier0_client vstdlib_client )
 
 if( LINUXALL )
     target_link_libraries(${OUTBINNAME} fontconfig freetype SDL2)

@@ -188,19 +188,79 @@ void IVP_SurfaceBuilder_Ledge_Soup::add_ledge_tree_to_convex_hull(class IVP_Comp
   if (node->child_2) add_ledge_tree_to_convex_hull(cr, node->child_2);
 }
 
-
+// todo(melvyn2) recreate using demcompiled version, much has changed
+// IVP_Compact_Ledge IVP_SurfaceBuilder_Ledge_Soup::build_root_convex_hull(){
 void IVP_SurfaceBuilder_Ledge_Soup::build_root_convex_hull(){
     IVV_Sphere *node = this->spheres_cluster[this->spheres_cluster[0].next].sphere;
 
     IVP_Compact_Recursive cr;
     add_ledge_tree_to_convex_hull(cr, node);
-    
+
+    // if( this->parameters->force_convex_hull == NULL ) {
+    // something_1 = IVP_Compact_Recursive::compile();
+    // }
+    // else {
+    // IVP_Compact_Recursive::set_rekursive_convex_hull(); // not a typo
+    // something_1 = this->parameters->force_convex_hull
+    // }
+    // if ( something_1 != NULL ) {
+
+    // }
+    // return something_1;
+
+
     IVP_Compact_Ledge *hull = cr.compile(); 
     c_ledge_vec.add(hull);
     node->compact_ledge = hull;
     rec_spheres.add(node);
 }
+/* decompiled version for references:
+IVP_Compact_Ledge * __thiscall build_root_convex_hull(IVP_SurfaceBuilder_Ledge_Soup *this)
 
+{
+  ushort *puVar1;
+  IVV_Sphere *pIVar2;
+  IVP_Compact_Ledge *pIVar3;
+  ushort uVar4;
+  IVP_Compact_Ledge *local_30;
+  IVP_Compact_Recursive local_28 [8];
+  IVP_Compact_Ledge *local_20;
+
+  pIVar2 = this->spheres_cluster[this->spheres_cluster->next].sphere;
+  _ZN21IVP_Compact_RecursiveC1Ev(local_28);
+  add_ledge_tree_to_convex_hull(this,local_28,(IVV_Sphere *)pIVar2);
+  pIVar3 = this->parameters->force_convex_hull;
+  if (pIVar3 == (IVP_Compact_Ledge *)0x0) {
+    local_30 = (IVP_Compact_Ledge *)_ZN21IVP_Compact_Recursive7compileEv();
+  }
+  else {
+    local_20 = pIVar3;
+    _ZN21IVP_Compact_Recursive25set_rekursive_convex_hullEv();
+    local_30 = local_20;
+  }
+  if (local_30 != (IVP_Compact_Ledge *)0x0) {
+    uVar4 = (this->c_ledge_vec).super_IVP_U_Vector_Base.n_elems;
+    if ((this->c_ledge_vec).super_IVP_U_Vector_Base.memsize <= uVar4) {
+      _ZN17IVP_U_Vector_Base13increment_memEv();
+      uVar4 = (this->c_ledge_vec).super_IVP_U_Vector_Base.n_elems;
+    }
+    *(IVP_Compact_Ledge **)((this->c_ledge_vec).super_IVP_U_Vector_Base.elems + uVar4) = local_30;
+    puVar1 = &(this->c_ledge_vec).super_IVP_U_Vector_Base.n_elems;
+    *puVar1 = *puVar1 + 1;
+    pIVar2->compact_ledge = local_30;
+    uVar4 = (this->rec_spheres).super_IVP_U_Vector_Base.n_elems;
+    if ((this->rec_spheres).super_IVP_U_Vector_Base.memsize <= uVar4) {
+      _ZN17IVP_U_Vector_Base13increment_memEv();
+      uVar4 = (this->rec_spheres).super_IVP_U_Vector_Base.n_elems;
+    }
+    *(IVV_Sphere **)((this->rec_spheres).super_IVP_U_Vector_Base.elems + uVar4) = pIVar2;
+    puVar1 = &(this->rec_spheres).super_IVP_U_Vector_Base.n_elems;
+    *puVar1 = *puVar1 + 1;
+  }
+  _ZN21IVP_Compact_RecursiveD1Ev(local_28);
+  return local_30;
+}
+*/
 
 void IVP_SurfaceBuilder_Ledge_Soup::cleanup()
 {
@@ -474,11 +534,8 @@ void IVP_SurfaceBuilder_Ledge_Soup::cluster_spheres_bottomup(IVP_DOUBLE threshol
 		
 		// retrieve smallest mothersphere (if available!)
 		IVV_Cluster_Min_Hash_Key key;
-		//lwss - x64 fixes
-		//key.key = (int)cluster_min_hash.find_min_elem();
-		key.key = (intptr_t)cluster_min_hash.find_min_elem();
-		//lwss end
-		if ( key.key != (unsigned int)NULL ) { // verify that there were at least 2 spheres in vector and a new minimal sphere could be generated!
+		key.key = (uintp)cluster_min_hash.find_min_elem();
+		if ( key.key != (uintp)NULL ) { // verify that there were at least 2 spheres in vector and a new minimal sphere could be generated!
 		    //IVP_DOUBLE radius = cluster_min_hash->find_min_value(); // radius of minimal sphere
 		    int sphere_1_number = key.spheres.s1;
 		    int sphere_2_number = key.spheres.s2;
@@ -546,14 +603,12 @@ void IVP_SurfaceBuilder_Ledge_Soup::generate_interval_minhash(float fixed_max_ra
 
 	// insert interval start into interval MinHash
 	IVP_Clustering_Shortrange_Interval_Min_Hash_Entry *new_entry_interval_start = new IVP_Clustering_Shortrange_Interval_Min_Hash_Entry(IVP_TRUE, sphere);
-	//new_key.key = (int)new_entry_interval_start;
-	new_key.key = (intptr_t)new_entry_interval_start; //lwss - x64 fix
+	new_key.key = (uintp)new_entry_interval_start;
 	this->interval_minhash->add((void *)new_key.key, sphere->center.k[this->longest_axis]-radius);
 
 	// insert interval end into interval MinHash
 	IVP_Clustering_Shortrange_Interval_Min_Hash_Entry *new_entry_interval_end = new IVP_Clustering_Shortrange_Interval_Min_Hash_Entry(IVP_FALSE, sphere);
-	//new_key.key = (int)new_entry_interval_end;
-	new_key.key = (intptr_t)new_entry_interval_end; //lwss - x64 fix
+	new_key.key = (uintp)new_entry_interval_end;
 	this->interval_minhash->add((void *)new_key.key, sphere->center.k[this->longest_axis]+radius);
 
     }
@@ -1291,8 +1346,8 @@ IVP_Compact_Ledgetree_Node *IVP_SurfaceBuilder_Ledge_Soup::build_ledgetree(IVV_S
 
     IVP_Compact_Ledgetree_Node *current_node = this->ledgetree_work;
 
-    IVP_ASSERT((intptr_t)current_node <  (intptr_t)this->clt_highmem); // ledgetree memory overwrite!
-    IVP_ASSERT((intptr_t)current_node >= (intptr_t)this->clt_lowmem);  // ledgetree memory underwrite!
+    IVP_ASSERT((intp)current_node <  (intp)this->clt_highmem); // ledgetree memory overwrite!
+    IVP_ASSERT((intp)current_node >= (intp)this->clt_lowmem);  // ledgetree memory underwrite!
 	
     this->ledgetree_work++;
     
@@ -1344,8 +1399,8 @@ void IVP_SurfaceBuilder_Ledge_Soup::ledgetree_debug_output(const IVP_Compact_Led
 {
     // *** debugging START ******************************************************
     IVP_IF(1) {
-	IVP_ASSERT((intptr_t)node < (intptr_t)this->clt_highmem); // ledgetree memory overread!
-	IVP_ASSERT((intptr_t)node >= (intptr_t)this->clt_lowmem); // ledgetree memory underread!
+	IVP_ASSERT((intp)node < (intp)this->clt_highmem); // ledgetree memory overread!
+	IVP_ASSERT((intp)node >= (intp)this->clt_lowmem); // ledgetree memory underread!
     }
     
     //for (int x=0; x<ivp_debug_sf_indent; x++) {
@@ -1373,21 +1428,19 @@ void IVP_SurfaceBuilder_Ledge_Soup::ledgetree_debug_output(const IVP_Compact_Led
 void IVP_SurfaceBuilder_Ledge_Soup::ledgetree_array_debug_output() {
 
     // *** debugging START ******************************************************
-    //lwss hack - commented out during the x64 fixes. Does not seem used.
-    //const IVP_Compact_Ledgetree_Node *node;
-    //const IVP_Compact_Ledgetree_Node *nodes = compact_surface->get_compact_ledge_tree_root();
-//
-    //int i;
-    //for (i=0; i<this->number_of_nodes; i++) {
-	//node = &nodes[i];
-	//printf("Node %d (address: 0x%x / %d)\n", i, (int)node, (int)node);
-	////node->center.print("     center ");
-	//printf("        radius %.6f)\n", node->radius);
-	//printf("         left branch offset: %d (address: 0x%x / %d)\n", sizeof(*node), (int)(node+1), (int)(node+1));
-	//printf("        right branch offset: %d (address: 0x%x / %d)\n", node->offset_right_node, (int)node+node->offset_right_node, (int)node+node->offset_right_node);
-	//printf("\n");
-    //}
-    //lwss end
+    const IVP_Compact_Ledgetree_Node *node;
+    const IVP_Compact_Ledgetree_Node *nodes = compact_surface->get_compact_ledge_tree_root();
+
+    int i;
+    for (i=0; i<this->number_of_nodes; i++) {
+	node = &nodes[i];
+	printf("Node %d (address: 0x%zx / %zd)\n", i, (size_t)node, (size_t)node);
+	//node->center.print("     center ");
+	printf("        radius %.6f)\n", node->radius);
+	printf("         left branch offset: %zd (address: 0x%zx / %zd)\n", sizeof(*node), (size_t)(node+1), (size_t)(node+1));
+	printf("        right branch offset: %zd (address: 0x%zx / %zd)\n", (size_t)node->offset_right_node, (size_t)node+node->offset_right_node, (size_t)node+node->offset_right_node);
+	printf("\n");
+    }
     // *** debugging END ********************************************************
     return;
 }

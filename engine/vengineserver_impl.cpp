@@ -39,7 +39,6 @@
 #include "networkstringtableserver.h"
 #include "networkstringtable.h"
 #include "LocalNetworkBackdoor.h"
-#include "host_phonehome.h"
 #include "sv_plugin.h"
 #include "singleplayersharedmemory.h"
 #include "MapReslistGenerator.h"
@@ -492,7 +491,10 @@ public:
 
 	virtual bool IsInternalBuild( void )
 	{
-		return !phonehome->IsExternalBuild();
+		if ( CommandLine()->FindParm("-phonehome") )
+			return true;
+		else
+			return false;
 	}
 
 	//-----------------------------------------------------------------------------

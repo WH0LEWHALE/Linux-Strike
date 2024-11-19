@@ -87,7 +87,6 @@
 #include "tier3/tier3.h"
 #include "avi/iavi.h"
 #include "avi/iquicktime.h"
-#include "ihudlcd.h"
 #include "toolframework_client.h"
 #include "hltvcamera.h"
 #include "hltvreplaysystem.h"
@@ -111,7 +110,6 @@
 #if defined( CSTRIKE15 )
 #include "gametypes/igametypes.h"
 #include "c_keyvalue_saver.h"
-#include "cs_workshop_manager.h"
 #include "c_team.h"
 #include "cs_gamerules.h"
 #include "c_cs_player.h"
@@ -193,10 +191,6 @@ extern void ProcessPortalTeleportations( void );
 #include "c_asw_generic_emitter.h"
 #endif
 
-#if defined( CSTRIKE15 )
-#include "p4lib/ip4.h"
-#endif
-
 #ifdef INFESTED_DLL
 #include "missionchooser/iasw_mission_chooser.h"
 #endif
@@ -217,8 +211,6 @@ extern void ProcessPortalTeleportations( void );
 
 #include "irendertorthelperobject.h"
 #include "iloadingdisc.h"
-
-#include "bannedwords.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1543,23 +1535,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CGlobalVarsBase *pGloba
 #if defined( CSTRIKE15 )
 	if ( ( g_pGameTypes = (IGameTypes *)appSystemFactory( VENGINE_GAMETYPES_VERSION, NULL )) == NULL )
 		return false;
-
-	// load the p4 lib - not doing it in CS:GO to prevent extra .dlls from being loaded
-	CSysModule *m_pP4Module = Sys_LoadModule( "p4lib" );
-	if ( m_pP4Module )
-	{
-		CreateInterfaceFn factory = Sys_GetFactory( m_pP4Module );
-		if ( factory )
-		{
-			p4 = ( IP4 * )factory( P4_INTERFACE_VERSION, NULL );
-
-			if ( p4 )
-			{
-				p4->Connect( appSystemFactory );
-				p4->Init();
-			}
-		}
-	}
 #endif
 
 #if defined( REPLAY_ENABLED )
@@ -1713,16 +1688,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CGlobalVarsBase *pGloba
 	// Load the game types.
 	g_pGameTypes->Initialize();
 #endif
-
-	//
-	// Censoring banlist loads here
-	//
-	bool bLoadBannedWords = !!CommandLine()->FindParm( "-perfectworld" );
-	bLoadBannedWords |= !!CommandLine()->FindParm( "-usebanlist" );
-	if ( bLoadBannedWords )
-	{
-		g_BannedWords.InitFromFile( "banlist.res" );
-	}
 
 	COM_TimestampedLog( "ClientDLL Init - Finish" );
 	return true;
@@ -1917,12 +1882,6 @@ void CHLClient::HudUpdate( bool bActive )
 
 	// run vgui animations
 	vgui::GetAnimationController()->UpdateAnimations( Plat_FloatTime() );
-
-	if ( hudlcd )
-	{
-		hudlcd->SetGlobalStat( "(time_int)", VarArgs( "%d", (int)gpGlobals->curtime ) );
-		hudlcd->SetGlobalStat( "(time_float)", VarArgs( "%.2f", gpGlobals->curtime ) );
-	}
 
 	// I don't think this is necessary any longer, but I will leave it until
 	// I can check into this further.
@@ -2524,11 +2483,6 @@ CEG_NOINLINE void CHLClient::LevelInitPreEntity( char const* pMapName )
 	ParticleMgr()->LevelInit();
 
 	ClientVoiceMgr_LevelInit();
-
-	if ( hudlcd )
-	{
-		hudlcd->SetGlobalStat( "(mapname)", pMapName );
-	}
 
 	C_BaseTempEntity::ClearDynamicTempEnts();
 	clienteffects->Flush();
@@ -4228,7 +4182,7 @@ bool CHLClient::IsChatRaised( void )
 
 	return pChat->ChatRaised();
 #else
-	return false;
+		return false;
 #endif
 }
 
@@ -4361,32 +4315,22 @@ const CUtlVector< Frustum_t, CUtlMemoryAligned< Frustum_t,16 > >* CHLClient::Get
 
 bool CHLClient::IsSubscribedMap( const char *pchMapName, bool bOnlyOnDisk )
 {
-#if !defined ( NO_STEAM ) && defined( CSTRIKE15 )
-	return g_CSGOWorkshopMaps.IsSubscribedMap( pchMapName, bOnlyOnDisk );
-#endif
 	return false;
 }
 
 bool CHLClient::IsFeaturedMap( const char *pchMapName, bool bOnlyOnDisk )
 {
-#if !defined ( NO_STEAM ) && defined( CSTRIKE15 )
-	return g_CSGOWorkshopMaps.IsFeaturedMap( pchMapName, bOnlyOnDisk );
-#endif
 	return false;
 }
 
 void CHLClient::DownloadCommunityMapFile( PublishedFileId_t id )
 {
-#if !defined ( NO_STEAM ) && defined( CSTRIKE15 )
-	g_CSGOWorkshopMaps.DownloadMapFile( id );
-#endif
+
 }
 
 float CHLClient::GetUGCFileDownloadProgress( PublishedFileId_t id )
 {
-#if !defined ( NO_STEAM ) && defined( CSTRIKE15 )
-	return g_CSGOWorkshopMaps.GetFileDownloadProgress( id );
-#endif
+	return 0.0f;
 }
 
 void CHLClient::RecordUIEvent( const char* szEvent )

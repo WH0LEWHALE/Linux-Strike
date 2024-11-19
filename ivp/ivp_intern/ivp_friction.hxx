@@ -10,7 +10,6 @@
 //        IVP_Contact_Point has backlink to both objects (via snapses ...)
 //        IVP_Contact_Point are numbered (but counted oppositely the way they occur in the list)
 //    function test_hole_fr_system_data checks consistency of most of this infos 
-#pragma once // lwss: these includes are hell
 
 class IVP_Contact_Point;
 class IVP_Friction_Solver_Long_Term;
@@ -21,7 +20,6 @@ class IV_U_Point_PCore;
 class IVP_Environment;
 class IVP_Cache_Ledge_Point;
 class IVP_Compact_Edge;
-class IVP_Mindist;
 
 #define IVP_SLOWLY_TURN_ON_KEEPER 20
 
@@ -48,11 +46,6 @@ class IVP_Mindist;
 #ifndef _IVP_CONTACT_SITUATION_INCLUDED
 #	include <ivp_contact_situation.hxx>
 #endif
-
-#ifndef _IVP_MINDIST_INCLUDED
-#   include <ivp_mindist.hxx>//lwss add
-#endif
-
 
 // set completely (except union) by recalc friction s_vals
 class IVP_Impact_Solver_Long_Term : public IVP_Contact_Situation {
@@ -265,25 +258,10 @@ public:
     const IVP_Synapse_Friction *get_synapse(int i) const { return &synapse[i];};
     void recalc_friction_s_vals(); // move on surfaces but keep topologie
     IVP_Contact_Point(IVP_Mindist *mindist);
+    IVP_FLOAT get_friction_factor();
     void set_friction_to_neutral();
     void get_material_info(IVP_Material *mtl[2]);
-
-    //lwss add
-    void get_contact_normal( IVP_U_Float_Point *pOutNormal )
-    {
-        // lwss - I am unsure if this is correct! But it's just a simple 3x float assign
-        pOutNormal->set( &last_contact_point_ws );
-        //floats(DWORD*)
-        // +44
-        // +45
-        // +43
-    }
-    float get_friction_factor()
-    {
-        return real_friction_factor;
-    }
     void recompute_friction();
-    //lwss end
 };
 
 

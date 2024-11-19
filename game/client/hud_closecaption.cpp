@@ -851,7 +851,7 @@ void CaptionAsyncLoaderCallback( const FileAsyncRequest_t &request, int numReadB
 	g_AsyncCaptionResourceManager.CaptionAsyncLoaderCallback( request, numReadBytes, asyncStatus );
 }
 
-DECLARE_HUDELEMENT_FLAGS( CHudCloseCaption, HUDELEMENT_SS_FULLSCREEN_ONLY );
+DECLARE_HUDELEMENT( CHudCloseCaption );
 
 DECLARE_HUD_MESSAGE( CHudCloseCaption, CloseCaption );
 DECLARE_HUD_MESSAGE( CHudCloseCaption, CloseCaptionDirect );
@@ -1678,7 +1678,7 @@ void CHudCloseCaption::Process( const wchar_t *stream, float duration, bool from
 
 void CHudCloseCaption::CreateFonts( void )
 {
-	vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( vgui::scheme()->GetScheme( "basemodui_scheme" ) );
+	vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( vgui::scheme()->GetScheme( "ClientScheme" ) );
 
 	if ( !IsGameConsole() )
 	{

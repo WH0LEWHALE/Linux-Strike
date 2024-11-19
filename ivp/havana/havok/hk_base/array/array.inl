@@ -1,8 +1,3 @@
-hk_Array_Base::hk_Array_Base()
-{
-}
-
-
 template <class T>
 hk_Array<T>::hk_Array( int initial_size )
 {
@@ -20,7 +15,7 @@ hk_Array<T>::hk_Array( int initial_size )
 template <class T>
 hk_Array<T>::hk_Array(T* elems, int initial_size)
 {
-	HK_ASSERT( (char *)elems == (char *)(this +1 ));
+	IVP_ASSERT( (char *)elems == (char *)(this +1 ));
 	m_n_elems = 0;
 	m_elems = (char *)elems;
 	m_memsize = initial_size;
@@ -32,7 +27,7 @@ hk_Array<T>::~hk_Array()
 {
 	if (m_elems)
 	{
-		HK_ASSERT( get_elems() != (T *)(this+1));
+		IVP_ASSERT( get_elems() != (T *)(this+1));
 		hk_deallocate( T, get_elems(), m_memsize, HK_MEMORY_CLASS_ARRAY );
 	}
 }
@@ -41,7 +36,7 @@ hk_Array<T>::~hk_Array()
 template <class T>
 hk_array_index hk_Array<T>::add_element_unchecked( T element )
 {
-	HK_ASSERT( m_n_elems < m_memsize );
+	IVP_ASSERT( m_n_elems < m_memsize );
 	get_elems()[ m_n_elems ] = element;
 	return m_n_elems++;
 }
@@ -75,7 +70,7 @@ template <class T>
 void hk_Array<T>::search_and_remove_element( T& t)
 {
 	int index = index_of(t);
-	HK_ASSERT(index>=0);
+	IVP_ASSERT(index>=0);
 
 	m_n_elems --;
 	if (index < m_n_elems)
@@ -88,7 +83,7 @@ template <class T>
 void hk_Array<T>::search_and_remove_element_sorted( T& t)
 {
 	int index = index_of(t);
-	HK_ASSERT(index>=0);
+	IVP_ASSERT(index>=0);
 
 	m_n_elems --;
 	while ( index < m_n_elems ){
@@ -189,9 +184,9 @@ T& hk_Array<T>::get_element( iterator i )
 }
 
 template <class T>
-hk_bool hk_Array<T>::is_valid( iterator i)
+bool hk_Array<T>::is_valid( iterator i)
 {
-	return hk_bool(i>=0);
+	return bool(i>=0);
 }
 
 template <class T>

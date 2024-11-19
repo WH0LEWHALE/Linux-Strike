@@ -3447,7 +3447,7 @@ void qh_tracemerging (void) {
   struct tm *tp;
 
   qh mergereport= zzval_(Ztotmerge);
-#if !defined(PSXII) && !defined(GEKKO)
+#if !defined(GEKKO)
   time_t timedata;
   time (&timedata);
   tp= localtime (&timedata);

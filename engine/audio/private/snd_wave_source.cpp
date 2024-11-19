@@ -2600,7 +2600,9 @@ bool CAudioSourceCache::LoadMasterCache( char const *pchLanguage, bool bAllowEmp
 	Q_snprintf( fullpath, sizeof( fullpath ), "%s%s", m_szMODPath.String(), m_szMasterCache.String() );
 	// Just for display
 	Q_FixSlashes( fullpath, INCORRECT_PATH_SEPARATOR );
-	//Q_strlower( fullpath ); // lwss- Fixed bug here on linux where it was creating new lowercase fullpaths
+#if defined( WIN32 )
+	Q_strlower( fullpath );
+#endif
 	DevMsg(	1, "Trying cache :  '%s'\n", fullpath );
 
 	CacheType_t *cache = AllocAudioCache( m_szMasterCache.String(), true );
@@ -2697,7 +2699,9 @@ bool CAudioSourceCache::Init( unsigned int memSize )
 	}
 
 	Q_FixSlashes( szDLCPath );
-	//Q_strlower( szDLCPath ); // lwss- Fixed bug here on linux where it was creating new lowercase fullpaths
+#if defined( WIN32 )
+	Q_strlower( szDLCPath );
+#endif
 
 	m_szMODPath = szDLCPath;
 	// Add trailing slash

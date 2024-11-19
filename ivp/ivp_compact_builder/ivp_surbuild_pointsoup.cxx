@@ -357,10 +357,7 @@ IVP_Compact_Ledge *IVP_SurfaceBuilder_Pointsoup::try_to_build_convex_ledge_from_
 	      int max_index = 0;
 	      int max_index2 = 0;
 	      for (int i0 = 0; i0 < point_indizes.len(); i0++){
-        //lwss - x64 fixes
-        //int in = int(point_indizes.element_at(i0));
-        intptr_t in = intptr_t(point_indizes.element_at(i0));
-		//lwss end
+        intp in = intp(point_indizes.element_at(i0));
 		if (skip_list[in]) goto no_point_skipped;
 		IVP_U_Point *p2 = plane->points.element_at( i0 );
 		IVP_DOUBLE dist = plane->points.element_at( 0 )->quad_distance_to(p2);
@@ -386,10 +383,7 @@ IVP_Compact_Ledge *IVP_SurfaceBuilder_Pointsoup::try_to_build_convex_ledge_from_
 	      {
 		  for (int i2 = 0; i2 < point_indizes.len(); i2++){
 		    if (i2 != max_index2 && i2 != max_index) {
-              //lwss - x64 fixes
-		      //int in = int(point_indizes.element_at(i2));
-		      intptr_t in = intptr_t(point_indizes.element_at(i2));
-		      //lwss end
+              intp in = intp(point_indizes.element_at(i2));
 		      skip_list[in]++;
 		      IVP_ASSERT( use_list[in] );
 		      //printf("point removed %i %i\n",in, points->len());
@@ -487,7 +481,7 @@ IVP_Compact_Ledge *IVP_SurfaceBuilder_Pointsoup::convert_pointsoup_to_compact_le
     // starting qhull
     // --------------
 
-#if defined(PSXII) || defined(WIN32) || defined(LINUX) || defined(GEKKO)
+#if defined(WIN32) || defined(LINUX) || defined(GEKKO)
     FILE *outfile = NULL;   // output from qh_produce_output() use NULL to skip qh_produce_output()
     FILE *errfile = NULL;   // error messages from qhull code
 #else
@@ -604,7 +598,7 @@ IVP_Compact_Ledge *IVP_SurfaceBuilder_Pointsoup::convert_pointsoup_to_compact_le
 	int curlong, totlong;
 	qh_memfreeshort( & curlong, &totlong );
 
-	P_DELETE(points2);
+	P_FREE(points2);
 	P_FREE(skip_list);
 	P_FREE(use_list);
     }
@@ -669,7 +663,7 @@ IVP_Compact_Ledge *IVP_SurfaceBuilder_Pointsoup::convert_pointsoup_to_compact_le
   * FPU mode
   ************************************************/
   //doesnt work with threads !!
-#ifdef WIN32
+#if defined WIN32 && defined(_M_IX86)
   WORD tmpflag;
   __asm FSTCW tmpflag;
 
@@ -684,7 +678,7 @@ IVP_Compact_Ledge *IVP_SurfaceBuilder_Pointsoup::convert_pointsoup_to_compact_le
     } else { // use QHULL to convert pointsoup
 	return IVP_SurfaceBuilder_Pointsoup::convert_pointsoup_to_compact_ledge_internal(points);
     }
-#ifdef WIN32
+#if defined WIN32 && defined(_M_IX86)
   __asm FLDCW tmpflag;
 #endif
 }

@@ -2,7 +2,7 @@ include("${CMAKE_MODULE_PATH}/common_functions.cmake")
 
 ########source_lowest_base########
 if(STATIC_LINK)
-    add_definitions(-DBASE -DSTATIC_LINK)
+    add_definitions(-DSTATIC_LINK)
 endif()
 ##################################
 
@@ -20,13 +20,28 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 #-Werror=return-type - Set these warnings to ERRORS because they can ruin your stack/day
-set(LINUX_FLAGS_COMMON " -ffast-math -march=native -Wno-invalid-offsetof -Wno-ignored-attributes -Wno-enum-compare -Werror=return-type ")
-set(LINUX_DEBUG_FLAGS " -ggdb -g3 -fno-eliminate-unused-debug-symbols ")
+if(NOT WIN32)
+	set(LINUX_FLAGS_COMMON " -ffast-math -march=native -Wno-invalid-offsetof -Wno-ignored-attributes -Wno-enum-compare -Werror=return-type ")
+	set(LINUX_DEBUG_FLAGS " -ggdb -g1") #3 -fno-eliminate-unused-debug-symbols
+endif()
+
+if( MSVC )
+	# Enable String Pooling: Yes (/GF)
+	# Build with Multiple Processes (/MP)
+	# Buffer Security Check: No (/GS-)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GF /MP /GS-")
+	
+	# @ssrobins at gitlab.kitware.com
+    add_compile_options(
+        $<$<CONFIG:>:/MT> #---------|
+        $<$<CONFIG:Debug>:/MTd> #---|-- Statically link the runtime libraries
+        $<$<CONFIG:Release>:/MT>) #--|
+endif()
 
 #$Configuration "Debug"
 if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     message(STATUS "Building in Debug mode")
-    add_definitions(-DBASE -DDEBUG -D_DEBUG -DDBGFLAG_ASSERT)
+    add_definitions(-DDEBUG -D_DEBUG -DDBGFLAG_ASSERT)
     if( OSXALL )
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-2 -g2 -Og -march=native")
     elseif( LINUXALL )
@@ -35,7 +50,12 @@ if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
 #$Configuration "Release"
 else()
     message(STATUS "Building in Release mode")
-    add_definitions(-DBASE -DNDEBUG)
+	if( MSVC AND NOT CMAKE_BUILD_TYPE STREQUAL "DEBUG" )
+		# Still generate pdbs
+		add_compile_options("/Zi")
+		add_link_options("/DEBUG:FASTLINK")
+	endif()
+    add_definitions(-DNDEBUG)
     if( OSXALL )
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-2 -g2 -O2 -march=native")
     elseif( LINUXALL )
@@ -58,7 +78,22 @@ include_directories("${SRCDIR}/common")
 include_directories("${SRCDIR}/public")
 include_directories("${SRCDIR}/public/tier0")
 include_directories("${SRCDIR}/public/tier1")
-add_definitions(-DGNUC -DPOSIX -DCOMPILER_GCC -DMEMOVERRIDE_MODULE=${PROJECT_NAME} -D_DLL_EXT=${_DLL_EXT})
+if(NOT WIN32)
+	add_definitions(-DGNUC -DPOSIX -DCOMPILER_GCC)
+	elseif(MSVC)
+	add_definitions(-DCOMPILER_MSVC)
+endif()
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	add_definitions(-DPLATFORM_64BITS)
+	if(MSVC)
+		add_definitions(-DCOMPILER_MSVC64)
+	endif()
+else()
+	if(MSVC)
+		add_definitions(-DCOMPILER_MSVC32)
+	endif()
+endif()
+add_definitions(-DMEMOVERRIDE_MODULE=${PROJECT_NAME} -D_DLL_EXT=${_DLL_EXT})
 if(DEDICATED)
     add_definitions(-DDEDICATED)
 endif()

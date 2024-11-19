@@ -1,11 +1,3 @@
-#ifdef HK_PS2
-#	include <hk_math/matrix3ps2.inl>
-#else	//HK_PS2
-
-hk_Matrix3::hk_Matrix3()
-{
-}
-
 inline void hk_Matrix3::set_elem(int r, int c, hk_real v)
 {
 	// works for transform too if elements are contiguous
@@ -59,6 +51,4 @@ inline const hk_Vector3& hk_Matrix3::get_column(int x) const
 {
 	return *(hk_Vector3 *)&m_elems[ 4 * x ];
 }
-
-#endif //HK_PS2
 

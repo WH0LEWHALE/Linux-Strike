@@ -84,7 +84,7 @@ static ConVar gpu_mem_level( "gpu_mem_level", "2", 0, "Memory Level - Default: H
 
 static ConVar mat_picmip( "mat_picmip", "0", FCVAR_NONE, "", true, -10, true, 4 );
 
-ConVar csm_quality_level( "csm_quality_level", "0", 0, "Cascaded shadow map quality level, [0,3], 0=VERY_LOW, 3=HIGHEST" );
+ConVar csm_quality_level( "csm_quality_level", "0", FCVAR_ARCHIVE, "Cascaded shadow map quality level, [0,3], 0=VERY_LOW, 3=HIGHEST", true, 0, true, 3 );
 
 // Moving this here (instead of in viewpostprocess.cpp) so videocfg.cpp can modify its value early during init based off whatever setting is in video.txt
 #if defined( CSTRIKE15 )
@@ -2046,13 +2046,13 @@ void CMaterialSystem::GenerateConfigFromConfigKeyValues( MaterialSystem_Config_t
 	uint width = 0;
 	uint height = 0;
 	uint refreshHz = 0; // Not used
-
+#ifndef DEDICATED
 	// query backbuffer size (window size whether FS or windowed)
 	if( g_pLauncherMgr )
 	{
 		g_pLauncherMgr->GetNativeDisplayInfo( -1, width, height, refreshHz );
 	}
-
+#endif
 	pConfig->m_VideoMode.m_Width = width;
 	pConfig->m_VideoMode.m_Height = height;
 

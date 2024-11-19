@@ -33,9 +33,9 @@ add_definitions(-DVERSION_SAFE_STEAM_API_INTERFACES)
 if( GL )
     add_definitions(-DGL_GLEXT_PROTOTYPES -DDX_TO_GL_ABSTRACTION)
 endif()
-if( NOT POSIX )
+#if( NOT POSIX )
     #"$BASE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead" [!$POSIX]
-endif()
+#endif()
 add_definitions(-DALLOW_TEXT_MODE=1)
 
 target_sources(${OUTBINNAME} PRIVATE "CColorCorrection.cpp")
@@ -65,7 +65,7 @@ target_sources(${OUTBINNAME} PRIVATE "cmatpaintmaps.cpp")
 target_sources(${OUTBINNAME} PRIVATE "cmatrendercontext.cpp")
 target_sources(${OUTBINNAME} PRIVATE "cmatqueuedrendercontext.cpp")
 
-target_link_libraries(${OUTBINNAME} bitmap_client mathlib_client shaderlib_client tier2_client tier3_client vtf_client libvstdlib_client)
+target_link_libraries(${OUTBINNAME} bitmap_client mathlib_client shaderlib_client tier2_client tier3_client vtf_client vstdlib_client)
 
 #if building as dll..
 #$Implib togl [!$IS_LIB_PROJECT && $GL && !$DEDICATED]

@@ -1108,7 +1108,7 @@ void qh_initflags(char *command) {
 	      *(t++)= *s++;
 	    }
 	    *t= '\0';
-#if defined(PSXII) || defined(GEKKO)
+#if defined(GEKKO)
 #else
 	    if (isquote) 
 	      ivp_message( "qhull error: missing end quote for option 'TO'.  Rest of line ignored.\n");
@@ -1262,7 +1262,7 @@ void qh_initqhull_globals (coordT *points, int numpoints, int dim, boolT ismallo
   boolT printgeom= False, printmath= False, printcoplanar= False;
   realT randr;
   realT factorial;
-#if !defined(PSXII) && !defined(GEKKO)
+#if !defined(GEKKO)
   time_t timedata;
 #endif
 
@@ -1380,7 +1380,7 @@ void qh_initqhull_globals (coordT *points, int numpoints, int dim, boolT ismallo
     qh IStracing= 0;
   }
   if (qh ROTATErandom == 0 || qh ROTATErandom == -1) {
-#if !defined(PSXII) && !defined(GEKKO)
+#if !defined(GEKKO)
     seed= time (&timedata);
 #endif
     if (qh ROTATErandom  == -1) {

@@ -11,7 +11,6 @@
 #include <ivp_mindist_intern.hxx>
 #include <ivp_hull_manager.hxx>
 #include <ivu_min_hash.hxx>
-#include <cstdint> //lwss- x64 fixes
 
 IVP_Template_Phantom::IVP_Template_Phantom(){
 	P_MEM_CLEAR(this);
@@ -55,10 +54,7 @@ void IVP_Controller_Phantom::mindist_entered_volume(class IVP_Mindist *mindist)
 		{
 			other_object = mindist->get_synapse(0)->get_object();
 		}
-		//lwss - x64 fixes
-		//int x = (int)mindist_object_counter->find_elem( other_object );
-		intptr_t x = (intptr_t)mindist_object_counter->find_elem( other_object );
-		//lwss end
+        intp x = (intp)mindist_object_counter->find_elem( other_object );
 		if (x)
 		{
 			mindist_object_counter->change_elem( other_object, (void *)(x+1));
@@ -81,10 +77,7 @@ void IVP_Controller_Phantom::mindist_entered_volume(class IVP_Mindist *mindist)
 			other_object = mindist->get_synapse(0)->get_object();
 		}
 		IVP_Core *other_core= other_object->get_core();
-		//lwss -x64 fixes
-		//int x = (int)mindist_core_counter->find_elem( other_core );
-		intptr_t x = (intptr_t)mindist_core_counter->find_elem( other_core );
-		//lwss end
+        intp x = (intp)mindist_core_counter->find_elem( other_core );
 		if (x)
 		{
 			mindist_core_counter->change_elem( other_core, (void *)(x+1));
@@ -122,10 +115,7 @@ void IVP_Controller_Phantom:: mindist_left_volume(class IVP_Mindist *mindist)
 		{
 			other_object = mindist->get_synapse(0)->get_object();
 		}
-		//lwss -x64 fixes
-		//int x = (int)mindist_object_counter->find_elem( other_object );
-		intptr_t x = (intptr_t)mindist_object_counter->find_elem( other_object );
-		//lwss end
+        intp x = (intp)mindist_object_counter->find_elem( other_object );
 		if (x>1)
 		{
 			mindist_object_counter->change_elem( other_object, (void *)(x-1));
@@ -148,10 +138,7 @@ void IVP_Controller_Phantom:: mindist_left_volume(class IVP_Mindist *mindist)
 			other_object = mindist->get_synapse(0)->get_object();
 		}
 		IVP_Core *other_core= other_object->get_core();
-		//lwss -x64 fixes
-		//int x = (int)mindist_core_counter->find_elem( other_core );
-		intptr_t x = (intptr_t)mindist_core_counter->find_elem( other_core );
-		//lwss end
+        intp x = (intp)mindist_core_counter->find_elem( other_core );
 		if (x>1)
 		{
 			mindist_core_counter->change_elem( other_core, (void *)(x-1));
@@ -194,13 +181,6 @@ set_of_mindists(16)
 	{
 		set_of_cores = new IVP_U_Set_Active<IVP_Core>(16);
 		mindist_core_counter = new IVP_VHash_Store(16);
-
-		//lwss
-		if( templat->manage_sleeping_cores )
-        {
-		    //TODO: hello friend this is unimplemented, looks like another IVP_U_SetActive(16) goes here.
-        }
-		//lwss end
 	} 
 	else 
 	{
@@ -281,18 +261,4 @@ set_of_mindists(16)
 	client_data = 0;
 }
 
-//lwss - add this missing func
-void IVP_Controller_Phantom::wake_all_sleeping_objects()
-{
-    int size = this->set_of_objects->n_elems();
-    for( int i = 0; i < size; i++ )
-    {
-        IVP_Real_Object *object = (IVP_Real_Object*)this->set_of_objects->element_at( i );
-        if( !object )
-            continue;
-        object->ensure_in_simulation();
-    }
-    //TODO: there is another loop just like this but with another array, unsure which one..
-}
-//lwss end
 

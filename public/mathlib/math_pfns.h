@@ -76,8 +76,11 @@ enum MatrixAxisType_t
 #if !(defined( PLATFORM_PPC ) || defined(SPU))
 // If we are not PPC based or SPU based, then assumes it is SSE2. We should make this code cleaner.
 
+#ifdef PLATFORM_ARM
+#include "sse2neon.h"
+#else
 #include <xmmintrin.h>
-
+#endif
 
 
 // These globals are initialized by mathlib and redirected based on available fpu features
@@ -118,7 +121,7 @@ inline float FastSqrtEst(float x) { return FastRSqrtFast(x) * x; }
 
 #else // !defined( PLATFORM_PPC ) && !defined(_SPU)
 
-#ifndef SPU
+#if !defined(SPU) && !defined(PLATFORM_ARM)
 // We may not need this for SPU, so let's not bother for now
 
 FORCEINLINE float _VMX_Sqrt( float x )
@@ -264,7 +267,7 @@ FORCEINLINE float _VMX_Cos( float a )
 #endif
 
 
-#if defined(__SPU__)
+#if defined(__SPU__) || defined(__arm__) || defined(__aarch64__)
 
 // do we need these optimized yet?
 
@@ -281,7 +284,6 @@ FORCEINLINE float FastRSqrt( float x )
 
 
 #define FastRSqrtFast(x)	FastRSqrt(x)
-
 
 #endif
 

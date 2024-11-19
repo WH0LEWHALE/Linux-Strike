@@ -5,9 +5,6 @@
 #include <ivp_physics.hxx>
 #include <ivp_performancecounter.hxx>
 
-#include <ivp_debug_manager.hxx>
-#include <ivp_debug.hxx>
-
 #ifndef WIN32
 #pragma implementation "ivp_mindist.hxx"
 #pragma implementation "ivp_mindist_intern.hxx"
@@ -19,6 +16,9 @@
 #include <ivp_mindist_intern.hxx>
 #include <ivp_mindist_event.hxx>
 #include <ivp_mindist_macros.hxx>
+
+#include <ivp_debug_manager.hxx>
+#include <ivp_debug.hxx>
 
 #include <ivp_compact_ledge.hxx>
 #include <ivp_cache_object.hxx>
@@ -50,34 +50,24 @@
 
 IVP_Mindist_Settings ivp_mindist_settings;
 
-void IVP_Mindist_Settings::set_collision_tolerance(IVP_DOUBLE t, IVP_DOUBLE gravLen){
+void IVP_Mindist_Settings::set_collision_tolerance(IVP_DOUBLE t){
     real_coll_dist =                         0.1f * t;
-
-    //lwss - changes from debug bins
-    //min_coll_dists = real_coll_dist        + 0.9f * t;
-    min_coll_dists = t;
-    //minimum_friction_dist = min_coll_dists + 0.0f * t;
-    minimum_friction_dist = t;
-    //lwss end
+    
+    min_coll_dists = real_coll_dist        + 0.9f * t;
+    minimum_friction_dist = min_coll_dists + 0.0f * t;
 
     for (int i = IVP_MAX_STEPS_FOR_COLLDIST_DECREASE-1; i >= 0 ; i-- ){
 	coll_dists[i] = min_coll_dists + ( i / IVP_DOUBLE(IVP_MAX_STEPS_FOR_COLLDIST_DECREASE)) * ( minimum_friction_dist - min_coll_dists );
     }
-    //lwss
-    //friction_dist = minimum_friction_dist + 1.0f *t;
-    friction_dist = minimum_friction_dist + t;
-    //lwss end
+    friction_dist = minimum_friction_dist + 1.0f *t;
 
-    keeper_dist = friction_dist + (0.3f * t);
+    keeper_dist = friction_dist + 0.3f * t;
 
-    //lwss
-    //speed_after_keeper_dist = IVP_Inline_Math::ivp_sqrtf( 2.0f * (keeper_dist - min_coll_dists) * 9.81f ); //speed when falling down from keeper dist to coll dist
-    speed_after_keeper_dist = IVP_Inline_Math::ivp_sqrtf( ((keeper_dist - t) + (keeper_dist - t)) * gravLen ); //speed when falling down from keeper dist to coll dist
-    //lwss end
+    speed_after_keeper_dist = IVP_Inline_Math::ivp_sqrtf( 2.0f * (keeper_dist - min_coll_dists) * 9.81f ); //speed when falling down from keeper dist to coll dist
     distance_keepers_safety = 0.01f * t; 			//safety gap, when surpassed, mindist doesnt appear in complex
     max_distance_for_friction = friction_dist + 2.5f * t;
     max_distance_for_impact_system = friction_dist + 20.0f * t;
-
+    
     min_vertical_speed_at_collision = 2.0f * t;	// meter /second
 
     mindist_change_force_dist = min_coll_dists * 0.1f;
@@ -307,10 +297,7 @@ public:
 class IVP_MM_CMP {
 public:
     static inline int calc_hash_index( IVP_MM_CMP_Key * o){
-    //lwss -x64 fixes
-	//int x = (int)o->ledge[0] ^ ( int(o->ledge[1])* 75 );
-	intptr_t x = (intptr_t)o->ledge[0] ^ ( intptr_t (o->ledge[1])* 75 );
-	//lwss end
+	int x = (intp)o->ledge[0] ^ ( intp(o->ledge[1])* 75 );
 	return x + 1023 * (x>>8);
     }
 
@@ -318,10 +305,7 @@ public:
     static inline int calc_hash_index( IVP_Collision *c, IVP_MM_CMP_Key * /*ref_key*/){
 	const IVP_Compact_Ledge *ledge[2];
 	c->get_ledges(ledge);
-	//lwss -x64 fixes
-	//int x = (int)ledge[0] ^ ( int(ledge[1])* 75 );
-	intptr_t x = (intptr_t)ledge[0] ^ ( intptr_t (ledge[1])* 75 );
-	//lwss end
+    intp x = (intp)ledge[0] ^ ( intp(ledge[1])* 75 );
 	return x + 1023 * (x>>8);
     }
 
@@ -630,10 +614,7 @@ void IVP_Mindist_Manager::insert_and_recalc_phantom_mindist( IVP_Mindist *new_mi
 class IVP_OO_CMP {
 public:
     static inline int calc_hash_index( IVP_Real_Object * o){
-    //lwss -x64 fixes
-	//int x = (int)o;
-	int x = (intptr_t)o;
-	//lwss end
+    intp x = (intp)o;
 	return x + 1023 * (x>>8);
     }
 
@@ -641,10 +622,7 @@ public:
     static inline int calc_hash_index( IVP_Collision *c, IVP_Real_Object * con){
 	IVP_Real_Object *objects[2];
 	c->get_objects(objects);
-	//lwss -x64 fixes
-	//int x = int(objects[0]) ^ int(objects[1]) ^ int(con);  // take other object (trick to avoid if)
-	int x = intptr_t(objects[0]) ^ intptr_t(objects[1]) ^ intptr_t(con);  // take other object (trick to avoid if)
-	//lwss end
+    intp x = intp(objects[0]) ^ intp(objects[1]) ^ intp(con);  // take other object (trick to avoid if)
 	IVP_ASSERT( objects[0] == con || objects[1] == con );
 	return x + 1023 * (x>>8);
     }

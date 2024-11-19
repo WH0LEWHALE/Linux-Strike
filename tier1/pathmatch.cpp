@@ -66,7 +66,7 @@
 
 static bool s_bShowDiag;
 #define DEBUG_MSG( ... ) if ( s_bShowDiag ) fprintf( stderr, ##__VA_ARGS__ )
-#ifdef __e2k__
+#if defined(__e2k__) || defined( __arm__ ) || defined(__aarch64__)
 	#define DEBUG_BREAK() raise(SIGTRAP)
 #else
 	#define DEBUG_BREAK() __asm__ __volatile__ ( "int $3" )

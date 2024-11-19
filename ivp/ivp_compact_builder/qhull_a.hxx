@@ -45,7 +45,7 @@
 
 #if qh_CLOCKtype == 2  /* defined in user.h from qhull.h */
 #include <sys/types.h>
-#if !defined(PSXII) && !defined(GEKKO)
+#if !defined(GEKKO)
 #	include <sys/times.h>
 #endif
 #include <unistd.h>

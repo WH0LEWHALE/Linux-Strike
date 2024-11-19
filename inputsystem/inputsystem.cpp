@@ -242,12 +242,11 @@ InitReturnVal_t CInputSystem::Init()
 	
 #elif defined( WIN32 ) && !defined( _X360 )
 	// Check if this version of windows supports raw mouse input (later than win2k)
-
-	CSysModule *m_pRawInputDLL = Sys_LoadModule( "USER32.dll" );
+	static HINSTANCE m_pRawInputDLL = LoadLibrary("user32.dll");
 	if ( m_pRawInputDLL )
 	{
-		pfnRegisterRawInputDevices = (RegisterRawInputDevices_t)GetProcAddress( (HMODULE)m_pRawInputDLL, "RegisterRawInputDevices" );
-		pfnGetRawInputData = (GetRawInputData_t)GetProcAddress( (HMODULE)m_pRawInputDLL, "GetRawInputData" );
+		pfnRegisterRawInputDevices = (RegisterRawInputDevices_t)GetProcAddress( m_pRawInputDLL, "RegisterRawInputDevices" );
+		pfnGetRawInputData = (GetRawInputData_t)GetProcAddress( m_pRawInputDLL, "GetRawInputData" );
 		if ( pfnRegisterRawInputDevices && pfnGetRawInputData )
 			m_bRawInputSupported = true;
 	}

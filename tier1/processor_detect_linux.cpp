@@ -16,7 +16,7 @@
 // Turn off memdbg macros (turned on up top) since this is included like a header
 #include "tier0/memdbgoff.h"
 
-#ifndef __e2k__ // e2k CPU don't have CPUID
+#if !defined(__e2k__) || !defined(PLATFORM_ARM) // e2k,arm CPUS don't have CPUID
 static void cpuid(uint32 function, uint32& out_eax, uint32& out_ebx, uint32& out_ecx, uint32& out_edx)
 {
 #if defined(PLATFORM_64BITS)
@@ -45,7 +45,7 @@ static void cpuid(uint32 function, uint32& out_eax, uint32& out_ebx, uint32& out
 
 bool CheckMMXTechnology(void)
 {
-#if defined(__e2k__)
+#if defined(__e2k__) || defined(PLATFORM_ARM)
 	#if defined(__MMX__)
 		return true;
 	#else
@@ -61,7 +61,7 @@ bool CheckMMXTechnology(void)
 
 bool CheckSSETechnology(void)
 {
-#if defined(__e2k__)
+#if defined(__e2k__) || defined(PLATFORM_ARM)
 	#if defined(__SSE__)
 		return true;
 	#else
@@ -77,7 +77,7 @@ bool CheckSSETechnology(void)
 
 bool CheckSSE2Technology(void)
 {
-#if defined(__e2k__)
+#if defined(__e2k__) || defined(PLATFORM_ARM)
 	#if defined(__SSE2__)
 		return true;
 	#else
@@ -93,7 +93,7 @@ bool CheckSSE2Technology(void)
 
 bool Check3DNowTechnology(void)
 {
-#if defined(__e2k__)
+#if defined(__e2k__) || defined(PLATFORM_ARM)
 	#if defined(__3dNOW__)
 		return true;
 	#else

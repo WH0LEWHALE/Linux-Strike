@@ -9,7 +9,7 @@
 #include "hudelement.h"
 #include "c_cs_player.h"
 #include "c_playerresource.h"
-#include "vgui_EntityPanel.h"
+#include "vgui_entitypanel.h"
 #include "iclientmode.h"
 #include "vgui/ILocalize.h"
 
@@ -52,7 +52,7 @@ private:
 	Color			m_cHostageColor;
 };
 
-// DECLARE_HUDELEMENT( CTargetID );
+DECLARE_HUDELEMENT( CTargetID );
 
 using namespace vgui;
 
@@ -207,17 +207,17 @@ void CTargetID::Paint()
 				
 				if ( pPlayer->InSameTeam(pLocalPlayer) )
 				{
-					printFormatString = "#Cstrike_playerid_sameteam";
+					printFormatString = "#SFUIHUD_playerid_sameteam";
 					bShowHealth = true;
 				}
 				else if ( pLocalPlayer->GetTeamNumber() != TEAM_CT && pLocalPlayer->GetTeamNumber() != TEAM_TERRORIST )
 				{
-					printFormatString = "#Cstrike_playerid_noteam";
+					printFormatString = "#SFUIHUD_playerid_noteam";
 					bShowHealth = true;
 				}
 				else
 				{
-					printFormatString = "#Cstrike_playerid_diffteam";
+					printFormatString = "#SFUIHUD_playerid_diffteam";
 				}
 
 				if ( bShowHealth )
@@ -273,7 +273,7 @@ void CTargetID::Paint()
 			if( pHostage != NULL )
 			{
 				c = m_cHostageColor;
-				printFormatString = "#Cstrike_playerid_hostage";
+				printFormatString = "#SFUIHUD_playerid_hostage";
 				_snwprintf( wszHealthText, ARRAYSIZE(wszHealthText) - 1, L"%.0f%%",  ((float)pHostage->GetHealth() / (float)pHostage->GetMaxHealth() ) * 100 );
 				wszHealthText[ ARRAYSIZE(wszHealthText)-1 ] = '\0';
 				bShowHealth = true;

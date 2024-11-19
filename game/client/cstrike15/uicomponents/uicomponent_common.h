@@ -46,8 +46,6 @@
 #define DECLARE_PANORAMA_JSREGISTERFUNC
 #endif
 
-#include "bannedwords.h"
-
 class IUiComponentGlobalInstanceBase
 {
 public:

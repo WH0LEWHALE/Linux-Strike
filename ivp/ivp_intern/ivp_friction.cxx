@@ -664,6 +664,10 @@ void IVP_Friction_System::calc_friction_forces(const IVP_Event_Sim *es) {
     //printf("\n");
 }
 
+IVP_FLOAT IVP_Contact_Point::get_friction_factor() {
+	return span_friction_s[0] * span_friction_s[1];
+}
+
 void IVP_Contact_Point::set_friction_to_neutral(){
     span_friction_s[0] = 0.0f;
     span_friction_s[1] = 0.0f;    
@@ -1058,6 +1062,11 @@ void  IVP_Contact_Point_API::reset_eliminated_energy(IVP_Contact_Point *friction
 IVP_FLOAT IVP_Contact_Point_API::get_vert_force(IVP_Contact_Point *friction_handle){
     return friction_handle->now_friction_pressure;
 };
+
+
+void IVP_Contact_Point_API::get_surface_normal_ws(IVP_Contact_Point* friction_handle, IVP_U_Float_Point* normal){
+	*normal = friction_handle->tmp_contact_info->surf_normal;
+}
 
 void IVP_Friction_Info_For_Core::friction_info_insert_friction_dist(IVP_Contact_Point *dist)
 {
@@ -1750,7 +1759,7 @@ void IVP_Mutual_Energizer::destroy_percent_energy(IVP_DOUBLE percent_energy_to_d
 {
     IVP_DOUBLE rot_impulse=calc_impulse_to_reduce_energy_level(rot_speed_potential,inv_rot_inertia[0],inv_rot_inertia[1],percent_energy_to_destroy*rot_energy_potential);
     IVP_DOUBLE trans_impulse=calc_impulse_to_reduce_energy_level(trans_speed_potential,inv_trans_inertia[0],inv_trans_inertia[1],percent_energy_to_destroy*trans_energy_potential);
-    if(!core[0]->physical_unmoveable) {
+    if(!core[0]->physical_unmoveable && !core[0]->pinned) {
 	core[0]->speed_change.add_multiple(&trans_vec_world,inv_trans_inertia[0]*trans_impulse);
 	core[0]->rot_speed_change.add_multiple(&rot_vec_obj[0],inv_rot_inertia[0]*rot_impulse);
     }

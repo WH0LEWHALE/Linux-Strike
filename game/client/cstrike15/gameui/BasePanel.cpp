@@ -1364,7 +1364,7 @@ void CBaseModPanel::DrawBackgroundImage()
 			// goes from [0..255]
 			alpha = (frametime - m_flFadeMenuStartTime) / (m_flFadeMenuEndTime - m_flFadeMenuStartTime) * 255;
 			alpha = clamp( alpha, 0, 255 );
-			m_pGameMenu->SetAlpha( alpha );
+			SetAlpha( alpha );
 			if ( alpha == 255 )
 			{
 				m_bFadingInMenus = false;
@@ -5841,8 +5841,6 @@ void CBaseModPanel::CloseBaseDialogs( void )
 		m_hCreateMultiplayerGameDialog->Close();
 }
 
-
-#if !defined( CSTRIKE15 )
 //-----------------------------------------------------------------------------
 // Purpose: Console command to show the main menu
 //-----------------------------------------------------------------------------
@@ -5858,7 +5856,6 @@ CON_COMMAND( hide_main_menu, "Hide the main menu" )
 {
 	BasePanel()->ShowMainMenu( false );
 }
-#endif // !defined( CSTRIKE15 )
 
 //Removed because these were used as an exploit to get to old VGUI panels and configure video options. Not relevant for end users anyways.
 // -----------------------------------------------------------------------------

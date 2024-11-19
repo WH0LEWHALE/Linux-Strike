@@ -10,9 +10,9 @@
 #include "vphysics/friction.h"
 
 #include "ivp_mindist.hxx"
+#include "ivp_mindist_intern.hxx"
 #include "ivp_listener_collision.hxx"
 #include "ivp_friction.hxx"
-
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

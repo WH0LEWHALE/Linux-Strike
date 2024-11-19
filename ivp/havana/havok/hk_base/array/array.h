@@ -8,7 +8,7 @@
 class hk_Array_Base
 {
 	public:
-			inline hk_Array_Base();
+			inline hk_Array_Base() = default;
 	protected:
 			inline hk_Array_Base(char *elems, int n_elems);
 
@@ -58,11 +58,11 @@ class hk_Array :  protected hk_Array_Base
 		inline void reserve(int n);
 
 		inline T& get_element( iterator );
-		inline hk_bool is_valid( iterator );
+		inline bool is_valid( iterator );
 		inline iterator next( iterator );
 		inline iterator start();
 
-	HK_PUBLIC:
+	public:
 
 		T *get_elems(){ return (T*)m_elems; };
 	protected:

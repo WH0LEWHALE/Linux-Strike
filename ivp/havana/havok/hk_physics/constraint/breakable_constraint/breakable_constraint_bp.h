@@ -7,9 +7,6 @@
 class hk_Breakable_Constraint_BP  //: public hk_Effector_BP 
 {
 	public:
-
-		HK_DECLARE_NONVIRTUAL_CLASS_ALLOCATOR(HK_MEMORY_CLASS_CONSTRAINT, hk_Breakable_Constraint_BP)
-
 		inline hk_Breakable_Constraint_BP()
 			:	m_real_constraint(HK_NULL),
 				m_linear_strength(0),
@@ -22,6 +19,7 @@ class hk_Breakable_Constraint_BP  //: public hk_Effector_BP
 		hk_Constraint* m_real_constraint;
 		hk_real m_linear_strength;
 		hk_real m_angular_strength;
+		hk_real m_bodyMassScale[2];
 
 	protected:
 

@@ -48,7 +48,7 @@ protected:
 class GCConCommand : public ConCommand
 {
 public:
-	GCConCommand( const char *pName, FnCommandCallbackVoid_t callback, const char *pHelpString = 0, int flags = 0, FnCommandCompletionCallback completionFunc = 0 )
+	GCConCommand( const char *pName, FnCommandCallbackV1_t callback, const char *pHelpString = 0, int flags = 0, FnCommandCompletionCallback completionFunc = 0 )
 		: ConCommand( pName, callback, pHelpString, flags, completionFunc ) {}
 	GCConCommand( const char *pName, FnCommandCallback_t callback, const char *pHelpString = 0, int flags = 0, FnCommandCompletionCallback completionFunc = 0 )
 		: ConCommand( pName, callback, pHelpString, flags, completionFunc ) {}

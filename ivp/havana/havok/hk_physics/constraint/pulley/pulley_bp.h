@@ -27,7 +27,7 @@ class hk_Pulley_BP  //: public hk_Constraint_BP
 		hk_real		m_gearing;
 		hk_Vector3	m_translation_os_ks[2];
 		hk_Vector3	m_worldspace_point[2];
-		hk_bool		m_is_rigid;
+		bool		m_is_rigid;
 
 	protected:
 

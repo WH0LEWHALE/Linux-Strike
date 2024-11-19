@@ -35,9 +35,8 @@ target_sources(${OUTBINNAME} PRIVATE main.cpp)
 target_sources(${OUTBINNAME} PRIVATE ${SRCDIR}/common/SteamAppStartup.cpp)
 
 if( LINUXALL )
-    #        $Lib     "$SRCDIR/thirdparty/telemetry/lib/libtelemetryx86.link" [$LINUX]
-    target_link_libraries(${OUTBINNAME} dl) #link for dlopen
-
-    #valve snuck these in the linux makefiles instead of VPC
-    target_link_libraries(${OUTBINNAME} libtier0_client libvstdlib_client)
+    target_link_libraries(${OUTBINNAME} dl) # link for dlopen
 endif()
+
+# valve snuck these in the linux makefiles instead of VPC
+target_link_libraries(${OUTBINNAME} libtier0_client vstdlib_client)

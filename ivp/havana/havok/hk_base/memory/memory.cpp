@@ -1,5 +1,5 @@
 #include <hk_base/base.h>
-#include <malloc.h>
+#include <cstdlib>
 
 
 class hk_Memory_With_Size {
@@ -75,9 +75,7 @@ void *hk_Memory::allocate_real( int size )
 {
 	if ( size > HK_MEMORY_MAX_SIZE_SMALL_BLOCK)
 	{
-#ifdef HK_CHECK
-		hk_Console::get_instance()->printf("big block allocated size %i\n", size );
-#endif
+		ivp_message("big block allocated size %i\n", size );
 		return hk_Memory::aligned_malloc( size, HK_MEMORY_CACHE_ALIGNMENT);
 	}
 
@@ -92,7 +90,7 @@ void *hk_Memory::allocate_real( int size )
 	if ( size + m_used_end > m_memory_end)
 	{
 #ifdef HK_CHECK
-		hk_Console::get_instance()->printf("running out of space: block size %i\n", size );
+		ivp_message("running out of space: block size %i\n", size );
 #endif
 		hk_Memory_Block *b = (hk_Memory_Block *)hk_Memory::aligned_malloc( sizeof(hk_Memory_Block) + HK_MEMORY_EXTRA_BLOCK_SIZE, HK_MEMORY_CACHE_ALIGNMENT );
 
@@ -172,8 +170,8 @@ void hk_Memory::deallocate(void* p, int size, hk_MEMORY_CLASS cl)
 	{
 		hk_Memory_With_Size *x = (hk_Memory_With_Size *)p;
 		x--;
-		HK_ASSERT( x->m_magic == hk_Memory_With_Size::MAGIC_MEMORY_WITH_SIZE );
-		HK_ASSERT(  x->m_size == size );
+		IVP_ASSERT( x->m_magic == hk_Memory_With_Size::MAGIC_MEMORY_WITH_SIZE );
+		IVP_ASSERT(  x->m_size == size );
 		this->aligned_free( x );
 	}
 #else
@@ -182,7 +180,7 @@ void hk_Memory::deallocate(void* p, int size, hk_MEMORY_CLASS cl)
 		int row = m_size_to_row[size];
 		m_blocks_in_use[row]--;
 		me->m_next = m_free_list[row];
-		HK_ASSERT( me->m_magic != HK_MEMORY_MAGIC_NUMBER);
+		IVP_ASSERT( me->m_magic != HK_MEMORY_MAGIC_NUMBER);
 		me->m_magic = HK_MEMORY_MAGIC_NUMBER;
 		m_free_list[row] = me;
 	}else{
@@ -193,7 +191,7 @@ void hk_Memory::deallocate(void* p, int size, hk_MEMORY_CLASS cl)
 
 int hk_Memory::size_to_row( int size )
 {
-	HK_ASSERT (HK_MEMORY_MAX_ROW == 12 );
+	IVP_ASSERT (HK_MEMORY_MAX_ROW == 12 );
 		 if (size <= 8 ) return 1;
 	else if (size <= 16 ) return 2;
 	else if (size <= 32 ) return 3;
@@ -245,14 +243,14 @@ void  hk_Memory::deallocate_stored_size(void* p , hk_MEMORY_CLASS cl)
 	{
 		hk_Memory_With_Size *x = (hk_Memory_With_Size *)p;
 		x--;
-		HK_ASSERT( x->m_magic == hk_Memory_With_Size::MAGIC_MEMORY_WITH_SIZE );
+		IVP_ASSERT( x->m_magic == hk_Memory_With_Size::MAGIC_MEMORY_WITH_SIZE );
 		this->deallocate( x, x->m_size + sizeof( hk_Memory_With_Size ), cl );
 	}
 }
 
 
 
-void *hk_Memory::aligned_malloc( hk_size_t size, hk_size_t alignment)
+void *hk_Memory::aligned_malloc( size_t size, size_t alignment)
 {
 #if defined(WIN32_)
 	return _aligned_malloc ( size, alignment );

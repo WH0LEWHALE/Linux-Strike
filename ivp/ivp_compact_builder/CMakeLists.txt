@@ -13,12 +13,16 @@ include_directories(${SRCDIR}/ivp/ivp_physics)
 include_directories(${SRCDIR}/ivp/ivp_utility)
 include_directories(${SRCDIR}/ivp/ivp_compact_builder)
 include_directories(${SRCDIR}/ivp/ivp_collision)
+include_directories(${SRCDIR}/ivp/ivp_controller)
 include_directories(${SRCDIR}/ivp/ivp_surface_manager)
+
+include_directories(${SRCDIR}/ivp/havana/havok)
+
+#TODO: pretty sure the valve guy made a typo here, it's supposed to be HAVOK_MOPP
+add_definitions(-D_LIB -DIVP_VERSION_SDK -DHAVOK_MOOP)
 
 if( LINUXALL )
     target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition -fpermissive)
-    #TODO: pretty sure the valve guy made a typo here, it's supposed to be HAVOK_MOPP
-    add_definitions(-D_LIB -DIVP_VERSION_SDK -DHAVOK_MOOP -DLINUX)
 endif()
 
 #target_sources(${OUTLIBNAME} PRIVATE 3dsimport_co.cxx)
@@ -50,7 +54,6 @@ target_sources(${OUTLIBNAME} PRIVATE ivp_surbuild_ledge_soup.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ivp_surbuild_pointsoup.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ivp_surbuild_polygon_convex.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ivp_surbuild_polyhdrn_cncv.cxx)
-target_sources(${OUTLIBNAME} PRIVATE ivp_surbuild_q12.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ivp_templates_intern.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ivp_tetra_intrude.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ivv_cluster_min_hash.cxx)

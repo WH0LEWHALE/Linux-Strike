@@ -2,10 +2,6 @@
 
 // IVP_EXPORT_PROTECTED
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 class IVP_Triangle;
 class IVP_SurfaceManager_Polygon;
 class IVP_Object_Polygon_Tetra;
@@ -25,9 +21,9 @@ class IVP_SurfaceBuilder_Polygon_Convex {
     friend class IVP_SurfaceBuilder_Q12;
     friend class IVP_SurfaceBuilder_Halfspacesoup;
     friend class IVP_SurfaceBuilder_Pointsoup;
+    friend class CPhysicsCollision;
     
-//protected:
-public: // lwss: change to public to fix errors
+protected:
     IVP_Object_Polygon_Tetra *tetras;
     IVP_Compact_Ledge *c_ledge;
     IVP_point_hash *poly_point_hash;

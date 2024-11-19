@@ -113,7 +113,6 @@
 #include "replayhistorymanager.h"
 #endif
 #include "sys_mainwind.h"
-#include "host_phonehome.h"
 #ifndef DEDICATED
 #include "vgui_baseui_interface.h"
 #include "cl_steamauth.h"
@@ -139,7 +138,9 @@
 #if defined( _X360 )
 #include "xbox/xbox_win32stubs.h"
 #endif
+#if defined( _PS3 )
 #include "engine/ips3frontpanelled.h"
+#endif
 #include "audio_pch.h"
 #include "platforminputdevice.h"
 #include "status.h"
@@ -188,6 +189,12 @@ extern char	*CM_EntityString( void );
 bool XBX_SetProfileDefaultSettings( int iController );
 extern ConVar host_map;
 extern ConVar sv_cheats;
+
+// tyabus: came from enginethreads.cpp
+bool g_bThreadedEngine = false;
+int g_nMaterialSystemThread = 0;
+int g_nServerThread = 1;
+// enginethreads.cpp end
 
 bool g_bDedicatedServerBenchmarkMode = false;
 
@@ -637,6 +644,9 @@ enum HostThreadMode
 ConVar host_thread_mode( "host_thread_mode", ( IsPlatformX360() || IsPlatformPS3() ) ? "1" : "0", FCVAR_DEVELOPMENTONLY, "Run the host in threaded mode, (0 == off, 1 == if multicore, 2 == force)" );
 ConVar host_threaded_sound( "host_threaded_sound", ( IsPlatformX360() || IsPlatformPS3()) ? "1" : "0", 0, "Run the sound on a thread (independent of mix)" );
 ConVar host_threaded_sound_simplethread( "host_threaded_sound_simplethread", ( IsPlatformPS3()) ? "1" : "0", 0, "Run the sound on a simple thread not a jobthread" );
+
+// Threadpool affinity is no more in newer csgo
+#if defined( _X360 ) || defined( _PS3 )
 extern ConVar threadpool_affinity;
 void OnChangeThreadAffinity( IConVar *var, const char *pOldValue, float flOldValue )
 {
@@ -647,6 +657,7 @@ void OnChangeThreadAffinity( IConVar *var, const char *pOldValue, float flOldVal
 }
 
 ConVar threadpool_affinity( "threadpool_affinity", "1", 0, "Enable setting affinity", 0, 0, 0, 0, &OnChangeThreadAffinity );
+#endif
 
 extern ConVar threadpool_reserve;
 CThreadEvent g_ReleaseThreadReservation( true );
@@ -2457,14 +2468,12 @@ void Host_AccumulateTime( float dt )
 float g_fFramesPerSecond = 0.0f;
 
 // temporarily a constant until I bother to hook it to a cvar
+#if defined( _PS3 )
 inline static bool cl_ps3ledframerate()  // should i make the front LEDs show the framerate (divided by two)
 {
-#ifdef _PS3
 	return (CPS3FrontPanelLED::GetSwitches() & CPS3FrontPanelLED::kPS3SWITCH3) == 0;
-#else
-	return false;
-#endif
 }
+#endif
 
 /*
 ==================
@@ -2478,7 +2487,9 @@ void Host_PostFrameRate( float frameTime )
 
 	float fps = 1.0f / frameTime;
 	g_fFramesPerSecond = g_fFramesPerSecond * FPS_AVG_FRAC + ( 1.0f - FPS_AVG_FRAC ) * fps;
-	if ( IsPS3() && !IsCert() )
+
+#if defined( _PS3 )
+	if ( !IsCert() )
 	{
 		if ( cl_ps3ledframerate() )
 		{
@@ -2505,6 +2516,7 @@ void Host_PostFrameRate( float frameTime )
 			CPS3FrontPanelLED::SetLEDs( 0 );
 		}
 	}
+#endif // _PS3
 }
 
 /*
@@ -5824,17 +5836,6 @@ void Host_Init( bool bDedicated )
 		DevShotGenerator().StartDevShotGeneration();
 	}
 
-	// if running outside of steam and NOT a dedicated server then phone home (or if "-phonehome" is passed on the command line)
-	if ( !sv.IsDedicated() || CommandLine()->FindParm( "-phonehome" ) )
-	{
-		// In debug, only run this check if -phonehome is on the command line (so a debug build will "just work").
-		if ( IsDebug() && CommandLine()->FindParm( "-phonehome" ) )
-		{
-			phonehome->Init();
-			phonehome->Message( IPhoneHome::PHONE_MSG_ENGINESTART, NULL );
-		}
-	}
-
 	Host_PostInit();
 	EndLoadingUpdates();
 
@@ -6442,9 +6443,6 @@ void Host_Shutdown(void)
 		g_pDebugInputThread->Stop();
 		delete g_pDebugInputThread;
 	}
-
-	phonehome->Message( IPhoneHome::PHONE_MSG_ENGINEEND, NULL );
-	phonehome->Shutdown();
 
 #ifndef DEDICATED
 	// Store active configuration settings

@@ -34,7 +34,7 @@ CHudSaveStatus::CHudSaveStatus( const char *pElementName ) :
 	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
-	SetScheme( "basemodui_scheme" );
+	SetScheme( "ClientScheme" );
 	SetProportional( true );
 
 	m_pSavingIcon = NULL;

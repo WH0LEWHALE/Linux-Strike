@@ -19,7 +19,7 @@ class hk_VMQ_Storage
 {
 	public:
 
-		inline hk_VMQ_Storage() { }
+		inline hk_VMQ_Storage() = default;
 		inline ~hk_VMQ_Storage(){ }
 
 		inline void initialize()
@@ -87,7 +87,7 @@ class hk_VM_Query_Builder
 {
 	public:
 
-		inline hk_VM_Query_Builder(){}
+		inline hk_VM_Query_Builder() = default;
 
 		void begin(int size)
 		{
@@ -119,7 +119,7 @@ class hk_VM_Query_Builder
 				const hk_Vector3 &axis_ws,
 				hk_real sign )
 		{
-			HK_ASSERT(	int(index_offset + m_vmq_offset/sizeof(hk_Virtual_Mass_Query)) < m_vmq_storage.length() );
+			IVP_ASSERT(	int(index_offset + m_vmq_offset/sizeof(hk_Virtual_Mass_Query)) < m_vmq_storage.length() );
 
 			hk_Virtual_Mass_Query &vmq = *offset_vmq (m_vmq_storage.get_vmq(body_index), index_offset);
 			vmq.m_linear.set_zero();
@@ -135,7 +135,7 @@ class hk_VM_Query_Builder
 		inline void add_linear( int index_offset, hk_Body_Index body_index, hk_Rigid_Body *rb,
 				const hk_Vector3 &position_ws, const hk_Vector3 &direction_ws, hk_real signum )
 		{
-			HK_ASSERT( int(index_offset + m_vmq_offset/sizeof(hk_Virtual_Mass_Query)) < m_vmq_storage.length() );
+			IVP_ASSERT( int(index_offset + m_vmq_offset/sizeof(hk_Virtual_Mass_Query)) < m_vmq_storage.length() );
 
 			hk_Virtual_Mass_Query &vmq = *offset_vmq (m_vmq_storage.get_vmq(body_index), index_offset);
 
@@ -152,7 +152,7 @@ class hk_VM_Query_Builder
 		inline void add_linear( int index_offset, hk_Body_Index body_index, hk_Rigid_Body *rb,
 				const hk_Mass_Relative_Vector3 &pos_rel, const hk_Vector3 &direction_ws, hk_real signum )
 		{
-			HK_ASSERT( int(index_offset + m_vmq_offset/sizeof(hk_Virtual_Mass_Query)) < m_vmq_storage.length() );
+			IVP_ASSERT( int(index_offset + m_vmq_offset/sizeof(hk_Virtual_Mass_Query)) < m_vmq_storage.length() );
 
 			hk_Virtual_Mass_Query &vmq = *offset_vmq (m_vmq_storage.get_vmq(body_index), index_offset);
 			const hk_Vector3 &mass_center_relative = pos_rel.m_vector;
@@ -170,7 +170,7 @@ class hk_VM_Query_Builder
 				hk_Body_Index body_index, hk_Rigid_Body *rb,
 				const hk_Mass_Relative_Vector3 &mass_center_relative, hk_real signum)
 		{
-			HK_ASSERT( int(index_offset + m_vmq_offset/sizeof(hk_Virtual_Mass_Query)) < m_vmq_storage.length() );
+			IVP_ASSERT( int(index_offset + m_vmq_offset/sizeof(hk_Virtual_Mass_Query)) < m_vmq_storage.length() );
 
 			hk_Virtual_Mass_Query &vmq = *offset_vmq (m_vmq_storage.get_vmq(body_index), index_offset);
 			vmq.m_linear.set_zero();
@@ -239,15 +239,6 @@ class hk_VM_Query_Builder
 		inline void apply_impulses( hk_Body_Index body_index, hk_Rigid_Body *rb,
 									const hk_real impulses[] )
 		{
-#ifdef HK_CHECK // lwss: add ifdef so hk_checks aren't ran on release
-			HK_IF_CHECK (HK_FALSE)
-			{
-				for (int i = 0; i < m_dense_matrix_offset;i++)
-				{
-					HK_CHECK( impulses[i] < HK_MAX_IMPULSE );
-				}
-			}
-#endif
 			rb->get_rigid_body_core()->apply_impulses(	m_input[ body_index ],	impulses);
 		}
 	protected:

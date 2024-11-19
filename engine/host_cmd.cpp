@@ -1540,10 +1540,6 @@ void Host_Changelevel_f( const CCommand &args )
 	Q_StripExtension( args[ 1 ], mapname, sizeof( mapname ) );
 
 	bool bMapMustExist = true;
-	static ConVarRef sv_workshop_allow_other_maps( "sv_workshop_allow_other_maps" );
-	if ( StringHasPrefix( mapname, "workshop" ) && ( ( mapname[8] == '/' ) || ( mapname[8] == '\\' ) ) &&
-		sv_workshop_allow_other_maps.GetBool() )
-		bMapMustExist = false;
 
 	if ( bMapMustExist && !modelloader->Map_IsValid( mapname, true ) )
 	{

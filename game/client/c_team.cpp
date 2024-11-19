@@ -6,7 +6,6 @@
 //=============================================================================//
 #include "cbase.h"
 #include "c_team.h"
-#include "bannedwords.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -165,8 +164,6 @@ const char *C_Team::Get_ClanName( void )
 		if ( pParameters->m_bAnonymousPlayerIdentity )
 			return "";
 	}
-
-	g_BannedWords.CensorBannedWordsInplace( m_szClanTeamname );
 
 	return m_szClanTeamname;
 }

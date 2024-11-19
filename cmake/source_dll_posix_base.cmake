@@ -21,6 +21,11 @@ set_target_properties(${OUTBINNAME} PROPERTIES PREFIX "")
 
 target_compile_definitions(${OUTBINNAME} PRIVATE -DDLLNAME=${OUTBINNAME})
 
+# Make SURE we dont have undefined symbols
+if( LINUXALL )
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
+endif()
+
 message("Adding dll target: ${OUTBINNAME}${OUTDLLEXT}\n")
 
 set_target_properties( ${OUTBINNAME} PROPERTIES

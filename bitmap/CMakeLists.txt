@@ -46,11 +46,10 @@ target_sources(${OUTLIBNAME} PRIVATE "tgaloader.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "texturepacker.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "tgawriter.cpp")
 
-if( WINDOWS )
-    #$Folder "Link Libraries" [$WINDOWS]
-	#{
-	#	$Lib	"$SRCDIR\lib\public\nvtc"			[!$WIN64]
-	#	$Lib	"$SRCDIR\lib\public\nvtc64"			[$WIN64]
-	#	$Lib	"bitmap_byteswap"
-	#}
-endif()
+#if( WIN32 )
+#	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+#		target_link_libraries(${OUTLIBNAME} PRIVATE ${SRCDIR}/lib/public/nvtc64.lib)
+#	else()
+#		target_link_libraries(${OUTLIBNAME} PRIVATE ${SRCDIR}/lib/public/nvtc.lib)
+#	endif()
+#endif()

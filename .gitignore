@@ -23,6 +23,8 @@ bld/
 *.vcxproj.vpc_crc
 *.sln
 
+# Visual Studio 2015 cache/options directory
+.vs/
 
 # Idea IDE
 .idea/
@@ -45,6 +47,9 @@ lib/public/linux64/*.o
 #Ignore crypto++ built files
 external/crypto++-5.61/*.o
 external/crypto++-5.61/libcryptopp.a
+
+# compiled .rc files
+*.aps
 
 #VPC makefile
 csgo_partner.mak

@@ -74,8 +74,8 @@ void CCSBot::FireWeaponAtEnemy( void )
 
 			// aim more precisely with a sniper rifle
 			// because rifles' bullets spray, don't have to be very precise
-			const float halfSize = (IsUsingSniperRifle()) ? HalfHumanWidth : 2.0f * HalfHumanWidth;
-
+			//const float halfSize = (IsUsingSniperRifle()) ? HalfHumanWidth : 2.0f * HalfHumanWidth;
+			const float halfSize = HalfHumanWidth ;
 			// aiming tolerance depends on how close the target is - closer targets subtend larger angles
 			float aimTolerance = (float)cos( atan( halfSize / rangeToEnemy ) );
 
@@ -197,24 +197,12 @@ void CCSBot::PickNewAimSpot()
 			const float sharpshooter = 0.8f;
 			VisiblePartType aimAtPart;
 
-			if (IsUsingMachinegun())
+			if (IsUsingMachinegun() ||
+				IsUsing( WEAPON_AWP ) ||
+				IsUsingShotgun() ||
+				GetProfile()->GetSkill() > 0.5f && IsActiveWeaponRecoilHigh()
+			)
 			{
-				// spray the big machinegun at the enemy's gut
-				aimAtPart = GUT;
-			}
-			else if (IsUsing( WEAPON_AWP ) || IsUsingShotgun())
-			{
-				// these weapons are best aimed at the chest
-				aimAtPart = GUT;
-			}
-			else if (GetProfile()->GetSkill() > 0.5f && IsActiveWeaponRecoilHigh() )
-			{
-				// sprayin' and prayin' - aim at the gut since we're not going to be accurate
-				aimAtPart = GUT;
-			}
-			else if (GetProfile()->GetSkill() < sharpshooter)
-			{
-				// low skill bots don't go for headshots
 				aimAtPart = GUT;
 			}
 			else
@@ -251,9 +239,6 @@ void CCSBot::PickNewAimSpot()
 					m_targetSpot = GetPartPosition( GetBotEnemy(), FEET );
 				}
 			}
-
-			// temp test
-			m_targetSpot = GetPartPosition( GetBotEnemy(), GUT );
 
 			m_targetSpotVelocity = m_enemy->GetAbsVelocity();
 			m_targetSpotTime = gpGlobals->curtime;

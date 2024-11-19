@@ -2,10 +2,6 @@
 
 //IVP_EXPORT_PUBLIC
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 #ifndef IVP_CONSTRAINT_LOCAL_INCLUDED
 //#	include <ivp_constraint_local.hxx>
 #endif
@@ -19,7 +15,7 @@
 
 class IVP_Template_Constraint_Fixed_Keyframed:public IVP_Template_Controller_Motion {
 public:
-    IVP_Template_Constraint_Fixed_Keyframed();
+    IVP_Template_Constraint_Fixed_Keyframed() = default;
 };
 
 class IVP_Constraint_Fixed_Keyframed: public IVP_Controller_Dependent {

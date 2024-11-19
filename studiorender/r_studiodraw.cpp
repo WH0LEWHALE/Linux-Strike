@@ -945,7 +945,7 @@ void ComputeSkinMatrixToMemorySSE( mstudioboneweight_t &boneweights, matrix3x4_t
 matrix3x4_t *ComputeSkinMatrixSSE( mstudioboneweight_t &boneweights, matrix3x4_t *pPoseToWorld, matrix3x4_t &scratchMatrix )
 {
 	// NOTE: pPoseToWorld, being cache aligned, doesn't need explicit initialization
-#if defined( _WIN32 ) && !defined( _WIN64 ) && !defined( _X360 )
+#if defined( _WIN32 ) && !defined( _WIN64 ) && !defined( _X360 ) && !defined(PLATFORM_ARM)
 	switch( boneweights.numbones )
 	{
 	default:

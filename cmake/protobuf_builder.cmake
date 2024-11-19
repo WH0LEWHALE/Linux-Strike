@@ -4,7 +4,7 @@ MacroRequired(GENERATED_PROTO_DIR)
 MacroRequired(SRCDIR)
 
 include_directories(${GENERATED_PROTO_DIR})
-include_directories(${SRCDIR}/thirdparty/protobuf-2.5.0/src)
+include_directories(${SRCDIR}/thirdparty/protobuf-3.5.1/src)
 
 add_definitions(-DPROTOBUF)
 
@@ -30,7 +30,7 @@ macro( TargetBuildAndAddProto TARGET_NAME PROTO_FILE PROTO_OUTPUT_FOLDER )
             OUTPUT "${PROTO_OUTPUT_FOLDER}/${PROTO_FILENAME}.pb.cc"
                    "${PROTO_OUTPUT_FOLDER}/${PROTO_FILENAME}.pb.h"
             COMMAND ${PROTO_COMPILER}
-            ARGS --cpp_out=. --proto_path=${SRCDIR}/game/shared/cstrike15 --proto_path=${SRCDIR}/thirdparty/protobuf-2.5.0/src --proto_path=${SRCDIR}/gcsdk --proto_path=${SRCDIR}/game/shared --proto_path=${SRCDIR}/common ${PROTO_FILE}
+            ARGS --cpp_out=. --proto_path=${SRCDIR}/game/shared/cstrike15 --proto_path=${SRCDIR}/thirdparty/protobuf-3.5.1/src --proto_path=${SRCDIR}/gcsdk --proto_path=${SRCDIR}/game/shared --proto_path=${SRCDIR}/common ${PROTO_FILE}
             DEPENDS ${PROTO_FILE} ${PROTO_COMPILER}
             WORKING_DIRECTORY ${PROTO_OUTPUT_FOLDER}
             COMMENT "Running homemade protoc compiler on ${PROTO_FILE} - output (${PROTO_OUTPUT_FOLDER}/${PROTO_FILENAME}.pb.cc)"

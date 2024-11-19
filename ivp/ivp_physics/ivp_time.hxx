@@ -6,10 +6,6 @@
 #ifndef _IVP_TIME_INCLUDED
 #define _IVP_TIME_INCLUDED
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 class IVP_U_Min_List;
 class IVP_Environment;
 class IVP_Mindist;
@@ -23,7 +19,7 @@ class IVP_Mindist;
 class IVP_Time_Event_PSI : public IVP_Time_Event
 {
 public:
-    IVP_Time_Event_PSI(){;};
+    IVP_Time_Event_PSI() = default;
     void simulate_time_event(IVP_Environment *env);
 };
 
@@ -40,6 +36,8 @@ public:
     void simulate_time_event(IVP_Environment *env);
     IVP_Time_Event_N(IVP_Time time);
 };
+
+class IVP_Time_Manager;
 
 class IVP_Event_Manager {
 public:
@@ -63,8 +61,7 @@ class IVP_Event_Manager_D : public IVP_Event_Manager {
 
 class IVP_Time_Manager
 {
-//private: // lwss change this to public.
-public:
+private:
     int n_events; // num of events currently managed
     IVP_Time_Event *get_next_event(); // and remove event afterwards
     IVP_Time_Event *get_next_event(IVP_Time time); //get event until

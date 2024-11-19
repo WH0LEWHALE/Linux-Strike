@@ -113,68 +113,19 @@ struct BGRA8888_t
 	uint8 g;		//  order of the output ARGB or BGRA, etc...
 	uint8 r;		//  Last one is MSB, 1st is LSB.
 	uint8 a;
-	inline BGRA8888_t& operator=( const BGRA8888_t& in )
+	inline BGRA8888_t& operator=(const BGRA8888_t& in)
 	{
-		*( unsigned int * )this = *( unsigned int * )&in;
+		*(unsigned int*)this = *(unsigned int*)&in;
 		return *this;
 	}
-	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
-	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
-	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
-	inline int ATo10Bit( ) const { return ConvertTo10Bit<8>( a ); }
-	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
-	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
-	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
-	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<8>( a10 ); }
-};
-
-struct ABGR8888_t
-{
-	uint8 a;
-	uint8 b;		// change the order of names to change the 
-	uint8 g;		//  order of the output ARGB or BGRA, etc...
-	uint8 r;		//  Last one is MSB, 1st is LSB.
-	inline ABGR8888_t& operator=( const BGRA8888_t& in )
-	{
-		r = in.r;
-		g = in.g;
-		b = in.b;
-		a = in.a;
-		return *this;
-	}
-	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
-	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
-	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
-	inline int ATo10Bit( ) const { return ConvertTo10Bit<8>( a ); }
-	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
-	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
-	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
-	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<8>( a10 ); }
-};
-
-
-struct RGBA8888_t
-{
-	uint8 r;		// change the order of names to change the 
-	uint8 g;		//  order of the output ARGB or BGRA, etc...
-	uint8 b;		//  Last one is MSB, 1st is LSB.
-	uint8 a;
-	inline RGBA8888_t& operator=( const BGRA8888_t& in )
-	{
-		r = in.r;
-		g = in.g;
-		b = in.b;
-		a = in.a;
-		return *this;
-	}
-	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
-	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
-	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
-	inline int ATo10Bit( ) const { return ConvertTo10Bit<8>( a ); }
-	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
-	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
-	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
-	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<8>( a10 ); }
+	inline int RTo10Bit() const { return ConvertTo10Bit<8>(r); }
+	inline int GTo10Bit() const { return ConvertTo10Bit<8>(g); }
+	inline int BTo10Bit() const { return ConvertTo10Bit<8>(b); }
+	inline int ATo10Bit() const { return ConvertTo10Bit<8>(a); }
+	inline void RFrom10Bit(int r10) { r = ConvertFrom10Bit<8>(r10); }
+	inline void GFrom10Bit(int g10) { g = ConvertFrom10Bit<8>(g10); }
+	inline void BFrom10Bit(int b10) { b = ConvertFrom10Bit<8>(b10); }
+	inline void AFrom10Bit(int a10) { a = ConvertFrom10Bit<8>(a10); }
 };
 
 struct RGB888_t
@@ -205,6 +156,93 @@ struct RGB888_t
 	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
 };
 
+struct ABGR8888_t
+{
+	uint8 a;
+	uint8 b;		// change the order of names to change the 
+	uint8 g;		//  order of the output ARGB or BGRA, etc...
+	uint8 r;		//  Last one is MSB, 1st is LSB.
+	inline ABGR8888_t& operator=( const BGRA8888_t& in )
+	{
+		r = in.r;
+		g = in.g;
+		b = in.b;
+		a = in.a;
+		return *this;
+	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
+	inline int ATo10Bit( ) const { return ConvertTo10Bit<8>( a ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
+	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<8>( a10 ); }
+};
+
+struct BGRX8888_t
+{
+	uint8 b;
+	uint8 g;
+	uint8 r;
+	uint8 x;
+	inline BGRX8888_t& operator=(const BGRA8888_t& in)
+	{
+		r = in.r;
+		g = in.g;
+		b = in.b;
+		x = 255;
+		return *this;
+	}
+	inline int RTo10Bit() const { return ConvertTo10Bit<8>(r); }
+	inline int GTo10Bit() const { return ConvertTo10Bit<8>(g); }
+	inline int BTo10Bit() const { return ConvertTo10Bit<8>(b); }
+	inline void RFrom10Bit(int r10) { r = ConvertFrom10Bit<8>(r10); }
+	inline void GFrom10Bit(int g10) { g = ConvertFrom10Bit<8>(g10); }
+	inline void BFrom10Bit(int b10) { b = ConvertFrom10Bit<8>(b10); }
+};
+
+struct RGBA8888_t
+{
+	uint8 r;		// change the order of names to change the 
+	uint8 g;		//  order of the output ARGB or BGRA, etc...
+	uint8 b;		//  Last one is MSB, 1st is LSB.
+	uint8 a;
+	inline RGBA8888_t& operator=(const BGRA8888_t& in)
+	{
+		r = in.r;
+		g = in.g;
+		b = in.b;
+		a = in.a;
+		return *this;
+	}
+	inline RGBA8888_t& operator=(const RGB888_t& in)
+	{
+		r = in.r;
+		g = in.g;
+		b = in.b;
+		a = 0xFF;
+		return *this;
+	}
+	inline RGBA8888_t& operator=(const BGRX8888_t& in)
+	{
+		r = in.r;
+		g = in.g;
+		b = in.b;
+		a = 0xFF;
+		return *this;
+	}
+
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
+	inline int ATo10Bit( ) const { return ConvertTo10Bit<8>( a ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
+	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<8>( a10 ); }
+};
+
 struct BGR888_t
 {
 	uint8 b;
@@ -224,29 +262,6 @@ struct BGR888_t
 	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
 	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
 };
-
-struct BGRX8888_t
-{
-	uint8 b;
-	uint8 g;
-	uint8 r;
-	uint8 x;
-	inline BGRX8888_t& operator=( const BGRA8888_t& in )
-	{
-		r = in.r;
-		g = in.g;
-		b = in.b;
-		x = 255;
-		return *this;
-	}
-	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
-	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
-	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
-	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
-	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
-	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
-};
-
 
 // 360 uses this structure for x86 dxt decoding
 #if defined( _X360 )

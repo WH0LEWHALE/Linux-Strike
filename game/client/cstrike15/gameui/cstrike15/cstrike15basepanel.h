@@ -58,6 +58,8 @@ public:
 	bool	Xbox_IsPartyChatEnabled( void );
 #endif // _X360
 
+	virtual	void OnOpenServerBrowser();
+
 #if defined(INCLUDE_SCALEFORM)
 	virtual void OnOpenCreateStartScreen( void ); // [jason] provides the "Press Start" screen interface
 	virtual void DismissStartScreen( void );
@@ -79,7 +81,6 @@ public:
 	virtual void OnOpenDisconnectConfirmationDialog( void );
 	virtual void OnOpenQuitConfirmationDialog( bool bForceToDesktop = false );
 
-	virtual	void OnOpenServerBrowser();
 	virtual void OnOpenCreateLobbyScreen( bool bIsHost = false );
 	virtual void OnOpenLobbyBrowserScreen( bool bIsHost = false );
 	virtual void UpdateLobbyScreen( void );
@@ -175,7 +176,6 @@ protected:
 	virtual void OnOpenDisconnectConfirmationDialog( void );
 	virtual void OnOpenQuitConfirmationDialog( bool bForceToDesktop = false );
 
-	virtual	void OnOpenServerBrowser();
 	virtual void OnOpenCreateLobbyScreen( bool bIsHost = false );
 	virtual void OnOpenLobbyBrowserScreen( bool bIsHost = false );
 	virtual void UpdateLobbyScreen( void );

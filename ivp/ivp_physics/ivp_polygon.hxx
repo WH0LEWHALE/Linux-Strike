@@ -10,10 +10,9 @@
 #ifndef _IVP_POLYGON_INCLUDED
 #define _IVP_POLYGON_INCLUDED
 
-#ifndef WIN32
-#	pragma interface
-#endif
+#include "ivp_core.hxx"
 
+#include <hk_physics/physics.h>
 
 /********************************************************************************
  *	Name:	   	IVP_Polygon    	
@@ -24,7 +23,8 @@
  *			entirely covered by surfaces).
  *	Note:		To create a polygon, see IVP_Environment::create_polygon(...)
  ********************************************************************************/
-class IVP_Polygon: public IVP_Real_Object
+
+class IVP_Polygon: public hk_Entity
 {
 protected:
     friend class IVP_Environment;

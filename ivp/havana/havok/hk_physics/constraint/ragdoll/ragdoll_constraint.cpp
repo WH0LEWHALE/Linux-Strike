@@ -32,7 +32,7 @@ class hk_Ragdoll_Constraint_Work
 			return addr;
 		}
 #else
-		static inline void *operator new (unsigned long int size, void *addr){
+		static inline void *operator new (size_t size, void *addr){
 			return addr;
 		}
 
@@ -55,7 +55,7 @@ class hk_Ragdoll_Constraint_Work
 
 		inline hk_real get_twist_axis_length(){
 			return twist_axis_ws.w;
-		}	
+		}
 };
 
 
@@ -78,6 +78,10 @@ void hk_Ragdoll_Constraint::init_ragdoll_constraint(const hk_Ragdoll_Constraint_
 	m_strength				= bp->m_strength;
 	m_constrainTranslation  = bp->m_constrainTranslation;
 
+	m_axisMap[0] = bp->m_axisMap[0];
+	m_axisMap[1] = bp->m_axisMap[1];
+	m_axisMap[2] = bp->m_axisMap[2];
+
 	const hk_real factor = (sys) ? sys->get_epsilon() : 1.0f;
 	for(int i=0; i<3; i++)
 	{
@@ -88,15 +92,15 @@ void hk_Ragdoll_Constraint::init_ragdoll_constraint(const hk_Ragdoll_Constraint_
 	hk_real center_cone = (bp->m_limits[HK_LIMIT_CONE].m_limit_max  + bp->m_limits[HK_LIMIT_CONE].m_limit_min) * 0.5f;
 	hk_real diff_cone   =  bp->m_limits[HK_LIMIT_CONE].m_limit_max  - bp->m_limits[HK_LIMIT_CONE].m_limit_min;
 
-	if ( hk_Math::fabs( center_cone ) > 0.001f ){
+	if ( fabs( center_cone ) > 0.001f ){
 		m_transform_os_ks[0].rotate( 2, center_cone);
 	}
-	m_limits[HK_LIMIT_CONE].m_limit_min = hk_Math::cos(0.5f * diff_cone);
+	m_limits[HK_LIMIT_CONE].m_limit_min = cos(0.5f * diff_cone);
 	m_limits[HK_LIMIT_CONE].m_limit_max = 100.0f;
 
 
-	m_limits[HK_LIMIT_PLANES].m_limit_min = -hk_Math::sin( bp->m_limits[HK_LIMIT_PLANES].m_limit_max );
-	m_limits[HK_LIMIT_PLANES].m_limit_max = -hk_Math::sin( bp->m_limits[HK_LIMIT_PLANES].m_limit_min );
+	m_limits[HK_LIMIT_PLANES].m_limit_min = -sin( bp->m_limits[HK_LIMIT_PLANES].m_limit_max );
+	m_limits[HK_LIMIT_PLANES].m_limit_max = -sin( bp->m_limits[HK_LIMIT_PLANES].m_limit_min );
 	// note: the max min and directions are reversed !!!!!!!!!
 	m_inputLimits[0] = bp->m_limits[0];
 	m_inputLimits[1] = bp->m_limits[1];
@@ -112,6 +116,11 @@ void hk_Ragdoll_Constraint::write_to_blueprint( hk_Ragdoll_Constraint_BP *bp )
 	bp->m_limits[2] = m_inputLimits[2];
 	bp->m_strength = m_strength;
 	bp->m_tau = m_tau;
+	bp->m_constrainTranslation = m_constrainTranslation;
+	bp->m_axisMap[0] = m_axisMap[0];
+	bp->m_axisMap[1] = m_axisMap[1];
+	bp->m_axisMap[2] = m_axisMap[2];
+
 }
 
 
@@ -155,8 +164,9 @@ void hk_Ragdoll_Constraint::apply_angular_part( hk_PSI_Info &pi, hk_Ragdoll_Cons
 	hk_Rigid_Body* b1 = get_rigid_body(1);
 	// twist first
 	hk_real twist_factor = work.get_twist_axis_length();
-	hk_Constraint_Limit_Util::do_angular_limit( pi, b0, work.twist_axis_ws, work.joint_angles( HK_LIMIT_TWIST ), b1,
-		m_limits[ HK_LIMIT_TWIST], tau_factor * twist_factor, strength_factor * twist_factor );
+	// TODO: this is why ragdolls are flinging and spasming
+	// We need to comment some lines till we fix the RigidBody or the problem which causes this.
+	// 	hk_Constraint_Limit_Util::do_angular_limit( pi, b0, work.twist_axis_ws, work.joint_angles( HK_LIMIT_TWIST ), b1, m_limits[HK_LIMIT_TWIST], tau_factor * twist_factor, strength_factor * twist_factor );
 
 	// planar parts
 	int i = 2; do {
@@ -215,13 +225,13 @@ int	hk_Ragdoll_Constraint::setup_and_step_constraint(
 
 			hk_Vector3 a_us; a_us.set_rotated_inv_dir ( m_ws_us, perp_axes_Att_ws );
 
-			work.joint_angles( HK_LIMIT_TWIST ) = -hk_Math::atan2( a_us.y, a_us.z);
+			work.joint_angles( HK_LIMIT_TWIST ) = -atan2( a_us.y, a_us.z);
 		}
 		// planes setup
 		work.joint_angles( HK_LIMIT_CONE )   = work.twist_axis_Ref_ws.dot( work.twist_axis_Att_ws );
 		work.joint_angles( HK_LIMIT_PLANES ) = work.plane_Axis_Ref_ws.dot( work.twist_axis_Att_ws );
-
-		this->apply_angular_part(pi, work, tau_factor, strength_factor );
+        // Commented out till Rigidbody or the problem which causes this gets fixed. 
+		// this->apply_angular_part(pi, work, tau_factor, strength_factor );
 	}
 
 	if ( m_constrainTranslation )
@@ -234,23 +244,11 @@ int	hk_Ragdoll_Constraint::setup_and_step_constraint(
 
 		hk_Vector3 &dir = work.dir;
 		dir.set_sub( position_ws[1], position_ws[0] );
-#if 0
 
-		// UNDONE: store per joint rescue teleport distance squared?
-		// UNDONE: Then enable this to fix stretchy ragdolls?
-		if ( dir.length_squared() > 0.01 )
-		{
-			IVP_U_Quat rot;
-			IVP_U_Point position;
-			b0->get_quat_world_f_object_AT( &rot, &position );
-			position.k[0] = position_ws[1].x;
-			position.k[1] = position_ws[1].y;
-			position.k[2] = position_ws[1].z;
-			b0->beam_object_to_new_position( &rot, &position, IVP_FALSE );
-			position_ws[0] = position_ws[1];
-			dir.set_sub( position_ws[1], position_ws[0] );
-		}
-#endif
+		hk_Local_Constraint_System *lcs = get_constraint_system();
+
+		if( lcs )
+			lcs->report_square_error(dir.length_squared());
 
 		query_engine.begin(3);
 		{
@@ -277,7 +275,7 @@ int	hk_Ragdoll_Constraint::setup_and_step_constraint(
 
 		hk_Vector3 delta_dist_3;
 		delta_dist_3.set_mul( tau_factor * m_tau * pi.get_inv_delta_time(), dir );
-		delta_dist_3.add_mul( -1.0f * m_strength * strength_factor, *(const hk_Vector3 *)approaching_velocity );
+		delta_dist_3.add_mul( -0.0f * m_strength * strength_factor, *(const hk_Vector3 *)approaching_velocity );
 
 		hk_Fixed_Dense_Matrix<3>& mass_matrix = query_engine.get_vmq_storage().get_fixed_dense_matrix();
 
@@ -301,7 +299,8 @@ void hk_Ragdoll_Constraint::step_constraint( hk_PSI_Info& pi, void *mem, hk_real
 	hk_Rigid_Body *b1 = get_rigid_body(1);
 	hk_Ragdoll_Constraint_Work& work = *(hk_Ragdoll_Constraint_Work*)mem;
 
-	this->apply_angular_part(pi, work, tau_factor, strength_factor );
+	// Commented out till Rigidbody or the problem which causes this gets fixed. 
+	//this->apply_angular_part(pi, work, tau_factor, strength_factor );
 
 	if ( m_constrainTranslation )
 	{ /* step LINEAR */
@@ -342,3 +341,23 @@ void hk_Ragdoll_Constraint::apply_effector_PSI(
 
 // HAVOK DO NOT EDIT
 
+void hk_Ragdoll_Constraint::update_friction(hk_real max_angular_impulse)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		m_limits[i].set_friction(max_angular_impulse);
+		m_inputLimits[i].set_friction(max_angular_impulse);
+	}
+}
+
+void hk_Ragdoll_Constraint::update_transforms(const hk_Transform& os_ks_0, const hk_Transform& os_ks_1)
+{
+	m_transform_os_ks[0].get_column(0) = os_ks_0.get_column(m_axisMap[0]);
+	m_transform_os_ks[1].get_column(0) = os_ks_1.get_column(m_axisMap[0]);
+
+	m_transform_os_ks[0].get_column(1) = os_ks_0.get_column(m_axisMap[2]);
+	m_transform_os_ks[1].get_column(1) = os_ks_1.get_column(m_axisMap[2]);
+
+	m_transform_os_ks[0].get_column(2) = os_ks_0.get_column(m_axisMap[1]);
+	m_transform_os_ks[1].get_column(2) = os_ks_1.get_column(m_axisMap[1]);
+}

@@ -17,10 +17,7 @@ struct hkVector3ExpressionMinus;
 class hk_Vector3
 {
 	public:
-
-		HK_DECLARE_NONVIRTUAL_CLASS_ALLOCATOR(HK_MEMORY_CLASS_CONSTRAINT, hk_Vector3)
-
-		inline hk_Vector3();
+		inline hk_Vector3() = default;
 		inline hk_Vector3(hk_real a, hk_real b, hk_real c);
 		inline hk_Vector3(const double*);
 		inline hk_Vector3(const float*);

@@ -35,7 +35,7 @@
 // Include the event register/write/unregister macros compiled from the manifest file.
 // Note that this includes evntprov.h which requires a Vista+ Windows SDK
 // which we don't currently have, so evntprov.h is checked in.
-#include "ValveETWProviderEvents.h"
+//#include "ValveETWProviderEvents.h"
 
 // Typedefs for use with GetProcAddress
 typedef ULONG (__stdcall *tEventRegister)( LPCGUID ProviderId, PENABLECALLBACK EnableCallback, PVOID CallbackContext, PREGHANDLE RegHandle);

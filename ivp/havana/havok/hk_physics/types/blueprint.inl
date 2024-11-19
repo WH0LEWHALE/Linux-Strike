@@ -19,7 +19,7 @@ unsigned int hk_Blueprint::get_size() const
     return m_length;
 }
 
-hk_size_t hk_Blueprint::size_of() const  
+size_t hk_Blueprint::size_of() const
 {
     return m_length;
 }

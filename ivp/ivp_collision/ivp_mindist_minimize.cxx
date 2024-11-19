@@ -24,7 +24,6 @@
 #include <ivp_cache_object.hxx>
 #include <ivp_cache_ledge_point.hxx>
 #include <ivp_compact_ledge_solver.hxx>
-#include <tier0/dbg.h>
 
 
 // for english speakers:
@@ -93,19 +92,15 @@ IVP_BOOL IVP_Mindist_Minimize_Solver::check_loop_hash(IVP_SYNAPSE_POLYGON_STATUS
     IVP_ASSERT( i_s0 < 4);
     IVP_ASSERT( i_s1 < 4);
 
-    //lwss -x64 fixes
-    //int x0 = int(i_e0) | i_s0;
-    //int x1 = int(i_e1) | i_s1;
-    intptr_t x0 = intptr_t (i_e0) | i_s0;
-    intptr_t x1 = intptr_t (i_e1) | i_s1;
-    //lwss end
+    intp x0 = intp(i_e0) | i_s0;
+    intp x1 = intp(i_e1) | i_s1;
 
     if (x0 < x1) {
 	int h = x0; x0 = x1; x1 = h;
     }
 
-    IVP_MM_Loop_Hash_Struct *s = & loop_hash[loop_hash_size-1];
-    for(int i = loop_hash_size-1; i>=0; i--){
+    IVP_MM_Loop_Hash_Struct *s = & loop_hash[loop_hash_size];
+    for(int i = loop_hash_size; i>=0; i--){
 	if ( s->a == x0 && s->b == x1){
 	    return IVP_TRUE;
 	}
@@ -132,8 +127,8 @@ void IVP_Mindist::mindist_rescue_push(){
     
     IVP_Real_Object *obj0 = get_synapse(0)->get_object();
     IVP_Real_Object *obj1 = get_synapse(1)->get_object();
-
-    obj0->get_environment()->get_anomaly_manager()->inter_penetration( this, obj0, obj1 );
+	// todo(crack); should a delta speed be calculated here?
+    obj0->get_environment()->get_anomaly_manager()->inter_penetration( this, obj0, obj1 , 0);
 }
 
 
@@ -215,9 +210,6 @@ IVP_MRC_TYPE IVP_Mindist::recalc_invalid_mindist()
 	CORE;	
     }	// while
     CORE;
-
-    // will not be reached, set for compiler warning.
-    return IVP_MRC_ILLEGAL;
 }
 
 
@@ -287,14 +279,13 @@ IVP_MRC_TYPE IVP_Mindist::recalc_mindist()
 	    return res;
 	}
 	default:
-	    CORE;
+//	    CORE;
 	    break;
 	}
-	CORE;
+//	CORE;	
     }	// while
-    CORE;
-    // will not be reached, set for compiler warning.
-    return IVP_MRC_ILLEGAL;
+//    CORE;
+// TODO(nillerusr): add warnings here instead of using CORE;
 }
 
 IVP_MRC_TYPE IVP_Mindist_Minimize_Solver::p_minimize_FF( const IVP_Compact_Edge *A,const IVP_Compact_Edge *B, IVP_Cache_Ledge_Point *m_cache_A, IVP_Cache_Ledge_Point *m_cache_B)
@@ -303,9 +294,7 @@ IVP_MRC_TYPE IVP_Mindist_Minimize_Solver::p_minimize_FF( const IVP_Compact_Edge 
     // Case: Surface - Surface
     
     IVP_DOUBLE min_qdist = P_DOUBLE_MAX;
-    //lwss add - this variable is for the Error() string. From retail, the purpose seems to be to know which loop ran last.
-    int dist = -1;
-    //lwss end
+
     // check all 9 point point combinations first:
     {
 	const IVP_Compact_Edge *pA, *pB;
@@ -320,7 +309,6 @@ IVP_MRC_TYPE IVP_Mindist_Minimize_Solver::p_minimize_FF( const IVP_Compact_Edge 
 		    m_cache_A->tmp.synapse->update_synapse(pA, IVP_ST_POINT);
 		    m_cache_B->tmp.synapse->update_synapse(pB, IVP_ST_POINT);
 		    min_qdist = qdist;
-		    dist = 0; //lwss add
 		}
 	    }
 	}
@@ -350,7 +338,6 @@ IVP_MRC_TYPE IVP_Mindist_Minimize_Solver::p_minimize_FF( const IVP_Compact_Edge 
 		  cc_A[i]->tmp.synapse->update_synapse(pA, IVP_ST_POINT);
 		  cc_B[i]->tmp.synapse->update_synapse(pB, IVP_ST_TRIANGLE);
 		  min_qdist = qdist;
-          dist = 1; //lwss add
 		}
 	      }
 	    }
@@ -376,7 +363,6 @@ IVP_MRC_TYPE IVP_Mindist_Minimize_Solver::p_minimize_FF( const IVP_Compact_Edge 
 		  cc_A[i]->tmp.synapse->update_synapse(pA, IVP_ST_EDGE);
 		  cc_B[i]->tmp.synapse->update_synapse(pB, IVP_ST_POINT);
 		  min_qdist = qdist;
-          dist = 2; //lwss add
 		}
 	      }
 	    }
@@ -399,13 +385,12 @@ IVP_MRC_TYPE IVP_Mindist_Minimize_Solver::p_minimize_FF( const IVP_Compact_Edge 
 		    m_cache_A->tmp.synapse->update_synapse(pA, IVP_ST_EDGE);
 		    m_cache_B->tmp.synapse->update_synapse(pB, IVP_ST_EDGE);
 		    min_qdist = qdist;
-            dist = 3; //lwss add
 		}
 	    }
 	}
     }
 
-
+    
 
     IVP_Synapse_Real *syn0, *syn1, *syn_h;
     syn0 = m_cache_A->tmp.synapse;
@@ -450,30 +435,24 @@ IVP_MRC_TYPE IVP_Mindist_Minimize_Solver::p_minimize_FF( const IVP_Compact_Edge 
 	      break;
 	    }
 	    default:
-        //lwss change CORE->error statement in retail version. Seems Valve had trouble here as well at some point.
-        //CORE;
-        Error("%s in contact with %s, crash. dist = %d, minq = %1f\n", syn0->get_object()->get_name(), syn1->get_object()->get_name(), dist, min_qdist );
+                printf("IVP_Mindist_Minimize_Solver::p_minimize_FF failed(%s:%d)\n", __FILE__, __LINE__);
 	  }
 	  break;
       };
       case IVP_ST_EDGE:{
-	  switch(syn1->get_status()){  
+	  switch(syn1->get_status()){
 	    case IVP_ST_EDGE:{
 		ret_val = p_minimize_KK(e0, e1, m_cache_0, m_cache_1);
 		break;
 	    }
 	  default:
-	      //lwss change CORE->error statement in retail version. Seems Valve had trouble here as well at some point.
-	      //CORE;
-	      Error("%s in contact with %s, crash. dist = %d, minq = %1f\n", syn0->get_object()->get_name(), syn1->get_object()->get_name(), dist, min_qdist );
+              printf("IVP_Mindist_Minimize_Solver::p_minimize_FF failed(%s:%d)\n", __FILE__, __LINE__);
 	      break;
 	  }
 	  break;
       }
       default:
-    //lwss change CORE->error statement in retail version. Seems Valve had trouble here as well at some point.
-    //CORE;
-    Error("%s in contact with %s, crash. dist = %d, minq = %1f\n", syn0->get_object()->get_name(), syn1->get_object()->get_name(), dist, min_qdist );
+          printf("IVP_Mindist_Minimize_Solver::p_minimize_FF failed(%s:%d)\n", __FILE__, __LINE__);
     }
     
     return ret_val;
@@ -508,7 +487,7 @@ IVP_MRC_TYPE IVP_Mindist_Minimize_Solver::minimize_default_poly_poly(IVP_Mindist
 	printf("%32s statii: %i:%i \n","minimize_default_poly_poly", syn0->get_status(), syn1->get_status());
     }
 
-#define SYN_COMBINE(a,b) (a * IVP_ST_MAX_LEGAL + b)  //IVP_ST_MAX_LEGAL = 4
+#define SYN_COMBINE(a,b) (a * IVP_ST_MAX_LEGAL + b)
     switch( SYN_COMBINE(syn0->get_status(), syn1->get_status())){
       case SYN_COMBINE(IVP_ST_POINT,IVP_ST_POINT):{
 		ret_val = mms->p_minimize_PP(e0, e1, &m_cache_0, &m_cache_1);

@@ -803,7 +803,7 @@ void IdleState::OnUpdate( CCSBot *me )
 
 				// if we are escorting hostages and there are more hostages to rescue, 
 				// determine whether it's faster to rescue the ones we have, or go get the remaining ones
-				if ( zone && HOSTAGE_RULE_CAN_PICKUP ) // We can only carry one hostage at a time so go ahead and rescue the one we have
+				if ( zone && !mp_hostages_moveable.GetBool() ) // We can only carry one hostage at a time so go ahead and rescue the one we have
 				{
 					rescueHostages = true;
 				}

@@ -139,7 +139,7 @@ void CGameConsole::ActivateDelayed(float time)
 	m_pConsole->PostMessage(m_pConsole, new KeyValues("Activate"), time);
 }
 
-void CGameConsole::SetParent( int parent )
+void CGameConsole::SetParent( vgui::VPANEL parent )
 {	
 	if (!m_bInitialized)
 		return;

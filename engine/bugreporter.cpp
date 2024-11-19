@@ -75,7 +75,6 @@
 #include "icliententity.h"
 #include "tier0/platform.h"
 #include "net.h"
-#include "host_phonehome.h"
 #include "tier0/icommandline.h"
 #include "stdstring.h"
 #include "sv_main.h"

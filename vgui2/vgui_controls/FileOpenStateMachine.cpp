@@ -9,10 +9,8 @@
 #include "tier1/keyvalues.h"
 #include "vgui_controls/FileOpenDialog.h"
 #include "vgui_controls/MessageBox.h"
-#include "vgui_controls/perforcefilelistframe.h"
 #include "vgui_controls/savedocumentquery.h"
 #include "filesystem.h"
-#include "p4lib/ip4.h"
 #include "tier2/tier2.h"
 #include "tier0/icommandline.h"
 
@@ -197,12 +195,6 @@ void FileOpenStateMachine::WriteFile()
 	}
 
 	m_bWroteFile = true;
-	if ( m_bShowPerforceDialogs )
-	{
-		m_CurrentState = STATE_SHOWING_PERFORCE_ADD_DIALOG;
-		ShowPerforceQuery( GetParent(), m_FileName, this, NULL, PERFORCE_ACTION_FILE_ADD );
-		return;
-	}
 
 	if ( !m_bIsOpeningFile )
 	{
@@ -246,15 +238,6 @@ void FileOpenStateMachine::MakeFileWriteableDialog( )
 		return;
 	}
 
-	// If it's in perforce, and not checked out, then we must abort.
-	bool bIsInPerforce = p4->IsFileInPerforce( m_FileName );
-	bool bIsOpened = ( p4->GetFileState( m_FileName ) != P4FILE_UNOPENED );
-	if ( bIsInPerforce && !bIsOpened )
-	{
-		SetCompletionState( FILE_NOT_CHECKED_OUT );
-		return;
-	}
-
 	m_CurrentState = STATE_SHOWING_MAKE_FILE_WRITEABLE_DIALOG;
 
 	char pBuf[1024];
@@ -289,18 +272,6 @@ void FileOpenStateMachine::OnPerforceQueryCompleted( KeyValues *pKeyValues )
 		return;
 	}
 
-	if ( m_CurrentState == STATE_SHOWING_PERFORCE_ADD_DIALOG )
-	{
-		if ( !m_bIsOpeningFile )
-		{
-			SetCompletionState( SUCCESSFUL );
-			return;
-		}
-
-		OpenFileDialog();
-		return;
-	}
-
 	Assert(0);
 }
 
@@ -310,13 +281,6 @@ void FileOpenStateMachine::OnPerforceQueryCompleted( KeyValues *pKeyValues )
 //-----------------------------------------------------------------------------
 void FileOpenStateMachine::CheckOutDialog( )
 {
-	if ( m_bShowPerforceDialogs )
-	{
-		m_CurrentState = STATE_SHOWING_CHECK_OUT_DIALOG;
-		ShowPerforceQuery( GetParent(), m_FileName, this, NULL, PERFORCE_ACTION_FILE_EDIT );
-		return;
-	}
-
 	WriteFile();
 }
 
@@ -381,13 +345,6 @@ void FileOpenStateMachine::SaveFile( KeyValues *pContextKeyValues, const char *p
 	m_OpenFileType = NULL;
 	m_OpenFileName = NULL;
 
-	// Clear the P4 dialog flag for SDK users and licensees without Perforce
-	if ( g_pFullFileSystem->IsSteam() || CommandLine()->FindParm( "-nop4" ) )
-	{
-		nFlags &= ~FOSM_SHOW_PERFORCE_DIALOGS;
-	}
-
-	m_bShowPerforceDialogs = ( nFlags & FOSM_SHOW_PERFORCE_DIALOGS ) != 0;
 	m_bShowSaveQuery = ( nFlags & FOSM_SHOW_SAVE_QUERY ) != 0;
 	m_bIsOpeningFile = false;
 	m_bWroteFile = false;
@@ -452,7 +409,6 @@ void FileOpenStateMachine::OpenFile( const char *pOpenFileType, KeyValues *pCont
 	m_SaveFileType = pSaveFileType;
 	m_OpenFileType = pOpenFileType;
 	m_OpenFileName = NULL;
-	m_bShowPerforceDialogs = ( nFlags & FOSM_SHOW_PERFORCE_DIALOGS ) != 0;
 	m_bShowSaveQuery = ( nFlags & FOSM_SHOW_SAVE_QUERY ) != 0;
 	m_bIsOpeningFile = true;
 	m_bWroteFile = false;
@@ -478,7 +434,6 @@ void FileOpenStateMachine::OpenFile( const char *pOpenFileName, const char *pOpe
 	m_FileName = pSaveFileName;
 	m_SaveFileType = pSaveFileType;
 	m_OpenFileType = pOpenFileType;
-	m_bShowPerforceDialogs = ( nFlags & FOSM_SHOW_PERFORCE_DIALOGS ) != 0;
 	m_bShowSaveQuery = ( nFlags & FOSM_SHOW_SAVE_QUERY ) != 0;
 	m_bIsOpeningFile = true;
 	m_bWroteFile = false;

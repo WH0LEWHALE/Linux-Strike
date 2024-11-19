@@ -393,7 +393,7 @@ InitReturnVal_t CMatSystemSurface::Init( void )
 	InitReturnVal_t nRetVal = BaseClass::Init();
 	if ( nRetVal != INIT_OK )
 		return nRetVal;
-	MathLib_Init( 2.2f,  2.2f, 0.0f, 2.0f, true, true, true, true );
+	MathLib_Init( 2.2f,  2.2f, 0.0f, 2.0f, true, true, true );
 
 	g_pLocalize->SetTextQuery( this );
 

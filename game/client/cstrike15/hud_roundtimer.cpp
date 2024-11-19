@@ -7,7 +7,7 @@
 #include "cbase.h"
 #include "hudelement.h"
 #include <vgui_controls/Panel.h>
-#include <vgui/isurface.h>
+#include <vgui/ISurface.h>
 #include "clientmode_csnormal.h"
 #include "cs_gamerules.h"
 #include "hud_basetimer.h"
@@ -26,7 +26,7 @@ public:
 protected:	
 	virtual void Paint();
 	virtual void Think();
-	virtual bool ShouldDraw();
+    //virtual bool ShouldDraw();
 	virtual void ApplySchemeSettings(vgui::IScheme *pScheme);
 
 	void PaintTime(HFont font, int xpos, int ypos, int mins, int secs);
@@ -51,10 +51,11 @@ private:
 
 	float icon_tall;
 	float icon_wide;
+    Color ClockColor;
 };
 
 
-// DECLARE_HUDELEMENT( CHudRoundTimer );
+DECLARE_HUDELEMENT( CHudRoundTimer );
 
 
 CHudRoundTimer::CHudRoundTimer( const char *pName ) :
@@ -84,19 +85,21 @@ void CHudRoundTimer::ApplySchemeSettings(vgui::IScheme *pScheme)
 
 	BaseClass::ApplySchemeSettings( pScheme );
 }
-
+/*
 bool CHudRoundTimer::ShouldDraw()
 {
 	//necessary?
 	C_CSPlayer *pPlayer = C_CSPlayer::GetLocalCSPlayer();
 	if ( pPlayer )
 	{
-		return !pPlayer->IsObserver();
+		if(pPlayer->IsAlive() || pPlayer->GetObserverMode() == OBS_MODE_IN_EYE )
+			return true;
+		//return !pPlayer->IsObserver();
 	}
 
 	return false;
 }
-
+*/
 void CHudRoundTimer::Think()
 {
 	C_CSGameRules *pRules = CSGameRules();
@@ -104,13 +107,17 @@ void CHudRoundTimer::Think()
 		return;
 
 	int timer = (int)ceil( pRules->GetRoundRemainingTime() );
+	if ( pRules->IsWarmupPeriod() )
+	{
+	// in freeze period countdown to round start time
+	timer = (int)ceil(pRules->GetWarmupPeriodEndTime() - gpGlobals->curtime);
+	}
 
 	if ( pRules->IsFreezePeriod() )
 	{
 		// in freeze period countdown to round start time
 		timer = (int)ceil(pRules->GetRoundStartTime()-gpGlobals->curtime);
 	}
-
 	if(timer > 30)
 	{
 		SetFgColor(m_TextColor);
@@ -123,7 +130,6 @@ void CHudRoundTimer::Think()
 		SetFgColor(m_FlashColor);
 		return;
 	}
-
 	if(gpGlobals->curtime > m_flNextToggle)
 	{
 		if( timer <= 0)
@@ -197,12 +203,16 @@ void CHudRoundTimer::Paint()
 		return;
 
 	int timer = (int)ceil( pRules->GetRoundRemainingTime() );
-
+	ClockColor = pRules->IsWarmupPeriod() ? COLOR_GREEN : GetFgColor();
 	//If the bomb is planted and the timer is 0, don't draw
 	// EDIT: In CZ the timer is turned off as soon as the bomb is planted, so emulate that behavior here.
 	if( g_PlantedC4s.Count() > 0 )
 		return;
-
+	if ( pRules->IsWarmupPeriod() )
+	{
+		// in freeze period countdown to round start time
+		timer = (int)ceil(pRules->GetWarmupPeriodEndTime() - gpGlobals->curtime);
+	}
 	if ( pRules->IsFreezePeriod() )
 	{
 		// in freeze period countdown to round start time
@@ -218,7 +228,7 @@ void CHudRoundTimer::Paint()
 	//Draw Timer icon
 	if( m_pTimerIcon )
 	{
-		m_pTimerIcon->DrawSelf( icon_xpos, icon_ypos, icon_wide, icon_tall, GetFgColor() );
+		m_pTimerIcon->DrawSelf( icon_xpos, icon_ypos, icon_wide, icon_tall, ClockColor );
 	}
 
 	PaintTime( m_hNumberFont, digit_xpos, digit_ypos, minutes, seconds );
@@ -229,7 +239,7 @@ void CHudRoundTimer::PaintTime(HFont font, int xpos, int ypos, int mins, int sec
 	surface()->DrawSetTextFont(font);
 	wchar_t unicode[6];
 	V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d:%.2d", mins, secs);
-	
+
 	surface()->DrawSetTextPos(xpos, ypos);
 	surface()->DrawUnicodeString( unicode );
 }

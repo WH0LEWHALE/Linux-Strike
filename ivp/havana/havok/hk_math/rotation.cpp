@@ -1,7 +1,4 @@
 #include <hk_math/vecmath.h>
-#ifdef HK_PS2
-#	include <hk_math/rotationps2.cpp>
-#else
 
 void hk_Rotation::set(const hk_Quaternion& q)
 {
@@ -33,6 +30,4 @@ void hk_Rotation::set_axis_angle(const hk_Vector3& axis, hk_real angle)
 	q.set_axis_angle( axis, angle );
 	this->set(q);
 }
-
-#endif //HK_PS2
 

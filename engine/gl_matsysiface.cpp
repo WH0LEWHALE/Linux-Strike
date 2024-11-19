@@ -29,8 +29,6 @@
 #include "materialsystem/imaterial.h"
 #include "toolframework/itoolframework.h"
 #include "toolframework/itoolsystem.h"
-#include "tier2/p4helpers.h"
-#include "p4lib/ip4.h"
 #include "vgui/ISystem.h"
 #include <vgui_controls/Controls.h>
 #include "paint.h"

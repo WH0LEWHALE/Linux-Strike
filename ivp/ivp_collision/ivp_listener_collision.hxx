@@ -2,15 +2,10 @@
 
 //IVP_EXPORT_PUBLIC
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 #ifndef _IVP_CONTACT_SITUATION_INCLUDED
 #	include <ivp_contact_situation.hxx>
 #endif
 
-#include <ivp_friction.hxx>
 
 class IVP_Environment;
 
@@ -45,11 +40,8 @@ public:
      ********************************************************************************/
     static IVP_FLOAT get_vert_force(IVP_Contact_Point *friction_handle);
 
-    //lwss- add this missing func
-    static void get_surface_normal_ws(IVP_Contact_Point *friction_handle, IVP_U_Float_Point *normal )
-    {
-        return friction_handle->get_contact_normal( normal );
-    }
+	// IVP(mastercoms): add interface
+	static void get_surface_normal_ws(IVP_Contact_Point* friction_handle, IVP_U_Float_Point* normal);
 };
 
 

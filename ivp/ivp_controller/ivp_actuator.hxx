@@ -2,10 +2,6 @@
 
 //IVP_EXPORT_PUBLIC
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 #if !defined(IVP_ACTUATOR_INCLUDED)
 #	define IVP_ACTUATOR_INCLUDED
 
@@ -225,7 +221,7 @@ public:
     IVP_U_Float_Point core_pos;		// core position of anchor
     class IVP_Actuator *l_actuator;
 public:
-    IVP_Anchor(){;};
+    IVP_Anchor() = default;
     void object_is_going_to_be_deleted_event(IVP_Real_Object *obj);
     
     void init_anchor(IVP_Actuator *, IVP_Template_Anchor *);	// constructor, called by IVP_Real_Object::create_anchor
@@ -352,6 +348,7 @@ protected:
     // To create a new force actuator, use the method IVP_Environment->create_force
     IVP_Actuator_Force(IVP_Environment *env, IVP_Template_Force *templ);
 public:
+    IVP_DOUBLE get_force() const { return force; }
     void set_force(IVP_DOUBLE new_force);
     virtual ~IVP_Actuator_Force();
 

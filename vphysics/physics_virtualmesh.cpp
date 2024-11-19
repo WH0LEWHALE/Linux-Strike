@@ -187,8 +187,7 @@ void CMeshInstance::Init( const virtualmeshlist_t &list )
 	}
 }
 
-// UNDONE: Tune / expose this constant 512K budget for terrain collision
-const int g_MeshSize = (2048 * 1024);
+const int g_MeshSize = (2048 * 2048); // 4 MiB
 static CDataManager<CMeshInstance, virtualmeshlist_t, CMeshInstance *, CThreadFastMutex> g_MeshManager( g_MeshSize );
 static int numIndices = 0, numTriangles = 0, numBaseTriangles = 0, numSplits = 0;
 //-----------------------------------------------------------------------------
@@ -451,6 +450,9 @@ CMeshInstance *CPhysCollideVirtualMesh::BuildLedges()
 		m_hMemory = g_MeshManager.CreateResource( list );
 		m_ledgeCount = list.triangleCount;
 		CMeshInstance *pMesh = g_MeshManager.LockResource( m_hMemory );
+
+		Assert(g_MeshManager.AvailableSize() != 0);
+
 		return pMesh;
 	}
 	return NULL;

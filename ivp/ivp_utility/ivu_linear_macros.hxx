@@ -5,25 +5,16 @@
 #ifndef _IVP_U_LINEAR_MACROS_INCLUDED
 #define _IVP_U_LINEAR_MACROS_INCLUDED
 
-
-#ifndef WIN32
-#	pragma interface
-#endif
-
-#if defined(IVP_USE_PS2_VU0)
-#   include "ivu_linear_ps2.hxx"
-#elif defined(IVP_PIII)
+#if defined(IVP_PIII)
 #   include "ivu_linear_PIII.hxx"
 #else
 #   include "ivu_linear_software.hxx"
 #endif
 
-#if !defined(IVP_NO_DOUBLE)
-#   if defined(IVP_WILLAMETTE)
-#      include "ivu_linear_willamette.hxx"
-#   else
-#      include "ivu_linear_double.hxx"
-#   endif
+#if defined(IVP_WILLAMETTE)
+#   include "ivu_linear_willamette.hxx"
+#else
+#   include "ivu_linear_double.hxx"
 #endif
 
 
@@ -38,13 +29,11 @@ inline void IVP_U_Float_Point3::set(const IVP_FLOAT p[3]){
     k[2]= p[2];
 }
 
-#if !defined(IVP_NO_DOUBLE)
 inline void IVP_U_Float_Point3::set(const IVP_DOUBLE p[3]){
     k[0]= p[0];
     k[1]= p[1];
     k[2]= p[2];
 }
-#endif
 
 inline void IVP_U_Float_Point::set(const IVP_FLOAT p[3]){
     k[0]= p[0];
@@ -76,22 +65,6 @@ inline void IVP_U_Float_Point::set_multiple(const IVP_U_Quat *q_source, IVP_DOUB
 inline IVP_FLOAT IVP_Inline_Math::save_acosf(IVP_FLOAT angle) {
     //on windows compiler we ge not a number when angle >= 1.0
     return angle >= 1.0f ? 0.0f : IVP_Inline_Math::acosd(angle);
-}
-
-
-inline int IVP_Inline_Math::int_div_2(int a) {
-#ifdef PSXII
-    //workaround for compiler bug in CodeWarrior1.6
-    if(a<0) {
-	int h=-a;
-	h=h>>1;
-	return -h;
-    } else {
-	return a>>1;
-    }
-#else
-    return a/2;
-#endif
 }
 
 // an acos approximation whose absolute value is always less than abs(asin(angle))

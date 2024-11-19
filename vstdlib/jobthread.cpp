@@ -1097,7 +1097,10 @@ bool CThreadPool::Start( const ThreadPoolStartParams_t &startParams, const char 
 		ThreadSetPriority( (ThreadHandle_t)m_Threads[iThread]->GetThreadHandle(), priority );
 	}
 
+	// Threadpool affinity is no more in newer csgo
+#if defined( _X360 ) || defined( _PS3 )
 	Distribute( bDistribute, startParams.bUseAffinityTable ? (int *)startParams.iAffinityTable : NULL );
+#endif
 
 	return true;
 }
@@ -1106,6 +1109,8 @@ bool CThreadPool::Start( const ThreadPoolStartParams_t &startParams, const char 
 
 void CThreadPool::Distribute( bool bDistribute, int *pAffinityTable )
 {
+// Threadpool affinity is no more in newer csgo
+#if defined( _X360 ) || defined( _PS3 )
 	if ( bDistribute )
 	{
 		const CPUInformation &ci = GetCPUInformation();
@@ -1183,6 +1188,7 @@ void CThreadPool::Distribute( bool bDistribute, int *pAffinityTable )
 		}
 #endif
 	}
+#endif // _X360 || _PS3
 }
 
 //---------------------------------------------------------

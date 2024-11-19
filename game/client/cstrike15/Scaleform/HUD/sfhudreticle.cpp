@@ -61,6 +61,7 @@ extern ConVar cl_crosshairstyle;
 extern ConVar spec_show_xray;
 extern ConVar cl_draw_only_deathnotices;
 extern ConVar mp_hostages_takedamage;
+extern ConVar mp_hostages_moveable;
 static ConVar cl_teamid_overhead_name_alpha( "cl_teamid_overhead_name_alpha", "100", FCVAR_ARCHIVE  | FCVAR_SS, "The max alpha the overhead ID names will draw as." );
 static ConVar cl_teamid_overhead_name_fadetime( "cl_teamid_overhead_name_fadetime", "1.0", FCVAR_ARCHIVE  | FCVAR_SS, "How long it takes for the overhad name to fade out once your crosshair has left the target." );
 static ConVar mc_use_recoil_on_cursor( "mc_use_recoil_on_cursor", "0", 0 );
@@ -492,7 +493,7 @@ void SFHudReticle::ProcessInput( void )
 							// if we're outside use range, we're a terrorist or the hostage has a leader and it's not the player...
 							if ( !bValidHostageRule || !cfgUseHostageRule.UseByPlayerNow( pLocalPlayer, cfgUseHostageRule.k_EPlayerUseType_Start ) ||
 								pLocalPlayer->GetTeamNumber() == TEAM_TERRORIST || (pHostage->GetLeader() && pHostage->GetLeader() != pLocalPlayer) ||
-								(HOSTAGE_RULE_CAN_PICKUP && pLocalPlayer->m_hCarriedHostage != NULL) )
+								(!mp_hostages_moveable.GetBool() && pLocalPlayer->m_hCarriedHostage != NULL) )
 							{
 								if ( pHostage->GetLeader() && pHostage->GetLeader() != pLocalPlayer)
 								{

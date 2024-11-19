@@ -141,8 +141,6 @@
 #include "dota/dota_bot_commander.h"
 #endif
 
-#include "dedicated_server_ugc_manager.h"
-
 #ifdef _WIN32
 #include "IGameUIFuncs.h"
 #endif
@@ -1611,12 +1609,6 @@ void CServerGameDLL::Think( bool finalTick )
 		m_fAutoSaveDangerousTime = 0.0f;
 		m_fAutoSaveDangerousMinHealthToCommit = 0.0f;
 	}
-
-	// TODO: would have liked this to be totally event driven... currently needs a tick.
-	if ( engine->IsDedicatedServer() && steamgameserverapicontext->SteamHTTP() )
-	{
-		DedicatedServerWorkshop().Update();	
-	}
 }
 
 void CServerGameDLL::OnQueryCvarValueFinished( QueryCvarCookie_t iCookie, edict_t *pPlayerEntity, EQueryCvarValueStatus eStatus, const char *pCvarName, const char *pCvarValue )
@@ -2317,23 +2309,22 @@ CEG_NOINLINE void CServerGameDLL::LoadMessageOfTheDay()
 
 PublishedFileId_t CServerGameDLL::GetUGCMapFileID( const char* szMapPath )
 {
-	return DedicatedServerWorkshop().GetUGCMapPublishedFileID( szMapPath );
+	return 0;
 }
 
 bool CServerGameDLL::GetNewestSubscribedFiles( void )
 {
-	DedicatedServerWorkshop().GetNewestSubscribedFiles();
 	return true;
 }
 
 void CServerGameDLL::UpdateUGCMap( PublishedFileId_t id )
 {
-	DedicatedServerWorkshop().CheckForNewVersion( id );
+
 }
 
 bool CServerGameDLL::HasPendingMapDownloads( void ) const
 {
-	return DedicatedServerWorkshop().HasPendingMapDownloads();
+	return false;
 }
 
 // keeps track of which chapters the user has unlocked

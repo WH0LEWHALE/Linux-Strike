@@ -97,7 +97,6 @@ void IVP_U_Quat::set_matrix(IVP_DOUBLE m[4][4]) const {
 }
 
 void IVP_U_Quat::set_matrix(IVP_U_Matrix3 *mat)const  {
-#if !defined(IVP_USE_PS2_VU0_)
   const IVP_U_Quat *quat=this;
   IVP_DOUBLE wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
 
@@ -117,45 +116,6 @@ void IVP_U_Quat::set_matrix(IVP_U_Matrix3 *mat)const  {
   mat->set_elem(2,0, xz - wy);
   mat->set_elem(2,1, yz + wx);
   mat->set_elem(2,2, 1.0f - (xx + yy));
-#else
-   	asm __volatile__
-	("
-	    lqc2    vf4,0x0(%1)   #quat
-	    vadd.xyzw vf5, vf4, vf4	    # vf5 x2,y2,z2,w2
-	    vaddw.xyz vf10,vf0,vf0	    # vf10  1 1 1 2
-	    #nop
-	    #nop
-
-	    vmulw.xyzw vf9, vf4, vf5	    # vf9 wx,wy,wz,ww
-	    vmulx.xyzw vf6, vf4, vf5	    # vf6 xx,xy,xz,xw
-	    vmuly.xyzw vf7, vf4, vf5	    # vf7 yx,yy,yz,yw
-	    vmulz.xyzw vf8, vf4, vf5	    # vf8 zx,zy,zz,zw
-
-	    vsubz.y  vf12, vf6, vf9	    # xy - wz
-	    vaddz.x  vf13, vf7, vf9	    # xy + wz
-	    vsuby.x  vf14, vf8, vf9	    # xz - wy
-
-	    vsuby.x  vf12, vf10, vf7	    # 1.0 - yy
-	    vsubx.y  vf13, vf10, vf6	    # 1.0 - xx
-	    vsubx.z  vf14, vf10, vf6	    # 1.0 - xx
-
-	    vaddy.z  vf12, vf6, vf9	    # xz + wy
-	    vsubx.z  vf13, vf7, vf9	    # yz - wx
-	    vaddx.y  vf14, vf8, vf9	    # yz + wx
-
-	    vsubz.x  vf12, vf12, vf8	    # 1.0 - yy - zz
-	    vsubz.y  vf13, vf13, vf8	    # 1.0 - xx - zz
-	    vsuby.z  vf14, vf14, vf7	    # 1.0 - xx - yy	    
-
-		
-	    sqc2    vf12,0x0(%0)
-	    sqc2    vf13,0x10(%0)
-	    sqc2    vf14,0x20(%0)
-	"
-	: /*no output */
-	: "r" (mat) , "r" (this)
-	: "memory" );
-#endif
 }
 
 //  Comments: remember matrix (in OGL) is represented in COLUMN major form

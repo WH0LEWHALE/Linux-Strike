@@ -2,25 +2,7 @@
 #include <float.h>
 #endif
 
-#if defined(IVP_NO_DOUBLE) && !defined(SUN)
-#	include <math.h>
-
-#   if defined(WIN32) || defined(PSXII) || defined(LINUX)
-    union p_float_ieee {	    IVP_FLOAT val;
-	    struct {
-		    unsigned int valh:23;   unsigned int exp:8;   unsigned int signum:1;
-	    } ln;    };
-#else
-    union p_float_ieee {	    IVP_FLOAT val;
-	    struct {
-		    unsigned int signum:1; unsigned int exp:8;   ;unsigned int valh:23;   
-	    } ln;    };
-#endif
-    #define IVP_EXP_FOR_ONE 0x7f
-    inline int PFM_LD(float a){ return ((p_float_ieee *)&(a))->ln.exp - IVP_EXP_FOR_ONE; };
-#else
-#	if defined(LINUX) || defined(WIN32)
-
+#if defined(POSIX) || defined(WIN32)
 union p_double_ieee {
 	IVP_DOUBLE val;
 	struct {
@@ -56,48 +38,9 @@ union p_double_ieee {
 #	define P_EXP_FOR_ONE 0x3ff
 	inline int PFM_LD(double a){ return ((p_double_ieee *)&(a))->ln.exp - P_EXP_FOR_ONE; };
 #	endif
-#endif
-
 
 class IVP_Fast_Math {
 public:
-#if defined(PSXII)
-/// Calculates the dot product of the calling vector with v.
-/// \param v   
-inline    static IVP_DOUBLE isqrt(IVP_DOUBLE x, int /*resolution_steps*/)
-{
-	float u = 1.0f;
-	__asm__ __volatile__ ("
-	.set noreorder
-		rsqrt.s	%0, %1, %0
-	.set reorder
-	" : "+f" (x) : "f" (u));
-	return x;
-}
-
-
-/// Calculates the dot product of the calling vector with v.
-/// \param v   
-inline    static IVP_DOUBLE sqrt(IVP_DOUBLE x)
-{
-	__asm__ __volatile__ ("
-	.set noreorder
-		sqrt.s	%0, %0
-	.set reorder
-	" : "+f" (x) :);
-	return x;
-}
-
-#elif defined(IVP_NO_DOUBLE)
-  static IVP_DOUBLE isqrt(IVP_DOUBLE square, int /*resolution_steps*/){
-    return 1.0f/IVP_Inline_Math::ivp_sqrtf(square);
-  }
-
-  static IVP_DOUBLE sqrt(IVP_DOUBLE x){
-    return IVP_Inline_Math::ivp_sqrtf(x);
-  }
-
-#else
   // fast 1/sqrt(x),
   // resolution for resolution_steps
   // 0 -> 1e-3
@@ -124,5 +67,4 @@ inline    static IVP_DOUBLE sqrt(IVP_DOUBLE x)
     static IVP_DOUBLE sqrt(IVP_DOUBLE x) {
 	return ::sqrt(x);
     }
-#endif
 };

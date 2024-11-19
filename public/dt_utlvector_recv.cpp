@@ -11,7 +11,7 @@
 #include "tier0/memdbgon.h"
 
 
-extern char *s_ClientElementNames[MAX_ARRAY_ELEMENTS];
+extern char const *s_ClientElementNames[MAX_ARRAY_ELEMENTS];
 
 
 class CRecvPropExtra_UtlVector

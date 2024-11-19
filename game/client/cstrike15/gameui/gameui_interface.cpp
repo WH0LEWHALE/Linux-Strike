@@ -30,7 +30,6 @@
 																
 #include "filesystem.h"
 #include "gameui_interface.h"
-#include "sys_utils.h"
 #include "string.h"
 #include "tier0/icommandline.h"
 
@@ -288,9 +287,7 @@ void CGameUI::Initialize( CreateInterfaceFn factory )
 	vgui::VGui_InitMatSysInterfacesList( "GameUI", &factory, 1 );
 
 	// load localization file
-#if !defined( CSTRIKE15 )
 	g_pVGuiLocalize->AddFile( "resource/gameui_%language%.txt", "GAME", true );
-#endif
 
 	// load mod info
 	ModInfo().LoadCurrentGameInfo();
@@ -419,15 +416,6 @@ void CGameUI::Connect( CreateInterfaceFn gameFactory )
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: Callback function; sends platform Shutdown message to specified window
-//-----------------------------------------------------------------------------
-int __stdcall SendShutdownMsgFunc(WHANDLE hwnd, int lparam)
-{
-	Sys_PostMessage(hwnd, Sys_RegisterWindowMessage("ShutdownValvePlatform"), 0, 1);
-	return 1;
-}
-
-//-----------------------------------------------------------------------------
 // Purpose: Searches for GameStartup*.mp3 files in the sound/ui folder and plays one
 //-----------------------------------------------------------------------------
 void CGameUI::PlayGameStartupSound()
@@ -536,19 +524,6 @@ void CGameUI::Start()
 	// localization
 	g_pVGuiLocalize->AddFile( "resource/platform_%language%.txt");
 	g_pVGuiLocalize->AddFile( "resource/vgui_%language%.txt");
-
-	// dgoodenough - This should not be necessary.
-	// PS3_BUILDFIX
-	// FIXME - I have no idea why I need to remove this.  SYS_NO_ERROR is defined in sys_utils.h
-	// which is included at the top of this file.  It compiles fine, proving the definition is good.
-	// However it throws a link time error against SYS_NO_ERROR.  This is *declared* in sys_utils.cpp
-	// which is the same place that Sys_SetLastError(...) is declared.  Why then does one of these
-	// throw a link time error, when the other does not?  Probably a GCC quirk, since MSVC has no
-	// problem with it.  In any case, Sys_SetLastError(...) does nothing on PS3, so removing the
-	// call to it here is harmless.
-#if !defined( _PS3 )
-	Sys_SetLastError( SYS_NO_ERROR );
-#endif
 
 	// ********************************************************************
 	// The following is commented out to keep intro music from playing
@@ -787,7 +762,6 @@ void CGameUI::RunFrame()
 
 	if ( IsPC() && m_bTryingToLoadFriends && m_iFriendsLoadPauseFrames-- < 1  )
 	{
-		// we got the mutex, so load Friends/Serverbrowser
 		// clear the loading flag
 		m_bTryingToLoadFriends = false;
 		g_VModuleLoader.LoadPlatformModules(&m_GameFactory, 1, false);
@@ -933,7 +907,7 @@ void CGameUI::OnLevelLoadingFinished(bool bError, const char *failureReason, con
 {
 	StopProgressBar( bError, failureReason, extendedReason );
 
-#if defined( WIN32 ) 
+#if defined( WIN32 ) && defined(INCLUDE_SCALEFORM)
 	if ( g_pScaleformUI && !devCheatSkipInputLocking.GetBool() )
 	{
 		if( g_pInputSystem->GetCurrentInputDevice( ) == INPUT_DEVICE_NONE )

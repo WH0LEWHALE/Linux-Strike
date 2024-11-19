@@ -1,9 +1,6 @@
 #include "platform.h"
 #include "box_buoyancy.h"
 #include "mathlib/vector4d.h"
-#include "hardware_clock_fast.h"
-
-
 
 inline const Vector ToVector( const fltx4 & f4 )
 {
@@ -164,17 +161,15 @@ void BenchmarkBoxBuoyancy4x3( const fltx4& f4a, const fltx4& f4b, const fltx4&f4
 	int start, end;
 	const int nIterations = 1000000;
 
-	start = GetHardwareClockFast();
+	start = Plat_Rdtsc();
 	for ( int i = 0; i < nIterations; ++i )
 	{
 		result = result + GetBoxBuoyancy3x4( box );
 		box.x = AndSIMD( box.x, box.x );
 	}
-	end = GetHardwareClockFast();
+	end = Plat_Rdtsc();
 	Msg( "Box Buoyancy 4x3 Benchmark: %d ticks/box, volume %g \n", int32( ( end - start ) ) / nIterations, SubFloat( result, 3 ) / nIterations );
 }
-
-
 
 /*
 inline fltx4 operator - ( const fltx4 & a, const fltx4 & b )
@@ -915,14 +910,14 @@ void BenchmarkBoxBuoyancy( Vector a, const Vector& b, const Vector& c, const Vec
 	const int nIterations = 100000;
 	Vector4D result;
 
-	start = GetHardwareClockFast();
+	start = Plat_Rdtsc();
 	result.Init(0,0,0,0);
 	for ( int i = 0; i < nIterations; ++i )
 	{
 		result = result % (GetPyramidBuoyancy( pos, a, b, c ) % GetPyramidBuoyancy( pos, b, a, -c ) % GetPyramidBuoyancy( pos, c, a, b ) % GetPyramidBuoyancy( pos, a, c, -b ) % GetPyramidBuoyancy( pos, b, c, a ) % GetPyramidBuoyancy( pos, c, b, -a )) ;
 		a += Vector(1e-24f, 1e-25f, 1e-26f);
 	}
-	end = GetHardwareClockFast();
+	end = Plat_Rdtsc();
 	Msg( "Box Buoyancy Scalar Benchmark: %d ticks/box, volume %g \n", int32( ( end - start ) ) / nIterations, result.w / nIterations );
 }
 

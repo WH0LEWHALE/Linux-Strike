@@ -4,10 +4,6 @@
 #ifndef _IVP_CORE_INCLUDED
 #define _IVP_CORE_INCLUDED
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 /********************************************************************************
  *	Name:	       	ivp_core.hxx
  *	Description:	the real simulation core of an object
@@ -534,10 +530,7 @@ public:
     *                   Call at any time.
     ********************************************************************************/
     void values_changed_recalc_redundants();
-
-    //lwss added
     void apply_velocity_limit();
-    //lwss end
 };
 
 

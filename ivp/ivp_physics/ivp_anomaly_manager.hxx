@@ -5,10 +5,6 @@
 
 //IVP_EXPORT_PUBLIC
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 class IVP_Mindist;
 
 /********************************************************************************
@@ -23,7 +19,9 @@ public:
     IVP_FLOAT max_velocity;
     int       max_collisions_per_psi;
     IVP_FLOAT max_angular_velocity_per_psi;
-
+    int       max_collision_checks_per_psi;
+    IVP_FLOAT min_friction_mass;
+    IVP_FLOAT max_friction_mass;
     /********************************************************************************
      *	Name:	       	IVP_Anomaly_Manager
      *	Description:	used to identify and solve special situations occuring during
@@ -32,6 +30,7 @@ public:
     inline IVP_FLOAT get_max_velocity() const { return max_velocity; }; // [m/s]**2
     inline IVP_FLOAT get_max_angular_velocity_per_psi() const { return max_angular_velocity_per_psi; }; // [radians/psi]**2
     inline int get_max_collisions_per_psi(){ return max_collisions_per_psi; };  // per core
+    inline int get_max_collision_checks_per_psi() { return max_collision_checks_per_psi; };
 
     virtual void environment_will_be_deleted(IVP_Environment *);
 
@@ -55,7 +54,7 @@ public:
     
     virtual void max_velocity_exceeded(IVP_Anomaly_Limits *, IVP_Core *, IVP_U_Float_Point *velocity_in_out);
     virtual void max_angular_velocity_exceeded( IVP_Anomaly_Limits *, IVP_Core *, IVP_U_Float_Point *angular_velocity_in_out);
-    virtual void inter_penetration( IVP_Mindist *mindist,IVP_Real_Object *, IVP_Real_Object *);
+    virtual void inter_penetration( IVP_Mindist *mindist,IVP_Real_Object *, IVP_Real_Object *, IVP_DOUBLE);
     virtual IVP_BOOL max_collisions_exceeded_check_freezing(IVP_Anomaly_Limits *, IVP_Core *); // return true if object should be temp. freezed
 
     virtual void environment_will_be_deleted(IVP_Environment *);

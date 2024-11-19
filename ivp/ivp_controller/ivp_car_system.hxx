@@ -5,10 +5,6 @@
 #if !defined(IVP_CAR_SYSTEM_INCLUDED)
 #	define IVP_CAR_SYSTEM_INCLUDED
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 #ifndef IVP_LISTENER_PSI_INCLUDED
 #	include <ivp_listener_psi.hxx>
 #endif
@@ -133,6 +129,11 @@ struct IVP_CarSystemDebugData_t
 	// 4-wheel vehicle.
 	IVP_FLOAT	wheelRotationalTorque[4][3];
 	IVP_FLOAT	wheelTranslationTorque[4][3];
+
+    IVP_U_Float_Point backActuatorLeft;
+    IVP_U_Float_Point backActuatorRight;
+    IVP_U_Float_Point frontActuatorLeft;
+    IVP_U_Float_Point frontActuatorRight;
 };
 
 class IVP_Car_System {
@@ -169,24 +170,25 @@ public:
     virtual IVP_DOUBLE get_orig_front_wheel_distance()=0;
     virtual IVP_DOUBLE get_orig_axles_distance()=0;
 	virtual void get_skid_info( IVP_Wheel_Skid_Info *array_of_skid_info_out) = 0;
-
+    virtual void set_powerslide(IVP_FLOAT front_accel, IVP_FLOAT rear_accel) = 0;
     // Tools
     static IVP_FLOAT calc_ackerman_angle(IVP_FLOAT alpha, IVP_FLOAT dx, IVP_FLOAT dz); // alpha refers to innermost wheel
 
     
     /**** Methods: 2nd Level, based on primitives ****/
     /**** Methods: 2nd Level, based on primitives ****/
-    //lwss hack, this airboat crap is not defined for some reason
-    //virtual void do_steering(IVP_FLOAT steering_angle_in) = 0; // updates this->steering_angle
-    //lwss end
+    virtual void do_steering(IVP_FLOAT steering_angle_in, bool bAnalog = false) = 0; // updates this->steering_angle
     virtual void set_booster_acceleration(IVP_FLOAT acceleration) = 0;    // set an additional accerleration force
     virtual void activate_booster(IVP_FLOAT thrust, IVP_FLOAT duration, IVP_FLOAT recharge_time) =0; // set a temporary acceleration force as a factor of gravity
     virtual void update_booster(IVP_FLOAT delta_time)=0; // should be called every frame to allow the physics system to deactivate a booster
 	virtual IVP_FLOAT get_booster_delay() = 0;
-
+    virtual IVP_FLOAT get_booster_time_to_go() = 0;
 	// Debug (Getting debug data out to vphysics and the engine to be rendered!)
 	virtual void SetCarSystemDebugData( const IVP_CarSystemDebugData_t &carSystemDebugData ) = 0;
 	virtual void GetCarSystemDebugData( IVP_CarSystemDebugData_t &carSystemDebugData ) = 0;
+
+    // handle events
+    virtual void event_object_deleted(IVP_Event_Object* pEvent) { };
 };
 
 
@@ -209,6 +211,8 @@ protected:
 
     IVP_Actuator_Force  *car_act_down_force;
     IVP_Actuator_Force  *car_act_extra_gravity;
+    IVP_Actuator_Force  *car_act_powerslide_back;
+    IVP_Actuator_Force  *car_act_powerslide_front;
 
     IVP_Constraint *fix_wheel_constraint[IVP_CAR_SYSTEM_MAX_WHEELS];
 
@@ -268,16 +272,16 @@ public:
     IVP_DOUBLE get_orig_front_wheel_distance();
     IVP_DOUBLE get_orig_axles_distance();
 	void get_skid_info( IVP_Wheel_Skid_Info *array_of_skid_info_out);
-  
+    void set_powerslide(IVP_FLOAT front_accel, IVP_FLOAT rear_accel);
     /**** Methods: 2nd Level, based on primitives ****/
     /**** Methods: 2nd Level, based on primitives ****/
-    virtual void do_steering(IVP_FLOAT steering_angle_in); // updates this->steering_angle
-    
+    virtual void do_steering(IVP_FLOAT steering_angle_in, bool bAnalog = false); // updates this->steering_angle
+
     void set_booster_acceleration(IVP_FLOAT acceleration);
     void activate_booster(IVP_FLOAT thrust, IVP_FLOAT duration, IVP_FLOAT recharge_time);
     void update_booster(IVP_FLOAT delta_time);
 	virtual IVP_FLOAT get_booster_delay();
-
+    virtual IVP_FLOAT get_booster_time_to_go() { return booster_seconds_to_go; }
 	// Debug
 	void SetCarSystemDebugData( const IVP_CarSystemDebugData_t &carSystemDebugData );
 	void GetCarSystemDebugData( IVP_CarSystemDebugData_t &carSystemDebugData );

@@ -6,6 +6,7 @@ MacroRequired( SRCDIR )
 
 include_directories(${SRCDIR}/game/shared/econ)
 include_directories(${SRCDIR}/gcsdk/steamextra)
+include_directories(${SRCDIR}/gcsdk)
 
 
 #$Folder	"Economy"

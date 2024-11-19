@@ -335,7 +335,6 @@ private:
 	float			m_yFOV;
 
 	// timing
-	double		m_frameStartTime;
 	float		m_framerate;
 
 	float		m_zNear;
@@ -388,11 +387,6 @@ void CRender::FrameBegin( void )
 		{
 			R_AnimateLight ();
 			R_PushDlights();
-		}
-
-		if (!r_norefresh.GetInt())
-		{
-			m_frameStartTime = Sys_FloatTime ();
 		}
 
 		g_LightmapTransformList.RemoveAll();

@@ -35,6 +35,16 @@ class hk_Hinge_Constraint : public hk_Constraint
 		void set_motor( hk_real desired_vel, hk_real max_force );
 		void write_to_blueprint( hk_Hinge_BP * );
 
+		virtual const char* get_constraint_type()
+		{
+			return "hinge";
+		}
+
+		virtual int get_constraint_dof()
+		{
+			return 1;
+		}
+
 	protected:
 
 		void init_hinge_constraint(const hk_Hinge_BP*);

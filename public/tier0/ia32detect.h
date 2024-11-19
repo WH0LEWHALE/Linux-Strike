@@ -8,6 +8,10 @@
 #ifndef IA32DETECT_H
 #define IA32DETECT_H
 
+#ifdef PLATFORM_WINDOWS_PC
+#include <intrin.h>
+#endif
+
 #ifdef COMPILER_MSVC64
 extern "C" void __cpuid(int* CPUInfo, int InfoType);
 #pragma intrinsic (__cpuid)

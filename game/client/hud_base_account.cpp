@@ -6,7 +6,7 @@
 
 #include "cbase.h"
 #include <vgui_controls/Panel.h>
-#include <vgui/isurface.h>
+#include <vgui/ISurface.h>
 #include <vgui_controls/AnimationController.h>
 #include <vgui/ILocalize.h>
 #include "hud_base_account.h"
@@ -79,6 +79,7 @@ void CHudBaseAccount::Reset( void )
 
 void CHudBaseAccount::Paint()
 {
+	/*
 	if ( CSGameRules()->IsPlayingGunGameProgressive() || CSGameRules()->IsPlayingGunGameTRBomb() )
 	{
 		int weaponindex = GetPlayerGunGameWeapon();
@@ -112,7 +113,7 @@ void CHudBaseAccount::Paint()
 		vgui::surface()->DrawUnicodeString( unicode );
 	}
 	else
-	{
+	{*/
 		int account = GetPlayerAccount();
 
 		//don't show delta on initial money give
@@ -177,7 +178,7 @@ void CHudBaseAccount::Paint()
 		// draw delta
 		vgui::surface()->DrawSetTextColor(m_Ammo2Color);
 		PaintNumbers( m_hNumberFont, xpos, digit2_ypos, delta );
-	}
+	//}
 }
 
 int CHudBaseAccount::GetNumberWidth(HFont font, int number)

@@ -53,7 +53,7 @@ hk_result hk_Matrix3::invert(hk_real epsilon)
 
     hk_real D = get_column(0).dot(r0);	// main determinant
     
-    if( hk_Math::fabs(D)< epsilon ){
+    if( fabs(D) < epsilon ){
 		return HK_FAULT;  // cannot invert, may happen
     }
 
@@ -91,8 +91,8 @@ void hk_Matrix3::set_cross_skew( const hk_Vector3& r, const hk_Matrix3& R )
 
 void hk_Matrix3::set_mul3( const hk_Matrix3& Ma, const hk_Matrix3& Mb )
 {
-	HK_ASSERT(this!=&Ma);
-	HK_ASSERT(this!=&Mb);
+	IVP_ASSERT(this!=&Ma);
+	IVP_ASSERT(this!=&Mb);
 
 	for( int i = 0; i < 3; i++ )
 	{
@@ -156,8 +156,8 @@ void hk_Matrix3::rotate ( int axis, hk_real angle )
 	int z = y + 1;
 	if ( z == 3) z = 0;
 
-	hk_real cos_alpha = hk_Math::cos(angle);
-	hk_real sin_alpha = hk_Math::sin(angle);
+	hk_real cos_alpha = cos(angle);
+	hk_real sin_alpha = sin(angle);
 
 	rotation.get_column( y )( y ) = cos_alpha;
 	rotation.get_column( z )( z ) = cos_alpha;

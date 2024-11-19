@@ -21,8 +21,6 @@
 *			reference: the reference element
 ****************************************************************/
 
-#undef BASE //lwss- weird macro taking over here.
-
 template<class CMP,class FVECTOR,class BASE,class SEARCH>
 class IVP_Diff_Hash {
 public:

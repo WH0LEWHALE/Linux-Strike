@@ -4,10 +4,6 @@
 #//	Project Script
 #//-----------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.16)
-#dont build this on dedicated build
-if( DEDICATED )
-    return()
-endif()
 
 project(inputsystem_client)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
@@ -27,23 +23,28 @@ endif()
 target_sources(${OUTBINNAME} PRIVATE "inputstacksystem.cpp")
 target_sources(${OUTBINNAME} PRIVATE "inputsystem.cpp")
 target_sources(${OUTBINNAME} PRIVATE "inputsystem.h")
-if( NOT POSIX )
-    #$File	"joystick.cpp"			[!$POSIX]
-endif()
-if( OSXALL )
-    #$File	"joystick_osx.cpp"		[$OSXALL]
-endif()
-if( LINUXALL )
+if( WIN32 )
+    target_sources(${OUTBINNAME} PRIVATE "joystick.cpp")
+elseif( OSXALL )
+    target_sources(${OUTBINNAME} PRIVATE "joystick_osx.cpp")
+elseif( LINUXALL )
     target_sources(${OUTBINNAME} PRIVATE "joystick_linux.cpp")
 endif()
 target_sources(${OUTBINNAME} PRIVATE "steamcontroller.cpp")
 target_sources(${OUTBINNAME} PRIVATE "key_translation.cpp")
 target_sources(${OUTBINNAME} PRIVATE "key_translation.h")
-if( NOT POSIX )
+if( WIN32 )
+	target_sources(${OUTBINNAME} PRIVATE "xcontroller.cpp")
     #$File	"xcontroller.cpp"		[!$POSIX]
 endif()
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/common/platforminputdevice.cpp")
 
-target_link_libraries(${OUTBINNAME} tier2_client mathlib_client)
+target_link_libraries(${OUTBINNAME} tier2_client mathlib_client vstdlib_client)
 #Requires evil proprietary link to libsteam_api
-target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so)
+if( MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 4 )
+	target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steam_api.lib Winmm.lib)
+elseif( MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8 )
+	target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steam_api64.lib Winmm.lib)
+else()
+	target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so)
+endif()

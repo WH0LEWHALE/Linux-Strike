@@ -26,7 +26,7 @@ char *GetCommandLine();
 #include <dlfcn.h>
 #endif
 
-#if defined( LINUX ) || defined( USE_SDL )
+#if !defined( DEDICATED ) && defined( USE_SDL )
 // We lazily load the SDL shared object, and only reference functions if it's
 // available, so this can be included on the dedicated server too.
 #include "SDL.h"
@@ -384,7 +384,7 @@ PLATFORM_INTERFACE void SetAssertDialogDisabled( bool bAssertDialogDisabled )
 	g_bAssertDialogEnabled = !bAssertDialogDisabled;
 }
 
-#if defined( LINUX ) || ( defined( USE_SDL ) && defined( OSX ) )
+#if defined( USE_SDL ) || defined( OSX )
 SDL_Window *g_SDLWindow = NULL;
 
 PLATFORM_INTERFACE void SetAssertDialogParent( struct SDL_Window *window )
@@ -595,7 +595,7 @@ else
 	DialogBox( g_hTier0Instance, MAKEINTRESOURCE( IDD_ASSERT_DIALOG ), hParentWindow, AssertDialogProc );
 }
 
-#elif defined( LINUX ) || defined( USE_SDL )
+#elif defined( USE_SDL )
 
 	#define COLOR_YELLOW 	"\033[1;33m"
 	#define COLOR_GREEN 	"\033[1;32m"

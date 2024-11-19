@@ -24,11 +24,11 @@
 
 #include "tier0/platform.h"
 
-#ifdef	IS_WINDOWS_PC
+/*#ifdef	IS_WINDOWS_PC
 // ETW support should be compiled in for all Windows PC platforms. It isn't
 // supported on Windows XP but that is determined at run-time.
 #define	ETW_MARKS_ENABLED
-#endif
+#endif*/
 
 #ifdef	ETW_MARKS_ENABLED
 

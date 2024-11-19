@@ -15,8 +15,6 @@
 // For localization
 #include "tier3/tier3.h"
 #include "vgui/ILocalize.h"
-#include "tier2/p4helpers.h"
-#include "p4lib/ip4.h"
 
 #include "imageutils.h"
 
@@ -2635,47 +2633,6 @@ void BuildInventoryImagePath( char *pchOutfile, int nMaxPath, const char *pchDef
 	}
 }
 
-void SaveAndAddToP4( char *outfile, CUtlBuffer &outBuffer, bool bSkipAdd )
-{
-	bool bNewFile = false;
-
-	FileHandle_t hFileOut = g_pFullFileSystem->Open( outfile, "rb" );
-	if ( hFileOut != FILESYSTEM_INVALID_HANDLE )
-	{
-		g_pFullFileSystem->Close( hFileOut );
-	}
-	else
-	{
-		bNewFile = true;
-	}
-
-	hFileOut = g_pFullFileSystem->Open( outfile, "wb" );
-	if ( hFileOut != FILESYSTEM_INVALID_HANDLE )
-	{
-		g_pFullFileSystem->Write( outBuffer.Base(), outBuffer.TellPut(), hFileOut );
-		g_pFullFileSystem->Close( hFileOut );
-	}
-
-	if ( bNewFile && !bSkipAdd )
-	{
-		char szFullIconPath[ MAX_PATH ];
-		g_pFullFileSystem->RelativePathToFullPath( outfile, "MOD", szFullIconPath, sizeof( szFullIconPath ) );
-
-		if ( !p4->IsFileInPerforce( szFullIconPath ) )
-		{
-			DevMsg( "P4 Add: %s\n", outfile );
-
-			g_p4factory->SetDummyMode( p4 == NULL );
-			g_p4factory->SetOpenFileChangeList( "Item Icons Auto Checkout" );
-			CP4AutoAddFile autop4_add( szFullIconPath );
-		}
-		else
-		{
-			DevMsg( "File Already in P4: %s\n", szFullIconPath );
-		}
-	}
-}
-
 void InventoryImageReadyCallback( const CEconItemView *pItemView, CUtlBuffer &rawImageRgba, int nWidth, int nHeight, uint64 nItemID )
 {
 	const CEconItemDefinition *pItemDef = GetItemSchema()->GetItemDefinition( pItemView->GetStaticData()->GetDefinitionIndex() );
@@ -2709,8 +2666,6 @@ void InventoryImageReadyCallback( const CEconItemView *pItemView, CUtlBuffer &ra
 							 bHasWear, flWear,
 							 false );
 
-	SaveAndAddToP4( outfile, outBuffer, econ_inventory_image_pinboard.GetBool() );
-
 	if ( g_szGeneratingTradingIconPath[ 0 ] && !econ_inventory_image_pinboard.GetBool() )
 	{
 		BuildInventoryImagePath( outfile, sizeof( outfile ), 
@@ -2718,8 +2673,6 @@ void InventoryImageReadyCallback( const CEconItemView *pItemView, CUtlBuffer &ra
 			pItemView->GetCustomPaintKitIndex() == 0 ? NULL : pItemView->GetCustomPaintKit()->sName.String(),
 			bHasWear, flWear,
 			true );
-
-		SaveAndAddToP4( outfile, outBuffer, false );
 	}
 }
 

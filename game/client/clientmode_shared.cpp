@@ -773,6 +773,10 @@ void ClientModeShared::StartMessageMode( int iMessageModeType )
 	RkHudChat* pChat = GET_HUDELEMENT( RkHudChat );
 	if( pChat )
 	    pChat->StartMessageMode( iMessageModeType );
+#else
+	CBaseHudChat* pChat = ( CBaseHudChat* )GET_HUDELEMENT( CHudChat );
+	if( pChat )
+		pChat->StartMessageMode( iMessageModeType );
 #endif
 }
 

@@ -1324,7 +1324,7 @@ inline void CVertexBuilder::FastVertexSSE( const ModelVertexDX8_t &vertex )
 		movntps [edi + 16], xmm1
 		movntps [edi + 32], xmm2
 	}
-#elif defined(GNUC) && !defined(__e2k__)
+#elif defined(GNUC) && !defined(__e2k__) && !defined(PLATFORM_ARM)
 	const void *pRead = &vertex;
 	void *pCurrPos = m_pCurrPosition;
 	__asm__ __volatile__ (

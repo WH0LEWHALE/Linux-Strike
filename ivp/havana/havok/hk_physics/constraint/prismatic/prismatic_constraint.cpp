@@ -28,7 +28,7 @@ class hk_Prismatic_Work
 			return addr;
 		}
 #else
-		static inline void *operator new (unsigned long int size, void *addr){
+		static inline void *operator new (size_t size, void *addr){
 			return addr;
 		}
 
@@ -234,7 +234,7 @@ int	hk_Prismatic_Constraint::setup_and_step_constraint(
 	hk_Fixed_Dense_Matrix<5>& mass_matrix = query_engine.get_vmq_storage().get_fixed_dense_matrix();
 	hk_result invert_ok = hk_Dense_Matrix_Util::invert_5x5( mass_matrix, 0.0f);
 
-	HK_ASSERT(invert_ok == HK_OK);
+	IVP_ASSERT(invert_ok == HK_OK);
 
 	hk_Fixed_Dense_Vector<5> impulses;
 	hk_Dense_Matrix_Util::mult( mass_matrix, delta, impulses);

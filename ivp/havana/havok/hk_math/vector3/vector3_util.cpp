@@ -15,7 +15,7 @@ hk_Vector3 hk_Vector3_Util::perp_vec( const hk_Vector3 &dir )
 {
 	hk_Vector3 res;
 
-	if ( hk_Math::fabs(dir.x) < 0.57f )
+	if ( fabs(dir.x) < 0.57f )
 	{
 		res.set_cross( hk_Vector3(1,0,0), dir );
 	}

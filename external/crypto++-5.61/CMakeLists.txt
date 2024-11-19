@@ -19,11 +19,19 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND
 	set(CMAKE_BUILD_TYPE RelWithDebInfo)
 endif()
 
+# @ssrobins at gitlab.kitware.com
+if( MSVC )
+add_compile_options(
+    $<$<CONFIG:>:/MT> #---------|
+    $<$<CONFIG:Debug>:/MTd> #---|-- Statically link the runtime libraries
+    $<$<CONFIG:Release>:/MT>) #--|
+endif()
+
 #Kisak-strike specific options
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT WIN32)
 	#Downgrade ABI for kisakstrike
 	message(STATUS "Downgrading CXX11 ABI for kisakstrike!")
-	if(CMAKE_SYSTEM_PROCESSOR STREQUAL "e2k")
+	if(CMAKE_SYSTEM_PROCESSOR STREQUAL "e2k" OR CMAKE_SYSTEM_PROCESSOR MATCHES "arm" OR CMAKE_SYSTEM_PROCESSOR MATCHES "aarch" )
 		# O3 on mcst-lcc approximately equal to O2 at gcc X86/ARM
 		add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -O3 -march=native -fpermissive -fpic -Wno-narrowing)
 		# -mstackrealign option is X86 specific and not supported by mcst-lcc
@@ -32,7 +40,7 @@ if(UNIX AND NOT APPLE)
 		add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -O2 -march=native -fpermissive -fpic -Wno-narrowing)
 		# VALVE: when steamclient.so is launched from Python the stack is not 16-byte aligned and gcc assumes
 		# that it will be, causing crashes when writing to SSE local variables.
-		add_definitions( -mstackrealign)
+		add_definitions(-mstackrealign)
 	endif()
 endif()
 
@@ -59,7 +67,13 @@ if(CMAKE_VERSION VERSION_LESS 2.8.8 AND USE_INTERMEDIATE_OBJECTS_TARGET)
   set(USE_INTERMEDIATE_OBJECTS_TARGET OFF CACHE BOOL "Use a common intermediate objects target for the static and shared library targets" FORCE)
 endif()
 
-option(DISABLE_ASM "Disable ASM" OFF)
+# rdrand.asm is missing
+if(WIN32)
+	option(DISABLE_ASM "Disable ASM" ON)
+else()
+	option(DISABLE_ASM "Disable ASM" OFF)
+endif()
+
 option(DISABLE_SSSE3 "Disable SSSE3" OFF)
 option(DISABLE_SSSE4 "Disable SSSE4" OFF)
 option(DISABLE_AESNI "Disable AES-NI" OFF)
@@ -98,9 +112,9 @@ if(IS_BIG_ENDIAN)
 	add_definitions(-DIS_BIG_ENDIAN)
 endif()
 
-if(DISABLE_ASM)
+#if(DISABLE_ASM)
 	add_definitions(-DCRYPTOPP_DISABLE_ASM)
-endif()
+#endif()
 if(DISABLE_SSSE3)
 	add_definitions(-DCRYPTOPP_DISABLE_SSSE3)
 endif()
@@ -230,25 +244,25 @@ set(cryptopp_SOURCES
 		${cryptopp_SOURCES}
 		)
 
-if(MSVC AND NOT DISABLE_ASM)
-	if(${CMAKE_GENERATOR} MATCHES ".*ARM")
-		message(STATUS "Disabling ASM because ARM is specified as target platform.")
-	else()
-		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-			list(APPEND cryptopp_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/x64dll.asm)
-			list(APPEND cryptopp_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/x64masm.asm)
-			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/x64dll.asm PROPERTIES COMPILE_FLAGS "/D_M_X64")
-			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/x64masm.asm PROPERTIES COMPILE_FLAGS "/D_M_X64")
-			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/rdrand.asm PROPERTIES COMPILE_FLAGS "/D_M_X64")
-		else()
-			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/x64dll.asm PROPERTIES COMPILE_FLAGS "/D_M_X86 /safeseh")
-			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/x64masm.asm PROPERTIES COMPILE_FLAGS "/D_M_X86 /safeseh")
-			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/rdrand.asm PROPERTIES COMPILE_FLAGS "/D_M_X86 /safeseh")
-		endif()
-		list(APPEND cryptopp_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/rdrand.asm)
-		enable_language(ASM_MASM)
-	endif()
-endif()
+#if(MSVC AND NOT DISABLE_ASM)
+#	if(${CMAKE_GENERATOR} MATCHES ".*ARM")
+#		message(STATUS "Disabling ASM because ARM is specified as target platform.")
+#	else()
+#		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+#			list(APPEND cryptopp_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/x64dll.asm)
+#			list(APPEND cryptopp_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/x64masm.asm)
+#			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/x64dll.asm PROPERTIES COMPILE_FLAGS "/D_M_X64")
+#			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/x64masm.asm PROPERTIES COMPILE_FLAGS "/D_M_X64")
+#			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/rdrand.asm PROPERTIES COMPILE_FLAGS "/D_M_X64")
+#		else()
+#			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/x64dll.asm PROPERTIES COMPILE_FLAGS "/D_M_X86 /safeseh")
+#			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/x64masm.asm PROPERTIES COMPILE_FLAGS "/D_M_X86 /safeseh")
+#			set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/rdrand.asm PROPERTIES COMPILE_FLAGS "/D_M_X86 /safeseh")
+#		endif()
+#		list(APPEND cryptopp_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/rdrand.asm)
+#		enable_language(ASM_MASM)
+#	endif()
+#endif()
 
 #============================================================================
 # Compile targets

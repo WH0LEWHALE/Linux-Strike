@@ -2735,7 +2735,7 @@ CMouthInfo *C_BaseAnimating::GetMouth( void )
 ConVar cl_warn_thread_contested_bone_setup("cl_warn_thread_contested_bone_setup", "0" );
 #endif
 // 7LS - turning off threaded bones on X360 until we find out why there is a perf hit, even though we are running the bonesetups in parallel!
-ConVar cl_threaded_bone_setup( "cl_threaded_bone_setup", IsX360() ? "1" : (IsPS3() ? "2" : "0"), FCVAR_RELEASE, "Enable parallel processing of bones" );
+ConVar cl_threaded_bone_setup( "cl_threaded_bone_setup", "1", FCVAR_RELEASE, "Enable parallel processing of bones" );
 
 //-----------------------------------------------------------------------------
 // Purpose: Do the default sequence blending rules as done in HL1

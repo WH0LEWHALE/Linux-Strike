@@ -18,6 +18,7 @@
 
 #include <ivp_template_constraint.hxx>
 #include <ivp_constraint_car.hxx>
+#include <ivp_sim_unit.hxx>
 #include <ivp_car_system.hxx>
 
 
@@ -160,7 +161,7 @@ void IVP_Car_System_Real_Wheels::do_steering_wheel(IVP_POS_WHEEL wheel_pos, IVP_
     target_mat->vv.set(&old_translation);
 }
 
-void IVP_Car_System_Real_Wheels::do_steering(IVP_FLOAT s_angle)
+void IVP_Car_System_Real_Wheels::do_steering(IVP_FLOAT s_angle, bool bAnalog)
 {
     // tell constraint system new steering positions of wheels
     if (  steering_angle == s_angle) return;
@@ -451,6 +452,31 @@ IVP_Car_System_Real_Wheels::IVP_Car_System_Real_Wheels( IVP_Environment *env, IV
 	
 	this->car_act_down_force = environment->create_force( &force_template );	
 
+	// mmz: TODO fix this ---V
+	hp.set_to_zero();
+	hp.k[cs_car->x_idx] = -1.0f;
+	hp.k[cs_car->z_idx] = 2.0f;
+	anchor_center_template.set_anchor_position_cs(car_body, &hp);
+	hp.set_to_zero();
+	hp.k[cs_car->x_idx] = 1.0f;
+	hp.k[cs_car->z_idx] = 2.0f;
+	anchor_down_template.set_anchor_position_os(car_body, &hp);
+	force_template.anchors[0] = &anchor_center_template;
+	force_template.anchors[1] = &anchor_down_template;
+	this->car_act_powerslide_front = environment->create_force(&force_template);
+	hp.set_to_zero();
+	hp.k[cs_car->x_idx] = -1.0f;
+	hp.k[cs_car->z_idx] = -2.0f;
+	anchor_center_template.set_anchor_position_cs(car_body, &hp);
+	hp.set_to_zero();
+	hp.k[cs_car->x_idx] = 1.0f;
+	hp.k[cs_car->z_idx] = -2.0f;
+	anchor_down_template.set_anchor_position_os(car_body, &hp);
+	force_template.anchors[0] = &anchor_center_template;
+	force_template.anchors[1] = &anchor_down_template;
+	this->car_act_powerslide_back = environment->create_force(&force_template);
+	// mmz: TODO fix this ---^
+
 	///////////////////////////////////////////////////////////////////
 	////////             EXTRA GRAVITY               //////////////////
 	///////////////////////////////////////////////////////////////////
@@ -510,6 +536,34 @@ void IVP_Car_System_Real_Wheels::get_skid_info( IVP_Wheel_Skid_Info *array_of_sk
 		info.last_contact_position_ws = wheel->last_contact_position_ws;
 		info.last_skid_value = wheel->last_skid_value;
 		info.last_skid_time = wheel->last_skid_time;
+	}
+}
+
+void IVP_Car_System_Real_Wheels::set_powerslide(IVP_FLOAT front_accel, IVP_FLOAT rear_accel)
+{
+	IVP_FLOAT front_force = car_body->physical_core->get_mass() * front_accel;
+	if (front_force != car_act_powerslide_back->get_force())
+	{
+	car_act_powerslide_back->set_force(front_force);
+		IVP_U_Vector<IVP_Core> *cores = car_act_powerslide_back->get_associated_controlled_cores();
+		if (cores->n_elems)
+		{
+			IVP_Simulation_Unit* sim = cores->element_at(0)->sim_unit_of_core;
+			//IVP_Simulation_Unit* sim = *(IVP_Simulation_Unit**)(**(unsigned int**)(cores->elems) + 332);
+			sim->sim_unit_ensure_in_simulation();
+		}
+	}
+	IVP_FLOAT rear_force = car_body->physical_core->get_mass() * rear_accel;
+	if (rear_force != car_act_powerslide_front->get_force())
+	{
+		car_act_powerslide_front->set_force(rear_force);
+		IVP_U_Vector<IVP_Core> *cores = car_act_powerslide_front->get_associated_controlled_cores();
+		if (cores->n_elems)
+		{
+			IVP_Simulation_Unit* sim = cores->element_at(0)->sim_unit_of_core;
+			//IVP_Simulation_Unit* sim = *(IVP_Simulation_Unit**)(**(unsigned int**)(cores->elems) + 332);
+			sim->sim_unit_ensure_in_simulation();
+		}
 	}
 }
 

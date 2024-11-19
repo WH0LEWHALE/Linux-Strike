@@ -30,6 +30,15 @@ class hk_Limited_Ball_Socket_Constraint : public hk_Constraint
 
 		void init_constraint( const void* bp );
 
+		virtual const char* get_constraint_type()
+		{
+			return "limited_ball_socket";
+		}
+
+		virtual int get_constraint_dof()
+		{
+			return 3;
+		}
 	protected:
 
 		void init_ball_socket_constraint( const hk_Limited_Ball_Socket_BP *bp );

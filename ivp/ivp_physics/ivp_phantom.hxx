@@ -5,10 +5,6 @@
 #ifndef _IVP_PHANTOM_INCLUDED
 #define _IVP_PHANTOM_INCLUDED
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 #ifndef IVP_SET_INCLUDED
 #	include <ivu_set.hxx>
 #endif
@@ -40,10 +36,6 @@ public:
    *                    see IVP_Controller_Phantom::get_intruding_cores()
    *********************************************************************/
   IVP_BOOL manage_intruding_cores;         // default IVP_FALSE, if set to IVP_TRUE, phantom manages a set of intruding objects
-
-  //lwss add
-  IVP_BOOL manage_sleeping_cores;
-  //lwss end
     
   /*********************************************************************
    *	Name:	    	dont_check_for_unmoveables  	
@@ -72,6 +64,8 @@ public:
    *********************************************************************/
   IVP_FLOAT exit_policy_extra_time;   // def 0.5f[s]
   
+  IVP_BOOL manage_sleeping_cores;
+
   IVP_Template_Phantom();
 };
 
@@ -122,15 +116,19 @@ public:
   IVP_U_Set_Active<IVP_Core> *get_intruding_cores() const { return set_of_cores ; };  // returns NULL if manage_set was IVP_FALSE 
   IVP_U_Set_Active<IVP_Mindist_Base> *get_intruding_mindists(){ return &set_of_mindists ; };             // returns mindist
   IVP_Real_Object *get_object() const { return object; };
+  void wake_all_sleeping_objects()
+  {
+      if (object)
+      {
+          object->ensure_in_simulation();
+      }
+      // TODO(mastercoms): what is all?
+  }
   
   void add_listener_phantom( IVP_Listener_Phantom *listener);
   void remove_listener_phantom( IVP_Listener_Phantom *listener);
   
   ~IVP_Controller_Phantom();   // Note: Has side effect, switches phantom object to real object
-
-  //lwss add
-  void wake_all_sleeping_objects();
-  //lwss end
 
   void *client_data; // for use by game code
 };

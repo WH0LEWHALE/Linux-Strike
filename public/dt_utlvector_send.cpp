@@ -11,7 +11,7 @@
 #include "tier0/memdbgon.h"
 
 
-extern char *s_ElementNames[MAX_ARRAY_ELEMENTS];
+extern char const *s_ElementNames[MAX_ARRAY_ELEMENTS];
 
 // This gets associated with SendProps inside a utlvector and stores extra data needed to make it work.
 class CSendPropExtra_UtlVector

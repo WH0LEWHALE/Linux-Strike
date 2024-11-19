@@ -2,10 +2,6 @@
 
 #ifndef IVP_U_MINLIST_INCLUDED
 #define IVP_U_MINLIST_INCLUDED
-
-#ifndef WIN32
-#	pragma interface
-#endif
 // IVP_EXPORT_PUBLIC
 
 typedef float IVP_U_MINLIST_FIXED_POINT;
@@ -51,18 +47,6 @@ public:
     
     void *find_min_elem(){
 		IVP_ASSERT( first_element != IVP_U_MINLIST_UNUSED);
-		//lwss hack - this happens when spawning on overpass
-		if( first_element == IVP_U_MINLIST_UNUSED )
-        {
-		    // first_element is fk'd up. Go ahead and return the first element since there is only 1
-		    if( counter == 1 )
-            {
-		        return elems[0].element;
-            }
-		    fprintf(stderr, "ivu_min_list - first_element was unused!!\n");
-            return NULL;
-        }
-		//lwss end
 		return elems[first_element].element;
 	};
 

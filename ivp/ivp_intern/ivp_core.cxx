@@ -285,47 +285,6 @@ void IVP_Core::values_changed_recalc_redundants() {
     //environment->sim_unit_mem->end_memory_transaction();    
 }
 
-//lwss add
-void IVP_Core::apply_velocity_limit()
-{
-    // this was a real PITA to reverse, but is correct! Someone give me a medal.
-    IVP_Anomaly_Limits *limits = this->environment->anomaly_limits;
-    if( limits->max_velocity > 0.0 )
-    {
-        float flSpeed = this->speed.real_length();
-        if( flSpeed > limits->max_velocity )
-        {
-            float scaleBack = limits->max_velocity / flSpeed;
-            this->speed.mult( scaleBack );
-        }
-
-        float flSpeedChange = this->speed_change.real_length();
-        if( flSpeedChange > limits->max_velocity )
-        {
-            float scaleBack = limits->max_velocity / flSpeedChange;
-            this->speed_change.mult( scaleBack );
-        }
-    }
-    if( limits->max_angular_velocity_per_psi > 0.0 )
-    {
-        float flRotSpeed = this->rot_speed.real_length();
-        float flMaxAngularVelocity = limits->max_angular_velocity_per_psi * this->environment->inv_delta_PSI_time; // unsure about inv_Delta_psi_time
-        if( flRotSpeed > flMaxAngularVelocity )
-        {
-            float scaleBack = flMaxAngularVelocity / flRotSpeed;
-            this->rot_speed.mult( scaleBack );
-        }
-
-        float flSpeedChange = this->speed_change.real_length();
-        if( flSpeedChange > flMaxAngularVelocity )
-        {
-            float scaleBack = flMaxAngularVelocity / flSpeedChange;
-            this->rot_speed_change.mult( scaleBack );
-        }
-    }
-}
-//lwss end
-
 IVP_DOUBLE IVP_Core::calc_correct_virt_mass(const IVP_U_Float_Point *core_point,const IVP_U_Float_Point *direction_core,const IVP_U_Float_Point *direction_world) const {
     if(!pinned) //@@CBPIN
     {
@@ -340,6 +299,47 @@ IVP_DOUBLE IVP_Core::calc_correct_virt_mass(const IVP_U_Float_Point *core_point,
     else
     {
 	return 1.0f;
+    }
+}
+
+void IVP_Core::apply_velocity_limit() {
+    float unk;
+
+    IVP_Anomaly_Limits* al = environment->get_anomaly_limits();
+    IVP_DOUBLE max_speed = al->get_max_velocity();
+    if (max_speed > 0.0)
+    {
+        IVP_DOUBLE trans_len = speed.real_length();
+        if (trans_len > max_speed)
+        {
+            unk = max_speed / trans_len;
+            speed.mult(unk);
+        }
+
+        IVP_DOUBLE rot_change_len = speed_change.real_length();
+        if (rot_change_len > max_speed)
+        {
+            unk = max_speed / rot_change_len;
+            speed_change.mult(unk);
+        }
+    }
+    IVP_FLOAT max_angular_velocity_per_psi = al->get_max_angular_velocity_per_psi();
+    if (max_angular_velocity_per_psi > 0.0)
+    {
+        IVP_DOUBLE max_rot_speed = environment->get_inv_delta_PSI_time() * max_angular_velocity_per_psi;
+        IVP_DOUBLE rot_len = rot_speed.real_length();
+        if (rot_len > max_rot_speed)
+        {
+            unk = max_rot_speed / rot_len;
+            rot_speed.mult(unk);
+        }
+
+        IVP_DOUBLE rot_change_len = speed_change.real_length();
+        if (rot_change_len > max_rot_speed)
+        {
+            unk = max_rot_speed / rot_change_len;
+            rot_speed_change.mult(unk);
+        }
     }
 }
 
@@ -490,8 +490,13 @@ void IVP_Core::damp_object(IVP_DOUBLE delta_time_, const IVP_U_Float_Point *rota
 }
 
 void IVP_Core::set_rotation_inertia( const IVP_U_Float_Point *r){
-    rot_inertia.set(r);
-    this->calc_calc();
+	rot_inertia.set(
+		r->k[0] > P_FLOAT_MAX ? P_FLOAT_MAX : r->k[0],
+		r->k[1] > P_FLOAT_MAX ? P_FLOAT_MAX : r->k[1],
+		r->k[2] > P_FLOAT_MAX ? P_FLOAT_MAX : r->k[2]
+	);
+
+	this->calc_calc();
 }
 
 
@@ -798,9 +803,7 @@ void IVP_Core::undo_synchronize_rot_z() {
     IVP_IF(1) {
         IVP_Debug_Manager *dm=environment->get_debug_manager();
 	if(dm->file_out_impacts) {
-	    //lwss - x64 fixes
-	    //fprintf(dm->out_deb_file,"undoing_synchro %x at %f\n",0x0000ffff&(IVP_INT32)this,environment->get_current_time().get_time());
-	    //lwss end
+	    fprintf(dm->out_deb_file,"undoing_synchro %x at %f\n",0x0000ffff&(IVP_INT32)(intp)this,environment->get_current_time().get_time());
 	}
     }
     rot_speed.      set(&tmp_null.old_sync_info->old_sync_rot_speed);

@@ -54,7 +54,6 @@ protected:
 
 private:
 	CCvarNegateCheckButton		*m_pReverseMouseCheckBox;
-	CCvarToggleCheckButton		*m_pMouseFilterCheckBox;
 	CCvarToggleCheckButton		*m_pMouseRawCheckBox;
 	vgui::CheckButton			*m_pMouseAccelerationCheckBox;
 

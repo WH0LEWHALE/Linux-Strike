@@ -9,12 +9,12 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 
  <h1 align="center"> Fixed Bugs & Additions </h1>
 
- - Now when you control the bots, guns will not get lost.
- - Bots will now aim more accurately.
- - Fixed Molotov issue. <br>
- - Cant Create Mixer issues fixed, now game can find sounds.
- - Fixed some breakable constrains fly away.
- - New Open Source VPhysics 
+ - Now when you control the bots, guns will not get lost
+ - Bots will now aim more accurately
+ - Fixed Molotov flame issue
+ - Cant Create Mixer issues fixed, now game can find sounds
+ - Fixed some breakable constrains fly away
+ - A lot of changes made into the ivp and vphysics.
 
 <h1 align="center"> TO-DO </h1>
 

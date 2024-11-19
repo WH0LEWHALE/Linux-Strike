@@ -28,7 +28,6 @@ TargetBuildAndAddProto( ${OUTBINNAME} ${SRCDIR}/game/shared/base_gcmessages.prot
 
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/achievement_saverestore.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/achievementmgr.cpp")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/achievements_hlx.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/activitylist.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/ai_activity.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/ai_agent.cpp")
@@ -376,9 +375,6 @@ target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/timedeventmgr.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/trains.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/triggers.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/usercmd.cpp")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/ugc_file_info_manager.cpp")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/ugc_request_manager.cpp")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/ugc_utils.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/util.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/util_shared.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/variant_t.cpp")
@@ -512,9 +508,22 @@ target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/common/CegClientWrapper.cpp")
 #}
 
 
-target_link_libraries(${OUTBINNAME} bonesetup_client choreoobjects_client mathlib_client mathlib_extended_client libtier0_client libvstdlib_client interfaces_client)
-target_link_libraries(${OUTBINNAME} particles_client tier3_client vgui_controls_client responserules_runtime_client )
-target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # Link to proprietary steamapi
-target_link_libraries(${OUTBINNAME} kisak_gcsdk_client)
+target_link_libraries(${OUTBINNAME} bonesetup_client choreoobjects_client mathlib_client mathlib_extended_client libtier0_client vstdlib_client interfaces_client particles_client)
+
+# we must link in the right order
+if( DEDICATED )
+	target_link_libraries(${OUTBINNAME} bitmap_client dmxloader_client tier1_client tier2_client tier3_client responserules_runtime_client kisak_gcsdk_client)
+else()
+	target_link_libraries(${OUTBINNAME} bitmap_client dmxloader_client tier1_client tier2_client tier3_client vgui_controls_client responserules_runtime_client kisak_gcsdk_client)
+endif()
+
+#Requires evil proprietary link to libsteam_api
+if( MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 4 )
+	target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steam_api.lib Winmm.lib)
+elseif( MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8 )
+	target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steam_api64.lib Winmm.lib)
+else()
+	target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so)
+endif()
+
 target_link_libraries(${OUTBINNAME} libprotobuf) #from /thirdparty
-target_link_libraries(${OUTBINNAME} bitmap_client dmxloader_client tier2_client)

@@ -491,9 +491,9 @@ void IVP_OV_Tree_Manager::expand_tree(const IVP_OV_Node *new_node)
 	printf("Reste: %d %d %d\n", rest_x, rest_y, rest_z);
     }
 #endif    
-    new_root->data.x           = IVP_Inline_Math::int_div_2(old_root->data.x);
-    new_root->data.y           = IVP_Inline_Math::int_div_2(old_root->data.y);
-    new_root->data.z           = IVP_Inline_Math::int_div_2(old_root->data.z);
+    new_root->data.x           = old_root->data.x/2;
+    new_root->data.y           = old_root->data.y/2;
+    new_root->data.z           = old_root->data.z/2;
     new_root->data.rasterlevel = old_root->data.rasterlevel+1;
     new_root->data.sizelevel   = old_root->data.sizelevel+1;
 

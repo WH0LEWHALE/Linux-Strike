@@ -79,7 +79,6 @@ target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/teamplayroundbased_g
     target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/cstrike15/csgo_playeranimstate.cpp")
     target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/cstrike15/cs_playermove.cpp")
     target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/cstrike15/cs_pushentity.cpp")
-    target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/dedicated_server_ugc_manager.cpp")#[!$X360 && !$PS3])
     target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/cstrike15/cs_shareddefs.cpp")
     target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/cstrike15/cs_team.cpp")
     target_sources(${OUTBINNAME} PRIVATE "${SRVSRCDIR}/cstrike15/cs_vehicle_jeep.cpp")

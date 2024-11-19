@@ -17,7 +17,9 @@
 #if defined(LINUX)
 #include <unistd.h>
 #include <fcntl.h>
+#if !defined(DEDICATED)
 #include "SDL.h"
+#endif
 #endif
 
 #include "quakedef.h"

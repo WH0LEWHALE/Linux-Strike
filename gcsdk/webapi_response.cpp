@@ -259,7 +259,11 @@ bool Base64Decode( const char *pchData, uint32 cchDataMax, uint8 *pubDecodedData
 	
 	// valid base64 character range: '+' (0x2B) to 'z' (0x7A)
 	// table entries are 0-63, -1 for invalid entries, -2 for '='
+#ifdef PLATFORM_ARM
+	static const signed char rgchInvBase64[] = {
+#else
 	static const char rgchInvBase64[] = {
+#endif
 		62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,
 		-1, -1, -1, -2, -1, -1, -1,  0,  1,  2,  3,  4,  5,  6,  7,
 		 8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,

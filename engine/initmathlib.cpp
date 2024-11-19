@@ -15,9 +15,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-static bool s_bAllow3DNow = true;
 static bool s_bAllowSSE2 = true;
-
 
 static void OnEnableFastMathChanged( IConVar *var = NULL, const char *pOldValue = NULL, float flOldValue = 0.0f);
 
@@ -52,7 +50,7 @@ void InitMathlib( void )
 	MathLib_Init( 2.2f, // v_gamma.GetFloat()
 		2.2f, // v_texgamma.GetFloat()
 		0.0f /*v_brightness.GetFloat() */, 
-		2.0f /*mat_overbright.GetInt() */, s_bAllow3DNow, true, s_bAllowSSE2, true );
+		2.0f /*mat_overbright.GetInt() */, true, s_bAllowSSE2, true );
 	OnEnableFastMathChanged();
 }
 

@@ -7,17 +7,16 @@
 
 #include <ivp_physics.hxx>
 
-#if defined(WIN32) || defined(PSXII)
+#if defined(WIN32)
 //#	include <sys\types.h>
 //#	include <sys\stat.h>
 //#	include <windows.h>
 #	include <time.h>
 #endif
 
-#if defined(PSXII)
-#include <libcdvd.h>
-#define NULL 0
-#endif
+#include <ivp_mindist_intern.hxx>
+#include <ivp_mindist_minimize.hxx>
+#include <ivp_mindist_event.hxx>
 
 #include <ivp_debug.hxx>
 #include <ivp_debug_manager.hxx>
@@ -42,9 +41,6 @@
 #include <ivp_great_matrix.hxx>
 #include <ivp_constraint_local.hxx>
 
-#include <ivp_mindist_intern.hxx>
-#include <ivp_mindist_minimize.hxx>
-#include <ivp_mindist_event.hxx>
 #include <ivp_friction.hxx>
 
 #include <ivp_listener_collision.hxx>
@@ -59,14 +55,7 @@
 
 #include <ivp_betterstatisticsmanager.hxx>
 
-#include <ivp_authenticity.hxx>
-
-#ifndef _IVP_TIME_INCLUDED
-    #include <ivp_time.hxx>
-#endif
-#if !defined(IVP_VERSION_SDK) && !defined(IVP_VERSION_EVAL)
-#   pragma error("You have to define IVP_VERSION_SDK or IVP_VERSION_EVAL")
-#endif
+#include "ivp_polygon.hxx"
 
 IVP_Freeze_Manager::IVP_Freeze_Manager(){
     init_freeze_manager();
@@ -76,8 +65,7 @@ void IVP_Freeze_Manager::init_freeze_manager(){
     freeze_check_dtime = 0.3f;
 }
 
-IVP_Environment::IVP_Environment(IVP_Environment_Manager *manager,IVP_Application_Environment *appl_env,
-				 const char *company_name,unsigned int auth_code)
+IVP_Environment::IVP_Environment(IVP_Environment_Manager *manager,IVP_Application_Environment *appl_env)
 {
   IVP_ASSERT( sizeof(IVP_Compact_Edge) == 4);
   IVP_ASSERT( sizeof(IVP_Compact_Triangle) == 16);
@@ -179,10 +167,6 @@ IVP_Environment::IVP_Environment(IVP_Environment_Manager *manager,IVP_Applicatio
     IVP_Mindist_Minimize_Solver::init_mms_function_table();
     IVP_Mindist_Event_Solver::init_mim_function_table();
 
-    this->auth_costumer_name = p_strdup(company_name);
-    this->auth_costumer_code = auth_code;
-    this->pw_count = 10;
-   
     { // create a static ball
 	IVP_Template_Ball b;
 	b.radius = 1.0f;
@@ -263,41 +247,14 @@ IVP_Environment::~IVP_Environment(){
       cdr->environment_is_going_to_be_deleted_event(this);
     }
     collision_delegator_roots.clear();
-    
+
     P_DELETE(short_term_mem);
     P_DELETE(sim_unit_mem);
     P_DELETE(cache_object_manager);
-    P_DELETE(auth_costumer_name);
-    
+
     environment_manager->environments.remove(this);
     this->delete_draw_vector_debug();
 } 
-
-//IVP_BOOL IVP_Environment::must_perform_movement_check() {
-//    next_movement_check--;
-//    if(next_movement_check==0) {
-//#ifdef IVP_ENCRYPT_EXISTS
-//        pw_count--;
-//        if(pw_count==0) {
-//	    IVP_UINT32 crypt_val = IVP_Encrypt::encrypt_strings(auth_costumer_name,IVP_IPION_AUTH_CHECK);
-//	    if(auth_costumer_code != crypt_val) {
-//	        mindist_manager=NULL;
-//	    }
-//	    }
-//
-//	    time_t t, e;
-//		t = time(NULL);
-//		e = 3181552896; // october 26th 2000, on a Mac
-//		printf(" Now: %.1f   Target: %.1f\n\n", (float)t, (float)e);
-//		if (t > e)
-//	        mindist_manager=NULL;
-//#endif	
-//	next_movement_check=IVP_MOVEMENT_CHECK_COUNT*3/2 + (short)(ivp_rand()* (IVP_MOVEMENT_CHECK_COUNT/2));
-//	return IVP_TRUE;
-//    } else {
-//	return IVP_FALSE;
-//    }
-//}
 
 void IVP_Environment::fire_object_is_removed_from_collision_detection(IVP_Real_Object *obj){
     for (int k = collision_delegator_roots.len()-1;k>=0;k--){
@@ -397,15 +354,9 @@ IVP_Cluster *IVP_Environment::get_root_cluster()
 }
 
 
-IVP_Environment *IVP_Environment_Manager::create_environment(IVP_Application_Environment *appl_env,
-							     const char *costumer_name,unsigned int auth_code) {
-#ifdef IVP_ENCRYPT_EXISTS
-    IVP_UINT32 crypt_val = IVP_Encrypt::encrypt_strings(costumer_name,IVP_IPION_AUTH_CHECK);
-    if(auth_code != crypt_val) {
-	return NULL;
-    }
-#endif
-    IVP_Environment *new_en=new IVP_Environment(this,appl_env,costumer_name,auth_code);
+IVP_Environment *IVP_Environment_Manager::create_environment(IVP_Application_Environment *appl_env)
+{
+    IVP_Environment *new_en=new IVP_Environment(this,appl_env);
     return new_en;
 }
 
@@ -468,13 +419,11 @@ IVP_Draw_Vector_Debug::~IVP_Draw_Vector_Debug(){
 }
 
 void IVP_Debug_Manager::clear_debug_manager() {
-#if !defined(PSXII)
     if(out_deb_file) {
       if(out_deb_file!=stdout) {
 	fclose(out_deb_file);
       }
     }
-#endif
 }
 
 IVP_Debug_Manager::~IVP_Debug_Manager() {
@@ -509,6 +458,15 @@ void IVP_Environment::delete_draw_vector_debug(){
     }
     this->draw_vectors=NULL;
 
+}
+
+void IVP_Environment::force_psi_on_next_simulation()
+{
+    double now_seconds = current_time.get_seconds();
+    IVP_Time_Event_PSI *last_event = time_manager->psi_event;
+    double diff_seconds = now_seconds - time_manager->base_time.get_seconds();
+    time_manager->min_hash->remove_minlist_elem(last_event->index);
+    last_event->index = time_manager->min_hash->add(last_event, diff_seconds);
 }
 
 IVP_Polygon *IVP_Environment::create_polygon(IVP_SurfaceManager *vic, const IVP_Template_Real_Object *templ,
@@ -738,13 +696,6 @@ void IVP_Environment::remove_listener_constraint_global(IVP_Listener_Constraint 
 	constraint_listeners.remove(listener);
 }
 
-//lwss add
-void IVP_Environment::force_psi_on_next_simulation()
-{
-    // unsure if get_next_event() is correct.
-    this->time_manager->update_event( this->time_manager->get_next_event(), this->current_time );
-}
-//lwss end
 void IVP_Environment::merge_objects(IVP_U_Vector<IVP_Real_Object> *objs_to_merge) 
 {
 	IVP_Merge_Core merge_all_objs;
@@ -825,19 +776,11 @@ void IVP_Time_Event_N::simulate_time_event(IVP_Environment *env) {
 
 
 void IVP_Environment::do_d_events() {
-#ifdef PSXII
-    for(int i=0;i<20;i++) {
-	IVP_Time_Event_D *delay_event=new IVP_Time_Event_D(this->get_current_time());
-	delay_event->number_of_sons=7;
-	this->get_time_manager()->insert_event(delay_event,this->get_current_time());
-    }
-#else
     for(int i=0;i<5;i++) {
 	IVP_Time_Event_D *delay_event=new IVP_Time_Event_D(this->get_current_time());
 	delay_event->number_of_sons=8;
 	this->get_time_manager()->insert_event(delay_event,this->get_current_time());
     }
-#endif    
 }
 
 
@@ -863,44 +806,6 @@ void IVP_Environment::add_draw_vector(const IVP_U_Point *start_p, const IVP_U_Fl
     this->draw_vectors=draw_vector;
 	}
 }
-
-#ifdef PSXII
-	int ivp_bcd2dec(int bcd)
-	{
-		int dec = 0;
-		int sign = (bcd < 0 ? -1 : 1);
-		for (int order = 1; bcd; order*=10)
-		{
-			int i = bcd % 16;
-			IVP_ASSERT(i >= 0 && i <= 9);
-			bcd /= 16;
-			dec += order * i;
-		}
-		return dec*sign;
-	}
-
-	tm ivp_ps2_getTime()
-	{
-		sceCdCLOCK rtc;
-		int success = sceCdReadClock(&rtc);
-		IVP_ASSERT(success);
-		tm mytime;
-		mytime.tm_sec  = ivp_bcd2dec(rtc.second);
-		mytime.tm_min  = ivp_bcd2dec(rtc.minute);
-		mytime.tm_hour = ivp_bcd2dec(rtc.hour);
-		mytime.tm_mday = ivp_bcd2dec(rtc.day);
-		mytime.tm_mon  = ivp_bcd2dec(rtc.month)-1;
-		int year       = ivp_bcd2dec(rtc.year);
-		mytime.tm_year = (year < 70 ? year + 100 : year);
-		mytime.tm_isdst = -1;
-		return mytime;
-	}
-
-	int ivp_ps2_sec_since_1970() {
-		tm mytime = ivp_ps2_getTime();
-		return (int)mktime(&mytime);		
-	}
-#endif
 
 void IVP_Environment::simulate_psi(IVP_Time /*psi_time*/){
 
@@ -976,51 +881,17 @@ void IVP_Environment::simulate_psi(IVP_Time /*psi_time*/){
 	get_performancecounter()->pcount(IVP_PE_PSI_END);
 #endif
 
-
-#if (defined(WIN32) || defined(PSXII)) && defined(IVP_VERSION_EVAL)  /* blocking only if original ivp_authenticity.hxx is used */
-    {
-        // IVP_BLOCKING_EVERY_MIN    
-	time_since_last_blocking += get_delta_PSI_time();
-	//do some blocking from time to time
-	if( time_since_last_blocking>121.1f) {
-	    time_since_last_blocking=0.0f;
-
-		int t;
-
-#ifdef IVP_BLOCKING_ALWAYS
-	    this->do_d_events();
-#else
-
-#ifdef WIN32
-	    time_t tt = time(NULL);
-		t = (int)tt;
-#endif
-#ifdef PSXII
-		t = ivp_ps2_sec_since_1970();
-#endif
-
-	    if ( t > 983404800 // 1 Mar 01 @@CB
-		+ 60*60*24* (
-		31 + 30 + 31 ) ){ // expiration date 31 May 01 @@CB
-		this->do_d_events();
-	    }
-#endif
-	}
-    }
-#endif
-
-
     this->state = IVP_ES_AT;
     return;
 }
 
-//lwss add
-float IVP_Environment::get_global_collision_tolerance()
+void IVP_Environment::set_global_collision_tolerance( IVP_DOUBLE tolerance, IVP_DOUBLE gravity_length ){
+    ivp_mindist_settings.set_collision_tolerance( tolerance );
+    // CRACK - lol. according to both IDA and Ghidra, nothing is done with gravity_length
+}
+
+IVP_FLOAT IVP_Environment::get_global_collision_tolerance()
 {
+    //return ivp_mindist_settings.real_coll_dist;
     return ivp_mindist_settings.min_coll_dists;
 }
-void IVP_Environment::set_global_collision_tolerance( IVP_DOUBLE tolerance, IVP_DOUBLE gravLen ){
-    ivp_mindist_settings.set_collision_tolerance( tolerance, gravLen );
-}
-//lwss end
-

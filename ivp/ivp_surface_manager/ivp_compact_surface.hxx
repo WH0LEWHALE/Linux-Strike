@@ -13,8 +13,6 @@
 #ifndef _IVP_COMPACT_SURFACE_INCLUDED
 #define _IVP_COMPACT_SURFACE_INCLUDED
 
-#include <cstdint> // lwss - x64 fixes
-
 class IVP_Compact_Ledgetree_Node;
 
 
@@ -36,7 +34,7 @@ class IVP_Compact_Ledgetree_Node;
 
 
 class IVP_Compact_Surface {
-    IVP_Compact_Surface(){;};
+    IVP_Compact_Surface() = default;
 
 public:
     IVP_U_Float_Point3	mass_center;
@@ -54,10 +52,7 @@ public:
      *  Description:    INTERNAL METHOD
      *****************************************************************************/
     const IVP_Compact_Ledgetree_Node *get_compact_ledge_tree_root() const {
-    //lwss - x64 fixes
-	//char *base = (char *)(((int)this) + this->offset_ledgetree_root);
-	char *base = (char *)(((intptr_t)this) + this->offset_ledgetree_root);
-	//lwss end
+	char *base = (char *)(((intp)this) + this->offset_ledgetree_root);
 	return((const IVP_Compact_Ledgetree_Node *)base);
     }
 

@@ -14,7 +14,6 @@
 #ifndef _IVP_COMPACT_GRID_INCLUDED
 #define _IVP_COMPACT_GRID_INCLUDED
 
-#include <cstdint> //lwss - x64 fixes
 
 /********************************************************************************
  *  Class:	    IVP_Compact_Grid_Element
@@ -68,9 +67,7 @@ public:
      *  Description:    INTERNAL METHOD
      *****************************************************************************/
     const IVP_Compact_Grid_Element *get_grid_elements() {
-        //lwss - x64 fixes
-    	char *base = (char *)(((intptr_t)this) + this->offset_grid_elements);
-    	//lwss end
+    	char *base = (char *)(((intp)this) + this->offset_grid_elements);
 	return((const IVP_Compact_Grid_Element *)base);
     }
 
@@ -79,7 +76,7 @@ public:
      *  Description:    INTERNAL METHOD
      *****************************************************************************/
     const IVP_Compact_Ledge *get_compact_ledge_at(int i) {
-    	char *base = (char *)(((intptr_t)this) + this->offset_compact_ledge_array[i]);
+    	char *base = (char *)(((intp)this) + this->offset_compact_ledge_array[i]);
 	return((const IVP_Compact_Ledge *)base);
     }
 

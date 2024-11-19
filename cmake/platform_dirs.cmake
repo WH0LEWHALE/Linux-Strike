@@ -1,5 +1,5 @@
 if(WIN32)
-    set(PLATSUBDIR ".")
+    set(PLATSUBDIR "/.")
 endif()
 if(WIN64)
     set(PLATSUBDIR "/x64")

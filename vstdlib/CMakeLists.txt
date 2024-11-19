@@ -1,12 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
-project(libvstdlib_client)
+project(vstdlib_client)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH ${SRCDIR}/cmake)
-set(OUTBINNAME "libvstdlib_client")
+set(OUTBINNAME "vstdlib_client")
 set(OUTBINDIR ${SRCDIR}/../game/bin)
+set(NOSKELETONBASE "1")
 
 include(${CMAKE_MODULE_PATH}/detect_platform.cmake)
 include(${CMAKE_MODULE_PATH}/source_dll_base.cmake)
+
+if(MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8) 
+	ENABLE_LANGUAGE(ASM_MASM)
+endif()
 
 add_definitions(-DVSTDLIB_DLL_EXPORT)
 
@@ -21,15 +26,16 @@ endif()
 target_sources(${OUTBINNAME} PRIVATE "cvar.cpp")
 target_sources(${OUTBINNAME} PRIVATE "jobthread.cpp")
 target_sources(${OUTBINNAME} PRIVATE "keyvaluessystem.cpp")
-if( WINDOWS )
-    #$File	"processutils.cpp"			[$WINDOWS]
+if( WIN32 )
+	target_sources(${OUTBINNAME} PRIVATE "processutils.cpp")
+endif()
+if(MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_sources(${OUTBINNAME} PRIVATE "getstackptr64.asm")
+	set_source_files_properties("getstackptr64.asm" PROPERTIES COMPILE_FLAGS "/D_M_X64")
 endif()
 target_sources(${OUTBINNAME} PRIVATE "random.cpp")
 target_sources(${OUTBINNAME} PRIVATE "vcover.cpp")
 target_sources(${OUTBINNAME} PRIVATE "eventsystem.cpp")
-if( PS3 )
-    #$File	"prx.cpp"					[$PS3]
-    #$File	"prxexport.cpp"		[$PS3]
-endif()
 target_sources(${OUTBINNAME} PRIVATE "vstrtools.cpp")
 target_sources(${OUTBINNAME} PRIVATE "vstdlib_strtools.cpp")
+#target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/tier0/memoverride.cpp")

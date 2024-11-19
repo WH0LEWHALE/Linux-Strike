@@ -9,8 +9,12 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#if defined(__x86_64__) || defined(_WIN64) || defined(__e2k__)
+#if defined(__x86_64__) || defined(_WIN64) || defined(__e2k__) || defined(__aarch64__)
 #define PLATFORM_64BITS 1
+#endif
+
+#if defined(__arm__) || defined(__aarch64__)
+#define PLATFORM_ARM 1
 #endif
 
 #if defined(__e2k__)
@@ -147,6 +151,10 @@
 	#include <stdarg.h>
 #endif
 
+#endif
+
+#if defined( PLATFORM_ARM )
+#include <time.h>
 #endif
 
 // This macro 
@@ -1158,7 +1166,7 @@ typedef void * HINSTANCE;
 		#endif
 	#elif defined( OSX )
 		#define DebuggerBreak()  if ( Plat_IsInDebugSession() ) asm( "int3" ); else { raise(SIGTRAP); }
-	#elif ( defined( PLATFORM_CYGWIN ) || defined( PLATFORM_POSIX ) ) && !defined( __e2k__ )
+	#elif ( defined( PLATFORM_CYGWIN ) || defined( PLATFORM_POSIX ) ) && !defined( __e2k__ ) && !defined( PLATFORM_ARM )
 		#define DebuggerBreak()		__asm__( "int $0x3;")
 	#else
 		#define DebuggerBreak()	raise(SIGTRAP)
@@ -1390,7 +1398,7 @@ typedef int socklen_t;
 // Works for PS3 
 	inline void SetupFPUControlWord()
 	{
-#if defined ( _PS3 ) || defined ( __e2k__ )
+#if defined ( _PS3 ) || defined ( __e2k__ ) || defined(PLATFORM_ARM)
 // TODO: PS3 compiler spits out the following errors:
 // C:/tmp/ccIN0aaa.s: Assembler messages:
 // C:/tmp/ccIN0aaa.s(80): Error: Unrecognized opcode: `fnstcw'
@@ -1860,6 +1868,10 @@ inline uint64 Plat_Rdtsc()
 	return ( ( ( uint64 )hi ) << 32 ) | lo;
 #elif defined( __e2k__ )
 	return ( uint64 )__rdtsc();
+#elif defined( __arm__ ) || defined( __aarch64__ )
+	struct timespec t;
+	clock_gettime( CLOCK_REALTIME, &t);
+	return t.tv_sec * 1000000000ULL + t.tv_nsec;
 #else
 #error
 #endif
@@ -1897,7 +1909,6 @@ struct CPUInformation
 		 m_bFCMOV : 1,  // Is FCMOV supported?
 		 m_bSSE	  : 1,	// Is SSE supported?
 		 m_bSSE2  : 1,	// Is SSE2 Supported?
-		 m_b3DNow : 1,	// Is 3DNow! Supported?
 		 m_bMMX   : 1,	// Is MMX supported?
 		 m_bHT	  : 1;	// Is HyperThreading supported?
 
@@ -1937,28 +1948,6 @@ PLATFORM_INTERFACE void GetCurrentDayOfTheYear( int *pDay );  // 0 = Jan 1
 // ---------------------------------------------------------------------------------- //
 PLATFORM_INTERFACE void InitPME();
 PLATFORM_INTERFACE void ShutdownPME();
-
-
-//-----------------------------------------------------------------------------
-// Security related functions
-//-----------------------------------------------------------------------------
-// Ensure that the hardware key's drivers have been installed.
-PLATFORM_INTERFACE bool Plat_VerifyHardwareKeyDriver();
-
-// Ok, so this isn't a very secure way to verify the hardware key for now.  It
-// is primarially depending on the fact that all the binaries have been wrapped
-// with the secure wrapper provided by the hardware keys vendor.
-PLATFORM_INTERFACE bool Plat_VerifyHardwareKey();
-
-// The same as above, but notifies user with a message box when the key isn't in
-// and gives him an opportunity to correct the situation.
-PLATFORM_INTERFACE bool Plat_VerifyHardwareKeyPrompt();
-
-// Can be called in real time, doesn't perform the verify every frame.  Mainly just
-// here to allow the game to drop out quickly when the key is removed, rather than
-// allowing the wrapper to pop up it's own blocking dialog, which the engine doesn't
-// like much.
-PLATFORM_INTERFACE bool Plat_FastVerifyHardwareKey();
 
 //-----------------------------------------------------------------------------
 // The following are low-level OS-independent wrappers around actual OS file calls.

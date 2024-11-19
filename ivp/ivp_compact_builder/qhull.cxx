@@ -425,7 +425,7 @@ void qh_buildtracing (pointT *furthest, facetT *facet) {
   realT dist= 0;
   float cpu;
   int total, furthestid;
-#if !defined(PSXII) && !defined(GEKKO)
+#if !defined(GEKKO)
   time_t timedata;
 #endif
   struct tm *tp;
@@ -434,7 +434,7 @@ void qh_buildtracing (pointT *furthest, facetT *facet) {
   qh old_randomdist= qh RANDOMdist;
   qh RANDOMdist= False;
   if (!furthest) {
-#if !defined(PSXII) && !defined(GEKKO)
+#if !defined(GEKKO)
     time (&timedata);
     tp= localtime (&timedata);
 #endif
@@ -460,7 +460,7 @@ At %02d:%02d:%02d & %2.5g CPU secs, qhull has created %d facets and merged %d.\n
   }
   if (qh REPORTfreq && (qh facet_id-1 > qh lastreport+qh REPORTfreq)) {
     qh lastreport= qh facet_id-1;
-#if !defined(PSXII) && !defined(GEKKO)
+#if !defined(GEKKO)
     time (&timedata);
     tp= localtime (&timedata);
 #endif

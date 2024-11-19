@@ -124,7 +124,7 @@ void IVP_Compact_Ledge_Solver::get_all_ledges( const IVP_Compact_Mopp* mopp, IVP
 
 	do
 	{
-		IVP_ASSERT(((unsigned int)(ledge) & 0xf) == 0);
+		IVP_ASSERT(((uintp)(ledge) & 0xf) == 0);
 
 		all_ledges_out->add((IVP_Compact_Ledge*)ledge);
 
@@ -234,7 +234,7 @@ void IVP_Compact_Ledge_Solver::calc_pos_other_space(const IVP_Compact_Edge *P,IV
 
 void IVP_Compact_Ledge_Solver::transform_vec_other_space(const IVP_U_Point *dir_os, IVP_Cache_Ledge_Point *m_cache_dir,
 						       IVP_Cache_Ledge_Point *m_cache_other_space, IVP_U_Point *res){
-  IVP_U_Point dir_ws;
+  static IVP_U_Point dir_ws;
   m_cache_dir->clp_cache_object->m_world_f_object.inline_vmult3(dir_os, &dir_ws);
   m_cache_other_space->clp_cache_object->m_world_f_object.inline_vimult3(&dir_ws, res);
 }
@@ -698,16 +698,16 @@ IVP_BOOL IVP_Compact_Ledge_Solver::check_ledge(const IVP_Compact_Ledge *cl)
     // For debugging only
     // Checks for consistency
 
-	IVP_ASSERT ( (intptr_t(cl) & 15) == 0);
+	IVP_ASSERT ( (intp(cl) & 15) == 0);
 	const IVP_Compact_Poly_Point *ppppp=cl->get_point_array();
-	IVP_ASSERT ( ((intptr_t)ppppp & 15 ) == 0);
+	IVP_ASSERT ( ((intp)ppppp & 15 ) == 0);
 
     // all triangles 
     const IVP_Compact_Triangle *tri = cl->get_first_triangle();
     for(int i=0; i<cl->get_n_triangles(); i++){
 	IVP_ASSERT(i == tri->get_tri_index());
 
-		IVP_ASSERT ( (intptr_t(tri) & 15) == 0);
+		IVP_ASSERT ( (intp(tri) & 15) == 0);
 
 	// all edges
 	for(int j=0; j<3; j++){

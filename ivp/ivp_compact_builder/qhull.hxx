@@ -33,7 +33,7 @@
 
 #include <setjmp.h>
 #include <float.h>
-#if !defined(PSXII) && !defined(GEKKO)
+#if !defined(GEKKO)
 #	include <time.h>
 #endif
 

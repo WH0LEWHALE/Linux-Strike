@@ -35,11 +35,17 @@ class hk_Fixed_Constraint : public hk_Constraint
 
 		void write_to_blueprint( hk_Fixed_BP * );
 
-        //lwss add
-        //lwss hack - is this correct??
-        const hk_Transform get_transform(int index) { return m_transform_os_ks; }
-        //lwss end
+		virtual const char* get_constraint_type()
+		{
+			return "fixed";
+		}
 
+		inline hk_Transform get_transform(int x) const
+		{
+			// todo(crack): this is probably wrong... fix me
+			IVP_ASSERT(0);
+			return m_transform_os_ks;
+		}
 	protected:
 
 		void init_fixed_constraint( const hk_Fixed_BP *bp );

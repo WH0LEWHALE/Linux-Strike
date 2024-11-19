@@ -143,14 +143,12 @@ void CBaseHudWeaponSelection::VidInit(void)
 	// If we've already loaded weapons, let's get new sprites
 	gWR.LoadAllWeaponSprites();
 
-#if !defined( CSTRIKE15 )
 	// set spacing of pickup history
 	CHudHistoryResource *pHudHR = GET_HUDELEMENT( CHudHistoryResource );
 	if( pHudHR )
 	{
 		pHudHR->SetHistoryGap( 21 );
 	}
-#endif // !CSTRIKE15
 
 	Reset();
 }
@@ -294,7 +292,6 @@ void CBaseHudWeaponSelection::OnWeaponPickup( C_BaseCombatWeapon *pWeapon )
 {
 	RANDOM_CEG_TEST_SECRET_PERIOD( 2, 3 )
 
-#if !defined( CSTRIKE15 )
 	// add to pickup history
 	CHudHistoryResource *pHudHR = GET_HUDELEMENT( CHudHistoryResource );
 	
@@ -302,7 +299,6 @@ void CBaseHudWeaponSelection::OnWeaponPickup( C_BaseCombatWeapon *pWeapon )
 	{
 		pHudHR->AddToHistory( pWeapon );
 	}
-#endif // !CSTRIKE15
 }
 
 //------------------------------------------------------------------------
@@ -502,9 +498,7 @@ void CBaseHudWeaponSelection::UserCmd_NextWeapon(void)
 		return;
 
 	CycleToNextWeapon();
-#if !defined ( CSTRIKE15 )
 	if( hud_fastswitch.GetInt() > 0 )
-#endif
 	{
 		SelectWeapon();
 	}
@@ -521,9 +515,7 @@ void CBaseHudWeaponSelection::UserCmd_NextGrenadeWeapon(void)
 		return;
 
 	CycleToNextGrenadeOrBomb();
-#if !defined ( CSTRIKE15 )
 	if( hud_fastswitch.GetInt() > 0 )
-#endif
 	{
 		SelectWeapon();
 	}
@@ -540,9 +532,7 @@ void CBaseHudWeaponSelection::UserCmd_NextItemWeapon(void)
 		return;
 
 	CycleToNextGrenadeBombOrMelee();
-#if !defined ( CSTRIKE15 )
 	if( hud_fastswitch.GetInt() > 0 )
-#endif
 	{
 		SelectWeapon();
 	}
@@ -559,9 +549,7 @@ void CBaseHudWeaponSelection::UserCmd_NextNonGrenadeWeapon(void)
 		return;
 
 	CycleToNextNonGrenadeOrBomb();
-#if !defined ( CSTRIKE15 )
 	if( hud_fastswitch.GetInt() > 0 )
-#endif
 	{
 		SelectWeapon();
 	}
@@ -579,9 +567,7 @@ void CBaseHudWeaponSelection::UserCmd_PrevWeapon(void)
 
 	CycleToPrevWeapon();
 
-#if !defined ( CSTRIKE15 )
 	if( hud_fastswitch.GetInt() > 0 )
-#endif
 	{
 		SelectWeapon();
 	}

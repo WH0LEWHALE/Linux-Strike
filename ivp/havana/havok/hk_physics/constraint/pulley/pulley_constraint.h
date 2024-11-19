@@ -23,6 +23,15 @@ class hk_Pulley_Constraint : public hk_Constraint
 		virtual void init_constraint( const void* );
 		void write_to_blueprint( hk_Pulley_BP * );
 
+		virtual const char* get_constraint_type()
+		{
+			return "pulley";
+		}
+
+		virtual int get_constraint_dof()
+		{
+			return 5;
+		}
 	protected:
 
 		void init_pulley_constraint( const hk_Pulley_BP * );
@@ -38,7 +47,7 @@ class hk_Pulley_Constraint : public hk_Constraint
 		hk_real m_strength;  			// 4
 		hk_real m_length;       		// 4
 		hk_real m_gearing;			// 4
-		hk_bool m_is_rigid;
+		bool m_is_rigid;
 		
 	private:
 

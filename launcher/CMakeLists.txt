@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.16)
 if( DEDICATED )
     return()
 endif()
-project(launcher_client)
+project(launcher)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH ${SRCDIR}/cmake)
 set(OUTBINNAME "launcher_client")
@@ -39,8 +39,6 @@ endif()
 
 if( USE_KISAK_PHYSICS )
     add_definitions(-DUSE_KISAK_PHYSICS)
-elseif( USE_BULLET_PHYSICS )
-    add_definitions(-DUSE_BULLET_PHYSICS)
 endif()
 
 if( LINUXALL )
@@ -51,8 +49,18 @@ target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/filesystem_init.cpp")
 target_sources(${OUTBINNAME} PRIVATE "launcher.cpp")
 target_sources(${OUTBINNAME} PRIVATE "reslistgenerator.cpp")
 
-target_link_libraries(${OUTBINNAME} appframework_client tier1_client tier2_client tier3_client interfaces_client )
-target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # Link to proprietary steamapi
+target_link_libraries(${OUTBINNAME} appframework_client vstdlib_client libtier0_client tier1_client tier2_client tier3_client interfaces_client )
+#target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # Link to proprietary steamapi
+if( (NOT DEFINED NO_STEAM) )
+    #Looks like we have to include libsteam_api
+	if( MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 4 )
+		target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steam_api.lib)
+	elseif( MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8 )
+		target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steam_api64.lib)
+	else()
+		target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so)
+	endif()
+endif()
 if( NOT IS_LIB_PROJECT AND GL )
     target_link_libraries(${OUTBINNAME} libtogl_client) # Link to precompiled togl
 endif()

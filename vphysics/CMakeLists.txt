@@ -22,6 +22,7 @@ include_directories(${SRCDIR}/ivp/ivp_utility)
 include_directories(${SRCDIR}/ivp/ivp_controller)
 include_directories(${SRCDIR}/ivp/ivp_compact_builder)
 include_directories(${SRCDIR}/ivp/havana/havok)
+include_directories(${SRCDIR}/ivp/havana/havok/hk_math)
 include_directories(${SRCDIR}/ivp/havana)
 
 add_definitions(-DVPHYSICS_EXPORTS -DHAVANA_CONSTRAINTS -DHAVOK_MOPP)
@@ -59,5 +60,5 @@ target_sources(${OUTBINNAME} PRIVATE "vphysics_saverestore.cpp")
 #		$Lib "$LIBCOMMON/hk_math"
 #		$Lib "$LIBCOMMON/ivp_compactbuilder"
 #		$Lib "$LIBCOMMON/ivp_physics"
-target_link_libraries(${OUTBINNAME} havana_constraints hk_base hk_math ivp_compactbuilder ivp_physics)
-target_link_libraries(${OUTBINNAME} mathlib_client tier2_client libvstdlib_client)
+target_link_libraries(${OUTBINNAME} havana_constraints hk_math hk_base ivp_compactbuilder ivp_physics)
+target_link_libraries(${OUTBINNAME} mathlib_client tier2_client vstdlib_client)

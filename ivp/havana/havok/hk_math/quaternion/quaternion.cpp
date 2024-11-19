@@ -17,7 +17,7 @@ void hk_Quaternion::set(const hk_Rotation& r)
 	if( trace > 0 )
 	{
 		// else we calculate simply:
-		hk_real s = hk_Math::sqrt( trace + 1.0f );
+		hk_real s = sqrt( trace + 1.0f );
 		hk_real t = 0.5f / s;
 		this->x = (r(2,1)-r(1,2)) * t;
 		this->y = (r(0,2)-r(2,0)) * t;
@@ -36,7 +36,7 @@ void hk_Quaternion::set(const hk_Rotation& r)
 		int j = next[i];
 		int k = next[j];
 
-		hk_real s = hk_Math::sqrt(r(i,i) - (r(j,j)+r(k,k)) + 1.0f);
+		hk_real s = sqrt(r(i,i) - (r(j,j)+r(k,k)) + 1.0f);
 		hk_real t = 0.5f / s;
 
 		q[i] = 0.5f * s;
@@ -54,15 +54,15 @@ void hk_Quaternion::set(const hk_Rotation& r)
 
 void hk_Quaternion::set_axis_angle(const hk_Vector3& axis, hk_real angle)
 {
-	HK_ASSERT( hk_Math::fabs(axis.length()-1.0f) < 0.01f);
+	IVP_ASSERT( fabs(axis.length()-1.0f) < 0.01f);
 	hk_real half_angle = 0.5f*angle;
-	hk_Vector3::set_mul( hk_Math::sin(half_angle), axis);
-	this->w = hk_Math::cos(half_angle);
+	hk_Vector3::set_mul( sin(half_angle), axis);
+	this->w = cos(half_angle);
 }
 
 void hk_Quaternion::set_slerp(const hk_Quaternion& q0, const hk_Quaternion& q1, hk_real t)
 {
-	//HK_ASSERT((t>=0)&&(t<=1));
+	//IVP_ASSERT((t>=0)&&(t<=1));
 
 	hk_real cos_theta = q0.dot4(q1);
 
@@ -76,13 +76,13 @@ void hk_Quaternion::set_slerp(const hk_Quaternion& q0, const hk_Quaternion& q1, 
 
 	if (cos_theta < 1.0f - HK_QUATERNION_DELTA)
 	{
-		hk_real theta = hk_Math::acos(cos_theta);
+		hk_real theta = acos(cos_theta);
 		// use sqrt_inv(1+c^2) instead of 1.0/sin(theta) 
-		hk_real i_sin_theta = hk_Math::sqrt_inv(1.0f - cos_theta*cos_theta);
+		hk_real i_sin_theta = hk_Math::fast_rsqrt(1.0f - cos_theta*cos_theta);
 		hk_real t_theta = t*theta;
 
-		hk_real t0 = hk_Math::sin(theta-t_theta) * i_sin_theta;
-		hk_real t1 = hk_Math::sin(t_theta)       * i_sin_theta;
+		hk_real t0 = sin(theta-t_theta) * i_sin_theta;
+		hk_real t1 = sin(t_theta)       * i_sin_theta;
 
 		this->set_mul4( t0,            q0);
 		this->add_mul4( t1*sign_of_t1, q1);

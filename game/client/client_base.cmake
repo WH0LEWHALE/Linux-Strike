@@ -48,7 +48,6 @@ target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/achievement_saverest
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/achievementmgr.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/achievementmgr.h")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/achievements_and_stats_interface.h")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/achievements_hlx.cpp")
 if( NOT CSGO )
     #$File	"achievement_notification_panel.cpp"		[!$CSGO]
     #$File	"achievement_notification_panel.h"			[!$CSGO]
@@ -387,12 +386,6 @@ target_sources(${OUTBINNAME} PRIVATE "texturescrollmaterialproxy.cpp")
 target_sources(${OUTBINNAME} PRIVATE "timematerialproxy.cpp")
 target_sources(${OUTBINNAME} PRIVATE "toggletextureproxy.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/usercmd.cpp")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/ugc_file_info_manager.cpp")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/ugc_file_info_manager.h")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/ugc_request_manager.cpp")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/ugc_request_manager.h")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/ugc_utils.cpp")
-target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/ugc_utils.h")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/usermessages.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/util_shared.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/vehicle_viewblend_shared.cpp")
@@ -484,7 +477,6 @@ target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/vallocator.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/vgui_controls/vgui_controls.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/jigglebones.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/phonemeconverter.cpp")
-target_sources(${OUTBINNAME} PRIVATE "hud_lcd.cpp")
 target_sources(${OUTBINNAME} PRIVATE "in_mouse.cpp")
 target_sources(${OUTBINNAME} PRIVATE "in_steamcontroller.cpp")
 target_sources(${OUTBINNAME} PRIVATE "mumble.cpp")
@@ -580,7 +572,7 @@ target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/common/CegClientWrapper.cpp")
     target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/SharedFunctorUtils.cpp")
     target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/SharedFunctorUtils.h")
 #}
-if( WINDOWS OR POSIX )
+if( WIN32 OR POSIX )
 #$Folder	"MP3" [$WINDOWS||$POSIX]
 #{
     target_sources(${OUTBINNAME} PRIVATE "mp3player.cpp")
@@ -600,6 +592,13 @@ endif()
 #Linking is sloppy here and continued more in cstrike15
 target_link_libraries(${OUTBINNAME} bonesetup_client choreoobjects_client mathlib_extended_client )
 target_link_libraries(${OUTBINNAME} matsys_controls_client particles_client raytrace_client)
-target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # Link to proprietary steamapi
+#Requires evil proprietary link to libsteam_api
+if( MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 4 )
+	target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steam_api.lib Winmm.lib)
+elseif( MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8 )
+	target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steam_api64.lib Winmm.lib)
+else()
+	target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so)
+endif()
 target_link_libraries(${OUTBINNAME} tier3_client vgui_controls_client videocfg_client vtf_client resourcefile_client )
-target_link_libraries(${OUTBINNAME} libprotobuf) #from /thirdparty
+target_link_libraries(${OUTBINNAME} zlib png libprotobuf) #from /thirdparty

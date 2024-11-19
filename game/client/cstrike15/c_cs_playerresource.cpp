@@ -15,8 +15,6 @@
 #include "c_cs_player.h"
 #include "c_cs_team.h"
 
-#include "bannedwords.h"
-
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -431,7 +429,6 @@ const char *C_CS_PlayerResource::GetClanTag( int iIndex )
 			return "";
 	}
 
-	g_BannedWords.CensorBannedWordsInplace( m_szClan[iIndex] );
 	return m_szClan[iIndex];
 }
 
@@ -530,15 +527,6 @@ void C_CS_PlayerResource::UpdatePlayerName( int slot )
 
 	if ( !pchPlayerName )
 		pchPlayerName = PLAYER_UNCONNECTED_NAME;
-
-	if ( g_BannedWords.BInitialized() )
-	{
-		int nLen = V_strlen( pchPlayerName );
-		char *chPlayerName = ( char * ) stackalloc( 1 + nLen );
-		V_memcpy( chPlayerName, pchPlayerName, 1 + nLen );
-		if ( g_BannedWords.CensorBannedWordsInplace( chPlayerName ) )
-			pchPlayerName = chPlayerName;
-	}
 
 	if ( !m_szName[ slot ] || Q_stricmp( m_szName[ slot ], pchPlayerName ) )
 	{
@@ -657,8 +645,6 @@ const wchar_t* C_CS_PlayerResource::GetDecoratedPlayerName( int index, wchar_t* 
 		}
 
 		V_UTF8ToUnicode( nameBuf /*GetPlayerName( nameIndex )*/, wide_name, sizeof( wide_name ) );
-
-		g_BannedWords.CensorBannedWordsInplace( wide_name );
 
 		wchar_t safe_wide_name[4 * MAX_DECORATED_PLAYER_NAME_LENGTH]; // add enough room to safely escape all 64 name characters
 		safe_wide_name[0] = L'\0';

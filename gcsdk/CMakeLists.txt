@@ -24,6 +24,11 @@ include_directories(${SRCDIR}/public)
 include_directories(${SRCDIR}/public/gcsdk)
 include_directories(${SRCDIR}/thirdparty/JSON_parser)
 
+
+if( WIN32 )
+	include_directories(${SRCDIR}/gcsdk)
+endif()
+
 if( LINUXALL )
     target_compile_options(${OUTLIBNAME} PRIVATE -fPIC -fno-semantic-interposition)
 endif()

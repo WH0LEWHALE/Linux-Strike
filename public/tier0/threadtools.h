@@ -23,6 +23,10 @@
 #define THREAD_PRIORITY_HIGHEST 2
 #endif
 
+#if defined( PLATFORM_ARM ) && defined( _LINUX )
+#include <sched.h>
+#endif
+
 #if !defined( _X360 ) && !defined( _PS3 ) && defined(COMPILER_MSVC)
 // For _ReadWriteBarrier()
 #include <intrin.h>
@@ -235,9 +239,9 @@ inline void ThreadPause()
 #if defined( COMPILER_PS3 )
 	__db16cyc();
 #elif defined( COMPILER_GCC )
-	#ifdef __e2k__
+	#if defined(__e2k__)
 		__asm__ __volatile__ ("nop" : : );
-	#else
+	#elif !defined( PLATFORM_ARM )
 		__asm __volatile( "pause" );
 	#endif
 #elif defined ( COMPILER_MSVC64 )
@@ -249,6 +253,8 @@ inline void ThreadPause()
 	__asm { or r0,r0,r0 } 
 	YieldProcessor(); 
 	__asm { or r1,r1,r1 } 
+#elif defined( PLATFORM_ARM ) && defined( _LINUX )
+	sched_yield();
 #else
 #error "implement me"
 #endif
@@ -310,7 +316,7 @@ inline int32 ThreadInterlockedDecrement( int32 volatile *p )
 inline int32 ThreadInterlockedExchange( int32 volatile *p, int32 value )
 {
 	Assert( (size_t)p % 4 == 0 );
-#ifdef __e2k__
+#if defined(__e2k__) || defined(PLATFORM_ARM)
 	return __sync_lock_test_and_set( p, value );
 #else
 	int32 nRet;

@@ -54,17 +54,25 @@ public:
 	virtual void	Init( void );
 	virtual void	Reset( void );
 
+	virtual void	ChatPrintf(int iPlayerIndex, int iFilter, PRINTF_FORMAT_STRING const char* fmt, ...) FMTFUNCTION(4, 5);
+
 	bool			MsgFunc_SayText2( const CCSUsrMsg_SayText2 &msg );
 	bool			MsgFunc_RadioText( const CCSUsrMsg_RadioText &msg );
 	bool			MsgFunc_RawAudio( const CCSUsrMsg_RawAudio &msg );
 
 	int				GetChatInputOffset( void );
 
-
 	virtual Color	GetTextColorForClient( TextColor colorNum, int clientIndex );
 	virtual Color	GetClientColor( int clientIndex );
 
 	virtual int GetFilterForString( const char *pString );
+
+#if !defined( INCLUDE_SCALEFORM ) && !defined( INCLUDE_ROCKETUI )
+	CUserMessageBinder m_UMCMsgSayText2;
+	CUserMessageBinder m_UMCMsgSayText;
+	CUserMessageBinder m_UMCMsgRadioText;
+	CUserMessageBinder m_UMCMsgTextMsg;
+#endif
 };
 
 #endif	//CS_HUD_CHAT_H

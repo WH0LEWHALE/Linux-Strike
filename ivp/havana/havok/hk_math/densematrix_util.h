@@ -20,7 +20,6 @@ class hk_Dense_Matrix_Util
 		static void mult( const hk_Dense_Matrix& m, const hk_real *in, hk_real *out );
 		static inline void mult_3_symmetric( const hk_Fixed_Dense_Matrix<3>& m, const hk_Vector3& in, hk_Vector3& out );
 
-		static hk_result invert(hk_Dense_Matrix& m, hk_real tolerance);
 		static hk_result invert_6x6(hk_Fixed_Dense_Matrix<6>& m, hk_real tolerance);
 		static hk_result invert_5x5(hk_Fixed_Dense_Matrix<5>& m, hk_real tolerance);
 		static hk_result invert_4x4(hk_Fixed_Dense_Matrix<4>& m, hk_real tolerance);

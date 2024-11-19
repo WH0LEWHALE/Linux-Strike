@@ -58,8 +58,8 @@ enum hk_MEMORY_CLASS
 
 
 #define HK_NEW_DELETE_FUNCTION_CLASS( THIS_CLASS, MEMORY_CLASS )							\
-	inline void *operator new(hk_size_t size){										\
-		HK_ASSERT ( sizeof( THIS_CLASS ) == size );											\
+	inline void *operator new(size_t size){										\
+		IVP_ASSERT ( sizeof( THIS_CLASS ) == size );											\
 		void *object = hk_Memory::get_instance()->allocate( size, MEMORY_CLASS );			\
 		return object;																		\
 	}																						\
@@ -70,7 +70,7 @@ enum hk_MEMORY_CLASS
 																							\
 
 #define HK_NEW_DELETE_FUNCTION_VIRTUAL_CLASS( THIS_CLASS, MEMORY_CLASS )					\
-	inline void *operator new(hk_size_t size ){										\
+	inline void *operator new(size_t size ){										\
 		THIS_CLASS *object = (THIS_CLASS *)hk_Memory::get_instance()->allocate( size, MEMORY_CLASS );	\
 		object->m_memsize = size;															\
 		return object;																		\
@@ -120,7 +120,7 @@ class hk_Memory
 		//void print_statistics(class hk_Console *); // see hk_Memory_Util
 
 	public: // THE interfaces to the system allocate, change this if you want to add in your own big block memory allocation
-		static void *aligned_malloc( hk_size_t size, hk_size_t alignment);
+		static void *aligned_malloc( size_t size, size_t alignment);
 		static void aligned_free(	 void *data );
 		static inline void* memcpy(void* dest,const void* src,int size);
 		static inline void* memset(void* dest, hk_uchar val, hk_int32 size);

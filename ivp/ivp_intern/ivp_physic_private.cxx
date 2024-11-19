@@ -23,8 +23,6 @@
 #include <ivp_merge_core.hxx>
 #include <ivp_debug.hxx>
 #include <ivp_universe_manager.hxx>
-#include <ivp_authenticity.hxx>
-
 
 void IVP_Listener_Collision::event_pre_collision( IVP_Event_Collision *){;};   // the user app sould override this
 void IVP_Listener_Collision::event_post_collision( IVP_Event_Collision *){;};   // the user app sould override this

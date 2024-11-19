@@ -9,10 +9,6 @@
 #ifndef _IVP_CACHE_OBJECT_INCLUDED
 #define _IVP_CACHE_OBJECT_INCLUDED
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 
 class IVP_Cache_Object {
     friend class IVP_Real_Object;
@@ -74,13 +70,7 @@ IVP_Cache_Object *IVP_Real_Object::get_cache_object(){
     
     if ( IVP_MTIS_SIMULATED(this->flags.object_movement_state) ){
 	IVP_Environment *env = get_environment();
-	//lwss hack - ALERT! ALERT! this was changed from > to >= so that it would update on 0
-	// It seems that the cache object is not always initialized and all the world coord math returns NaN in p_minimize_FF()
-	// this is not a proper solution, but will at least let us load into maps like militia/train where it seems in-map physics objects like swinging signs trigger this code.
-	// I've done a benchmark with this code and it seemed fine, but it was not a particularly extensive physics test!!
-	//if ( env->get_current_time_code() > cache_object->valid_until_time_code){
-	if ( env->get_current_time_code() >= cache_object->valid_until_time_code){
-    //lwss end
+	if ( env->get_current_time_code() > cache_object->valid_until_time_code){
 	    cache_object->update_cache_object();
 	}
     }

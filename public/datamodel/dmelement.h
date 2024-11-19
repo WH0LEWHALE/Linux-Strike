@@ -1039,7 +1039,7 @@ int DmeEstimateMemorySize( T* pElement )
 // copy groups of elements together so that references between them are maintained
 //-----------------------------------------------------------------------------
 template< class T >
-void CopyElements( const CUtlVector< T* > &from, CUtlVector< T* > &to, TraversalDepth_t depth = TD_DEEP )
+void CopyElements( const CUtlVector< T* > &from, CUtlVector< T* > &to, TraversalDepth_t depth )
 {
 	CDisableUndoScopeGuard sg;
 

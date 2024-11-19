@@ -15,10 +15,6 @@ include(${CMAKE_MODULE_PATH}/source_lib_base.cmake)
 
 add_definitions(-DTIER1_STATIC_LIB)
 
-if( WINDOWS )
-    #		$AdditionalDependencies			"$BASE Rpcrt4.lib"
-endif()
-
 if( LINUXALL )
     target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
 endif()
@@ -50,7 +46,7 @@ target_sources(${OUTLIBNAME} PRIVATE "memstack.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "NetAdr.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "splitstring.cpp")
 
-if( WINDOWS OR X360 )
+if( WIN32 OR X360 )
     target_sources(${OUTLIBNAME} PRIVATE "processor_detect.cpp")
     #					$EnableC++Exceptions	"Yes (/EHsc)" [!$X360]
 endif()
@@ -79,5 +75,8 @@ target_sources(${OUTLIBNAME} PRIVATE "utlsymbol.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "miniprofiler_hash.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "sparsematrix.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "memoverride_dummy.cpp")
-
 target_sources(${OUTLIBNAME} PRIVATE "pathmatch.cpp")
+
+if( WIN32 )
+    target_link_libraries(${OUTLIBNAME} PRIVATE Rpcrt4.lib Ws2_32.lib)
+endif()

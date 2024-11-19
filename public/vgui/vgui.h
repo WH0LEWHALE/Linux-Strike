@@ -49,8 +49,8 @@ typedef uintp VPANEL;
 typedef unsigned long HScheme;
 typedef unsigned long HTexture;
 typedef unsigned long HCursor;
-typedef unsigned long HPanel;
-const HPanel INVALID_PANEL = 0xffffffff;
+typedef uintp HPanel;
+const HPanel INVALID_PANEL = ((HPanel)-1);
 typedef unsigned long HFont;
 const HFont INVALID_FONT = 0; // the value of an invalid font handle
 

@@ -27,9 +27,21 @@ class hk_Ball_Socket_Constraint : public hk_Constraint
 
 		void write_to_blueprint( hk_Ball_Socket_BP * );
 
-		//lwss add
-        const hk_Vector3 get_transform(int index) { return m_translation_os_ks[index]; }
-        //lwss end
+		virtual const char* get_constraint_type()
+		{
+			return "ball_socket";
+		}
+
+		virtual int get_constraint_dof()
+		{
+			return 3;
+		}
+
+		inline hk_Vector3 get_transform(int x) const
+		{
+			return m_translation_os_ks[x];
+		}
+
 	protected:
 
 		void init_ball_socket_constraint(const hk_Ball_Socket_BP *);

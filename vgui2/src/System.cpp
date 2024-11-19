@@ -328,7 +328,7 @@ void CSystem::OpenURL(const char *szURL)
     // "Some versions of windows (Win2k before SP3, Win XP before SP1) crash in
     // ShellExecute on long URLs (bug 161357 on bugzilla.mozilla.org). IE 5 and 6
     // support URLS of 2083 chars in length, 2K is safe."
-    if( strlen( kMaxUrlLength ) > 2048 )
+    if( strlen( szURL ) > 2048 )
         return;
 
     // has to start with one of these.

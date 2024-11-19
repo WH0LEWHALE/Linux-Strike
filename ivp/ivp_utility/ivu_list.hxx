@@ -54,7 +54,7 @@ public:
    next
    */
 
-template<class T> class P_Simple_List {
+/* template<class T> class P_Simple_List {
 public:
     T *first;
     
@@ -63,7 +63,7 @@ public:
 	first = elem;
     };
     
-    void remove_first(T *elem){
+    void remove_first(){
 	register T *e = elem;
 	register T *h;
 	first = e->next;
@@ -71,7 +71,7 @@ public:
 	    h->prev = e->prev;
 	}
     }
-};
+}; */
 
 #endif
 

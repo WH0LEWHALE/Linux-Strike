@@ -193,6 +193,7 @@ ConVar sv_spawn_afk_bomb_drop_time( "sv_spawn_afk_bomb_drop_time", "15", FCVAR_R
 extern ConVar spec_replay_winddown_time;
 
 ConVar mp_drop_knife_enable( "mp_drop_knife_enable", "0", FCVAR_RELEASE, "Allows players to drop knives." );
+ConVar mp_drop_grenade_enable( "mp_drop_grenade_enable", "0", FCVAR_RELEASE, "Allows players to drop grenades." );
 
 static ConVar tv_relayradio( "tv_relayradio", "0", FCVAR_RELEASE, "Relay team radio commands to TV: 0=off, 1=on" );
 
@@ -7228,27 +7229,26 @@ bool CCSPlayer::CSWeaponDrop( CBaseCombatWeapon *pWeapon, Vector targetPos, bool
 	return bSuccess;
 }
 
-
+// PiMoN: reverse-engineered from release binaries
 void CCSPlayer::TransferInventory( CCSPlayer* pTargetPlayer )
 {
-   	// PiMoN: reverse-engineered from release binaries
-	pTargetPlayer->RemoveAllItems( true );
+	pTargetPlayer->RemoveAllItems(true);
 
-	for ( int i = 0; i < MAX_WEAPONS; i++ )
+	for (int i = 0; i < MAX_WEAPONS; i++)
 	{
-		CBaseCombatWeapon* pWeapon = dynamic_cast<CBaseCombatWeapon*>(GetWeapon( i ));
-		if ( pWeapon && ((pWeapon->GetWpnData().iFlags & ITEM_FLAG_EXHAUSTIBLE) == 0 || pWeapon->HasAmmo()) )
+		CBaseCombatWeapon* pWeapon = dynamic_cast<CBaseCombatWeapon*>(GetWeapon(i));
+		if (pWeapon && ((pWeapon->GetWpnData().iFlags & ITEM_FLAG_EXHAUSTIBLE) == 0 || pWeapon->HasAmmo()))
 		{
 			// PiMoN: was CEconEntity, changed to CWeaponCSBase for a couple of fixes below
-			CWeaponCSBase* pNewWeapon = dynamic_cast<CWeaponCSBase*>(pTargetPlayer->GiveNamedItem( pWeapon->GetName(), 0, pWeapon->GetEconItemView() ));
-			if ( pNewWeapon )
+			CWeaponCSBase* pNewWeapon = dynamic_cast<CWeaponCSBase*>(pTargetPlayer->GiveNamedItem(pWeapon->GetName(), 0, pWeapon->GetEconItemView()));
+			if (pNewWeapon)
 			{
 				uint64 verylong = pWeapon->GetOriginalOwnerXuid();
-				pNewWeapon->SetOriginalOwnerXuid( (uint32)verylong, (uint32)(verylong >> 32) );
+				pNewWeapon->SetOriginalOwnerXuid((uint32)verylong, (uint32)(verylong >> 32));
 
 				// PiMoN: everything below is not part of Valve's code
-				pNewWeapon->SetReserveAmmoCount( AMMO_POSITION_PRIMARY, pWeapon->GetReserveAmmoCount( AMMO_POSITION_PRIMARY ), true );
-				pNewWeapon->SetReserveAmmoCount( AMMO_POSITION_SECONDARY, pWeapon->GetReserveAmmoCount( AMMO_POSITION_SECONDARY ), true );
+				pNewWeapon->SetReserveAmmoCount(AMMO_POSITION_PRIMARY, pWeapon->GetReserveAmmoCount(AMMO_POSITION_PRIMARY), true);
+				pNewWeapon->SetReserveAmmoCount(AMMO_POSITION_SECONDARY, pWeapon->GetReserveAmmoCount(AMMO_POSITION_SECONDARY), true);
 				pNewWeapon->m_iClip1 = pWeapon->m_iClip1;
 				pNewWeapon->m_iClip2 = pWeapon->m_iClip2;
 				// PiMoN: this also should set silencer, but I don't think that bots ever change it
@@ -7256,9 +7256,10 @@ void CCSPlayer::TransferInventory( CCSPlayer* pTargetPlayer )
 		}
 	}
 
-	if ( HasDefuser() )
+	if (HasDefuser())
 		pTargetPlayer->GiveDefuser();
-	pTargetPlayer->SetArmorValue( ArmorValue() );
+
+	pTargetPlayer->SetArmorValue(ArmorValue());
 	pTargetPlayer->m_bHasHelmet = m_bHasHelmet;
 	pTargetPlayer->m_bHasHeavyArmor = m_bHasHeavyArmor;
 	pTargetPlayer->m_bHasNightVision = m_bHasNightVision;
@@ -7266,9 +7267,9 @@ void CCSPlayer::TransferInventory( CCSPlayer* pTargetPlayer )
 	pTargetPlayer->m_iAccount = m_iAccount;
 	pTargetPlayer->m_iAccountMoneyEarnedForNextRound = m_iAccountMoneyEarnedForNextRound;
 
-	if ( dev_reportmoneychanges.GetBool() )
+	if (dev_reportmoneychanges.GetBool())
 	{
-		Msg( "-- %s\t\t\t(total: %d)\tTransferInventory to %s\n", GetPlayerName(), pTargetPlayer->m_iAccount, pTargetPlayer->GetPlayerName() );
+		Msg("-- %s\t\t\t(total: %d)\tTransferInventory to %s\n", GetPlayerName(), pTargetPlayer->m_iAccount, pTargetPlayer->GetPlayerName());
 	}
 
 	// as part of transferring inventory, remove what WE have
@@ -9003,8 +9004,14 @@ bool CCSPlayer::ClientCommand( const CCommand &args )
 	if ( FStrEq( pcmd, "jointeam" ) ) 
 	{
 		// Players can spam this at the wrong time to get into states we don't want them in. Ignore those cases.
-		if ( ( !IsBot() && !IsHLTV() ) && ( !m_bHasSeenJoinGame || cbIsMatchmaking ) )
+		if ( ( !IsBot() && !IsHLTV() ) && cbIsMatchmaking )
 			return true;
+
+		if( !m_bHasSeenJoinGame )
+		{
+			ClientPrint( this, HUD_PRINTTALK, "Please join the game first\n" );
+			return true;
+		}
 
 		if ( args.ArgC() < 2 )
 		{
@@ -12864,8 +12871,8 @@ bool CCSPlayer::HandleDropWeapon( CBaseCombatWeapon *pWeapon, bool bSwapping )
 
 		default:
 		{
-			// let dedicated servers optionally allow droppable knives
-			if ( type == WEAPONTYPE_KNIFE && mp_drop_knife_enable.GetBool( ) )
+			// let dedicated servers optionally allow droppable knives and grenades
+			if ( ( type == WEAPONTYPE_KNIFE && mp_drop_knife_enable.GetBool() ) || ( type == WEAPONTYPE_GRENADE && mp_drop_grenade_enable.GetBool() ) )
 			{
 				if ( CSGameRules( )->GetCanDonateWeapon( ) && !pCSWeapon->GetDonated( ) )
 				{
@@ -15767,7 +15774,7 @@ bool CCSPlayer::TakeControlOfBot( CCSBot *pBot, bool bSkipTeamCheck )
 			}
 		}
 
-		if ( HOSTAGE_RULE_CAN_PICKUP && pBot->m_hCarriedHostageProp != NULL )
+		if (!mp_hostages_moveable.GetBool() && pBot->m_hCarriedHostageProp != NULL )
 		{
 			// transfer any carried hostages and refresh the viewmodel
 			CHostageCarriableProp *pHostageProp = static_cast< CHostageCarriableProp* >( pBot->m_hCarriedHostageProp.Get() );

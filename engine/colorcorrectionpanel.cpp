@@ -41,7 +41,6 @@
 #include "dmxloader/dmxloader.h"
 #include "dmxloader/dmxelement.h"
 #include "dmxloader/dmxattribute.h"
-#include "tier2/p4helpers.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -5296,36 +5295,20 @@ void CColorOperationListPanel::OnCommand( const char *command )
 	}
 	else if( !Q_stricmp( command, "Save" ) )
 	{
-		g_p4factory->SetDummyMode( p4 == NULL );
-		g_p4factory->SetOpenFileChangeList( "Color Correction Auto Checkout" );
 		int nFlags = 0;
-		if ( p4 )
-		{
-			nFlags |= FOSM_SHOW_PERFORCE_DIALOGS;
-		}
+
 		m_pFileOpenStateMachine->SaveFile( NULL, m_FileName.Get(), "vcc", nFlags );
 	}
 	else if( !Q_stricmp( command, "SaveAs" ) )
 	{
-		g_p4factory->SetDummyMode( p4 == NULL );
-		g_p4factory->SetOpenFileChangeList( "Color Correction Auto Checkout" );
 		int nFlags = 0;
-		if ( p4 )
-		{
-			nFlags |= FOSM_SHOW_PERFORCE_DIALOGS;
-		}
+
 		m_pFileOpenStateMachine->SaveFile( NULL, NULL, "vcc", nFlags );
 	}
 	else if( !Q_stricmp( command, "Load" ) )
 	{
-		g_p4factory->SetDummyMode( p4 == NULL );
-		g_p4factory->SetOpenFileChangeList( "Color Correction Auto Checkout" );
-
 		int nFlags = FOSM_SHOW_SAVE_QUERY;
-		if ( p4 )
-		{
-			nFlags |= FOSM_SHOW_PERFORCE_DIALOGS;
-		}
+
 		m_pFileOpenStateMachine->OpenFile( NULL, "vcc", NULL, m_FileName.Get(), "vcc", nFlags );
 	}
 	else if( !Q_stricmp( command, "NewComplete" ) )
@@ -5985,7 +5968,6 @@ bool CColorOperationListPanel::SaveRawFile( const char *pFullPath )
 	//=============//
 	// PC raw file //
 	//=============//
-	CP4AutoEditAddFile co( pFullPath );
 
 	FileHandle_t file_handle = g_pFileSystem->Open( pFullPath, "wb" );
 	if ( file_handle == NULL )
@@ -6015,8 +5997,6 @@ bool CColorOperationListPanel::SaveRawFile( const char *pFullPath )
 	char pFilename360[256+4] = "";
 	V_StripExtension( pFullPath, pFilename360, 256+4 );
 	V_DefaultExtension( pFilename360, ".pwl.raw", 256+4 );
-
-	CP4AutoEditAddFile co2( pFilename360 );
 
 	FileHandle_t file_handle360 = g_pFileSystem->Open( pFilename360, "wb" );
 	if ( file_handle360 == NULL )

@@ -10,6 +10,7 @@
 #if defined( INCLUDE_SCALEFORM )
 #include "HUD/sfweaponselection.h"
 #endif
+#include "history_resource.h"
 #include "iinput.h"
 #include "cs_gamerules.h"
 #include "cs_weapon_parse.h"
@@ -32,6 +33,7 @@ DECLARE_HUDELEMENT( CHudWeaponSelection );
 
 using namespace vgui;
 
+
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
@@ -48,6 +50,13 @@ CHudWeaponSelection::CHudWeaponSelection( const char *pElementName ) : CBaseHudW
 //-----------------------------------------------------------------------------
 void CHudWeaponSelection::OnWeaponPickup( C_BaseCombatWeapon *pWeapon )
 {
+	// add to pickup history
+	CHudHistoryResource *pHudHR = GET_HUDELEMENT( CHudHistoryResource );
+	if ( pHudHR )
+	{
+		pHudHR->AddToHistory( pWeapon );
+	}
+/*
 	CWeaponCSBase* pCSWeapon = dynamic_cast<CWeaponCSBase*>( pWeapon );
 	C_CSPlayer *pPlayer = GetHudPlayer();
 
@@ -65,6 +74,7 @@ void CHudWeaponSelection::OnWeaponPickup( C_BaseCombatWeapon *pWeapon )
 #endif
 		}
 	}
+*/
 }
 
 //-----------------------------------------------------------------------------
@@ -143,13 +153,14 @@ bool CHudWeaponSelection::IsHudMenuPreventingWeaponSelection()
 bool CHudWeaponSelection::ShouldDraw()
 {
 	// [jason] Moving into Scaleform: sfhudhealthammopanel
+/*
 #if defined( CSTRIKE15 )
 	if ( !IsPC() )
 	{
 		return false;
 	}
 #endif
-
+*/
 	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
 	if ( !pPlayer )
 	{
@@ -182,7 +193,7 @@ void CHudWeaponSelection::LevelInit()
 //-------------------------------------------------------------------------
 void CHudWeaponSelection::Paint()
 {
-#if !defined( CSTRIKE15 )
+//#if !defined( CSTRIKE15 )
 	if (!ShouldDraw())
 		return;
 
@@ -355,7 +366,7 @@ void CHudWeaponSelection::Paint()
 		ypos = 0;
 		xpos += m_flBoxGap;
 	}
-#endif // #if !defined( CSTRIKE15 )
+//#endif // #if !defined( CSTRIKE15 )
 }
 
 //-----------------------------------------------------------------------------
@@ -735,10 +746,10 @@ void CHudWeaponSelection::CycleToNextWeapon(WEAPON_SELECTION_MODE selectionMode)
 	if ( pNextWeapon )
 	{
 		SetSelectedWeapon( pNextWeapon );
-
+/*
 #if defined ( CSTRIKE15 )
 		SelectWeapon();
-#else
+#else*/
 		if( hud_fastswitch.GetInt() > 0 )
 		{
 			SelectWeapon();
@@ -747,7 +758,7 @@ void CHudWeaponSelection::CycleToNextWeapon(WEAPON_SELECTION_MODE selectionMode)
 		{
 			OpenSelection();
 		}
-#endif
+//#endif
 
 		// Play the "cycle to next weapon" sound
 		if( m_bPlaySelectionSounds )
@@ -797,10 +808,11 @@ void CHudWeaponSelection::CycleToPrevWeapon( void )
 	if ( pNextWeapon )
 	{
 		SetSelectedWeapon( pNextWeapon );
-
+/*
 #if defined ( CSTRIKE15 )
 		SelectWeapon();
 #else
+*/
 		if( hud_fastswitch.GetInt() > 0 )
 		{
 			SelectWeapon();
@@ -809,7 +821,7 @@ void CHudWeaponSelection::CycleToPrevWeapon( void )
 		{
 			OpenSelection();
 		}
-#endif
+//#endif
 
 		// Play the "cycle to next weapon" sound
 		if( m_bPlaySelectionSounds )
@@ -1051,7 +1063,7 @@ void CHudWeaponSelection::SelectWeaponSlot( int iSlot )
 				break;
 			}
 		}
-
+/*
 #if defined ( CSTRIKE15 )
 		// only select if only one item in the bucket
 		if( bMultipleWeaponsInSlot == false )
@@ -1060,6 +1072,7 @@ void CHudWeaponSelection::SelectWeaponSlot( int iSlot )
 			SelectWeapon();
 		}
 #else
+*/
 
 		// if fast weapon switch is on, then weapons can be selected in a single keypress
 		// but only if there is only one item in the bucket
@@ -1073,7 +1086,7 @@ void CHudWeaponSelection::SelectWeaponSlot( int iSlot )
 			// open the weapon selection
 			OpenSelection();
 		}
-#endif
+//#endif
 	}
 
 	if( m_bPlaySelectionSounds )

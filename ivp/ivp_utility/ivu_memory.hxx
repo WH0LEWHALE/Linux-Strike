@@ -91,7 +91,7 @@ void IVP_U_Memory::end_memory_transaction()
 
 //warning: dependency with function neuer_sp_block
 inline void *IVP_U_Memory::align_to_next_adress(void *p) {
-    long adress=(long)p;
+    intp adress=(intp)p;
     adress += IVU_MEM_ALIGN-1;
     adress  =adress & IVU_MEM_MASK;
     return (void*)adress;
@@ -118,7 +118,7 @@ inline void    *IVP_U_Memory::get_mem(unsigned int groesse)
 	    return ((void *) this->neuer_sp_block(groesse));
 	} else {
 	    speicherbeginn = p;
-		IVP_IF( ((intptr_t)op > 0x780000 ) && ((intptr_t)op < 0x792f48)) {
+		IVP_IF( ((intp)op > 0x780000 ) && ((intp)op < 0x792f48)) {
 			op++;
 			op--;
 		}

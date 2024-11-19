@@ -47,7 +47,6 @@ IMaterialSystemHardwareConfig *g_pMaterialSystemHardwareConfig = 0;
 IDebugTextureInfo *g_pMaterialSystemDebugTextureInfo = 0;
 IVBAllocTracker *g_VBAllocTracker = 0;
 IColorCorrectionSystem *colorcorrection = 0;
-IP4 *p4 = 0;
 IMdlLib *mdllib = 0;
 IQueuedLoader *g_pQueuedLoader = 0;
 IResourceAccessControl *g_pResourceAccessControl = 0;
@@ -133,7 +132,6 @@ static InterfaceGlobals_t g_pInterfaceGlobals[] =
 	{ DEBUG_TEXTURE_INFO_VERSION, &g_pMaterialSystemDebugTextureInfo },
 	{ VB_ALLOC_TRACKER_INTERFACE_VERSION, &g_VBAllocTracker },
 	{ COLORCORRECTION_INTERFACE_VERSION, &colorcorrection },
-	{ P4_INTERFACE_VERSION, &p4 },
 	{ MDLLIB_INTERFACE_VERSION, &mdllib },
 	{ QUEUEDLOADER_INTERFACE_VERSION, &g_pQueuedLoader },
 	{ RESOURCE_ACCESS_CONTROL_INTERFACE_VERSION, &g_pResourceAccessControl },

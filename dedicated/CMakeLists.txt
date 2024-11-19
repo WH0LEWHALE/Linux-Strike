@@ -18,17 +18,15 @@ add_definitions(-DDEDICATED -DLAUNCHERONLY)
 
 if( USE_KISAK_PHYSICS )
     add_definitions(-DUSE_KISAK_PHYSICS)
-elseif( USE_BULLET_PHYSICS )
-    add_definitions(-DUSE_BULLET_PHYSICS)
-endif()
+end()
 
 #linker
-if( WINDOWS )
+#if( WINDOWS )
     #$AdditionalDependencies				"$BASE wsock32.lib odbc32.lib odbccp32.lib winmm.lib" [$WINDOWS]
-endif()
-if( OSXALL )
+#endif()
+#if( OSXALL )
     #$SystemLibraries                     "iconv" [$OSXALL]
-endif()
+#endif()
 
 #Source
 if( WINDOWS )
@@ -80,8 +78,7 @@ if( POSIX )
     target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/filesystem/linux_support.cpp")
 endif()
 
-
-target_link_libraries(${OUTBINNAME} appframework_client dmxloader_client mathlib_client tier2_client tier3_client libvstdlib_client vpklib_client)
+target_link_libraries(${OUTBINNAME} appframework_client dmxloader_client mathlib_client tier2_client tier3_client vstdlib_client vpklib_client)
 
 if( WINDOWS OR OSXALL )
     target_link_libraries(${OUTBINNAME} vgui_controls_client)

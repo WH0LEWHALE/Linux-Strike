@@ -55,7 +55,7 @@ static matrix3x4_t *ComputeSkinMatrixSSE( mstudioboneweight_t &boneweights, matr
 	VPROF_BUDGET( "ComputeSkinMatrixSSE", _T("SubD Rendering") );
 
 	// NOTE: pPoseToWorld, being cache aligned, doesn't need explicit initialization
-#if defined( _WIN32 ) && !defined( WIN64 ) && !defined( _X360 ) 
+#if defined( _WIN32 ) && !defined( _WIN64 ) && !defined( _X360 ) 
 	switch( boneweights.numbones )
 	{
 	default:

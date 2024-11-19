@@ -7,9 +7,6 @@
 class hk_Ball_Socket_BP  //: public hk_Effector_BP 
 {
 	public:
-
-		HK_DECLARE_NONVIRTUAL_CLASS_ALLOCATOR(HK_MEMORY_CLASS_CONSTRAINT, hk_Ball_Socket_BP)
-
 		inline hk_Ball_Socket_BP()
 		{
 			m_strength = 1.0f;

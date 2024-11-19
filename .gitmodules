@@ -1,0 +1,4 @@
+[submodule "ivp"]
+	path = ivp
+	url = https://github.com/zwexy/vphysics.git
+	branch = master

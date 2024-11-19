@@ -3720,6 +3720,11 @@ int CModelRender::DrawStaticPropArrayFast( StaticPropRenderInfo_t *pProps, int c
 #endif // DEDICATED
 }
 
+#ifndef DEDICATED
+static ConVar r_shadowlod("r_shadowlod", "-1");
+static ConVar r_shadowlodbias("r_shadowlodbias", "2");
+#endif
+
 //-----------------------------------------------------------------------------
 // Shadow rendering
 //-----------------------------------------------------------------------------
@@ -3727,8 +3732,6 @@ matrix3x4a_t* CModelRender::DrawModelShadowSetup( IClientRenderable *pRenderable
 {
 #ifndef DEDICATED
 	DrawModelInfo_t &info = *pInfo;
-	static ConVar r_shadowlod("r_shadowlod", "-1");
-	static ConVar r_shadowlodbias("r_shadowlodbias", "2");
 
 	model_t const* pModel = pRenderable->GetModel();
 	if ( !pModel )

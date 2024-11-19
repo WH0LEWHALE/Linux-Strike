@@ -63,7 +63,7 @@ void IVP_Compact_Recursive::build_convex_hull(){
 
 void IVP_Compact_Recursive::set_rekursive_convex_hull(){
   IVP_Hash point_hash( 1024, sizeof(IVP_U_Float_Point),(void *)-1);
-  int n_points_in_hash = 0;
+  intp n_points_in_hash = 0;
   
   struct Triangle_Key {
     int point_index[3];
@@ -103,10 +103,7 @@ void IVP_Compact_Recursive::set_rekursive_convex_hull(){
       int pi[3];
       // convert points to unique point nums
       for (int i = 0; i<3;i++){
-    //lwss - x64 fixes
-	//int ind = (int)point_hash.find( (char *)p[i]);
-	intptr_t ind = (intptr_t)point_hash.find( (char *)p[i]);
-	//lwss end
+	intp ind = (intp)point_hash.find( (char *)p[i]);
 	if (ind<0){
 	  point_hash.add( (char *)p[i], (void *)n_points_in_hash);
 	  ind = n_points_in_hash++;
@@ -143,10 +140,7 @@ void IVP_Compact_Recursive::set_rekursive_convex_hull(){
       int pi[3];
       // convert points to unique point nums
       for (int i = 0; i<3;i++){
-    //lwss -x64 fixes
-	//int ind = (int)point_hash.find( (char *)p[i]);
-	intptr_t ind = (intptr_t)point_hash.find( (char *)p[i]);
-	//lwss end
+    intp ind = (intp)point_hash.find( (char *)p[i]);
 	pi[i] = ind;
       }
       // find triangle in hash

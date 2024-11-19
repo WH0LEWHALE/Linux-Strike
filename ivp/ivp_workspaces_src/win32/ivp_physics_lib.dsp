@@ -927,10 +927,6 @@ SOURCE=..\..\IVP_UTILITY\ivu_linear_PIII.hxx
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\IVP_UTILITY\ivu_linear_ps2.hxx
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\IVP_UTILITY\ivu_linear_software.hxx
 # End Source File
 # Begin Source File
@@ -976,10 +972,6 @@ SOURCE=..\..\IVP_UTILITY\ivu_min_list.hxx
 # Begin Source File
 
 SOURCE=..\..\Ivp_utility\ivu_os_dep.cxx
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\IVP_UTILITY\ivu_ps2.hxx
 # End Source File
 # Begin Source File
 

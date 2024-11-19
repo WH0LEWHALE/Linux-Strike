@@ -1220,7 +1220,8 @@ FSReturnCode_t SetSteamInstallPath( char *steamInstallPath, int steamInstallPath
 
 	Q_strncpy( steamInstallPath, executablePath, steamInstallPathLen );
 #ifdef WIN32
-	const char *pchSteamDLL = "steam" DLL_EXT_STRING;
+	// _client.dll is a bad idea, hardcode .dll here
+	const char *pchSteamDLL = "steam.dll";
 #elif defined(OSX) || defined(LINUX)
 	const char *pchSteamDLL = "libsteam" DLL_EXT_STRING;
 

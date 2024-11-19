@@ -63,11 +63,11 @@ static int g_whichMenu = 0;
 //
 void OpenRadioMenu( int index )
 {
-#if defined( INCLUDE_SCALEFORM )
 	if ( CSGameRules() && CSGameRules()->IsPlayingTraining() )
 		return;
 
 	C_CSPlayer *pLocalPlayer = C_CSPlayer::GetLocalCSPlayer();
+#if defined( INCLUDE_SCALEFORM )
 	if ( pLocalPlayer && pLocalPlayer->GetObserverMode() > OBS_MODE_NONE )
 		return;
 
@@ -76,6 +76,38 @@ void OpenRadioMenu( int index )
 	{
 		pRadio->ShowRadioGroup( index );
 		g_whichMenu = index;
+	}
+#else
+// do not show the menu if the player is dead or is an observer
+	if ( !pLocalPlayer )
+		return;
+
+	if ( !pLocalPlayer->IsAlive() || pLocalPlayer->IsObserver() )
+		return;
+
+	CHudMenu *pMenu = (CHudMenu *) GetHud().FindElement( "CHudMenu" );
+	if ( !pMenu )
+		return;
+
+	g_whichMenu = index;
+
+	//
+	// the 0x23f and 0x3ff are masks that describes the keys that
+	// are valid.  This will have to be changed if the menus change.
+	//
+	switch ( index )
+	{
+	case 1:
+		pMenu->ShowMenu( "#RadioA", 0x23f );
+		break;
+	case 2:
+		pMenu->ShowMenu( "#RadioB", 0x23f );
+		break;
+	case 3:
+		pMenu->ShowMenu( "#RadioC", 0x3ff );
+		break;
+	default:
+		g_whichMenu = 1;
 	}
 #endif
 }

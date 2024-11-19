@@ -6,8 +6,6 @@
 
 #include "cbase.h"
 #include "cs_custom_texture_saver.h"
-#include "tier2/p4helpers.h"
-#include "p4lib/ip4.h"
 
 bool CCSCustomTextureSaver::Init()
 {
@@ -80,13 +78,6 @@ void CCSCustomTextureSaver::Update( float frameTime )
 
 			char szFullVTFPath[ MAX_PATH ];
 			g_pFullFileSystem->RelativePathToFullPath( completedMaterials[i].fileNames[j], "MOD", szFullVTFPath, sizeof( szFullVTFPath ) );
-
-			g_p4factory->SetDummyMode( p4 == NULL );
-			g_p4factory->SetOpenFileChangeList( completedMaterials[i].pchChangeListName );
-			if ( !( p4->IsFileInPerforce( szFullVTFPath ) ) )
-				CP4AutoAddFile autop4_add( szFullVTFPath );
-			else
-				CP4AutoEditFile autop4_edit( szFullVTFPath );
 		}
 		// TODO: add saved files to perforce
 	}

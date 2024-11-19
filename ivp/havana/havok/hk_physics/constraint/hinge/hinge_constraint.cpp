@@ -29,7 +29,7 @@ struct hk_Hinge_Constraint_Work
 		return addr;
 	}
 #else
-	static inline void *operator new (unsigned long int size, void *addr){
+	static inline void *operator new (size_t size, void *addr){
 		return addr;
 	}
 	static inline void operator delete (void *, void *){ }
@@ -165,7 +165,7 @@ int	hk_Hinge_Constraint::setup_and_step_constraint(
 
 		hk_real sin_alpha = perp_x2_ws.dot( perp_y_ws );
 		hk_real cos_alpha = perp_x2_ws.dot( perp_x_ws );
-		hk_real alpha = hk_Math::atan2( sin_alpha, cos_alpha );
+		hk_real alpha = atan2( sin_alpha, cos_alpha );
 		
 		hk_Constraint_Limit_Util::do_angular_limit( pi, b0, line_ws[0], alpha, b1, m_limit, tau_factor, strength_factor );
 	}
@@ -222,13 +222,11 @@ int	hk_Hinge_Constraint::setup_and_step_constraint(
 	}
 
 	hk_Fixed_Dense_Matrix<5>& mass_matrix = query_engine.get_vmq_storage().get_fixed_dense_matrix();
-
-	hk_Dense_Matrix_Util::invert_5x5( mass_matrix, 0.0f);
+	hk_Dense_Matrix_Util::invert_5x5(mass_matrix, 0.0f);
 
 	hk_Fixed_Dense_Vector<5> impulses;
 	hk_Dense_Matrix_Util::mult( mass_matrix, delta, impulses);
 
-		
 	query_engine.apply_impulses( HK_BODY_A, b0, impulses.get_const_real_pointer() );
 	query_engine.apply_impulses( HK_BODY_B, b1, impulses.get_const_real_pointer() );
 
@@ -378,7 +376,7 @@ void hk_Hinge_Constraint::apply_effector_PSI(	hk_PSI_Info& pi,
 	HK_DISPLAY_RAY(orig_ws[0], hk_Vector3(-impulse(0),-impulse(1),-impulse(2)), 0x00ffff);
 	HK_DISPLAY_RAY(line_ws[0], hk_Vector3(-impulse(3),-impulse(4),0), 0x00ffff);
 
-	HK_ASSERT(solve_ok == HK_OK);
+	IVP_ASSERT(solve_ok == HK_OK);
 
 	query_engine.apply_impulses( HK_BODY_A, b0, impulse.get_const_real_pointer() );
 	query_engine.apply_impulses( HK_BODY_B, b1, impulse.get_const_real_pointer() );

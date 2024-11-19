@@ -9,7 +9,11 @@
 #include <ctype.h>
 
 #if !defined(__MWERKS__) || !defined(__POWERPC__)
+#ifdef OSX
+#include <malloc/malloc.h>
+#else
 #include <malloc.h>
+#endif
 #endif
 #ifdef WIN32
 #	ifndef _XBOX
@@ -428,42 +432,3 @@ int p_atoi(const char *s){
     return atoi(s);
 }
 
-
-#ifdef WIN32
-#	include <time.h>
-
-long p_get_time(){ // returns seconds since 1970
-	time_t t;
-	time_t now = time(&t);
-	return t;
-}
-
-
-// there's no strcasecmp on Windows !?!
-
-// not sure, whether this implementation is entirely correct
-int	strcasecmp(const char *a,const char *b)
-{
-// chris, Sept 2000
-	return stricmp(a,b);
-
-/*
-	if(a==NULL) return -1;
-	if(b==NULL) return +1;
-	int i;
-
-	for(i=0;a[i];i++)
-	{
-		if(b[i]==0) return +1;
-		int ia=(int)a[i];
-		int ib=(int)b[i];
-		if((ia>=97) && (ia<123)) ia=ia-32;
-		if((ib>=97) && (ib<123)) ib=ib-32;
-		if(ia<ib) return -1;
-		if(ia>ib) return +1;
-	}
-	if(b[i]!=0) return -1; 
-	return 0;
-*/
-}
-#endif

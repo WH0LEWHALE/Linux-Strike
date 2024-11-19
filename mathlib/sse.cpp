@@ -10,6 +10,11 @@
 #include "tier0/dbg.h"
 #include "mathlib/mathlib.h"
 #include "mathlib/vector.h"
+
+#if defined(__arm__) || defined(__aarch64__)
+#include "sse2neon.h"
+#endif
+
 #include "sse.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -87,8 +92,7 @@ const __m128  f05 = _mm_set_ss(0.5f);  // 0.5 as SSE value
 
 float _SSE_RSqrtAccurate(float a)
 {
-
-#ifdef _WIN32
+#if defined( _WIN32 ) && !defined( _WIN64 )
 	float x;
 	float half = 0.5f;
 	float three = 3.f;
@@ -110,6 +114,9 @@ float _SSE_RSqrtAccurate(float a)
 	}
 
 	return x;
+#elif _WIN64
+	// Inline assembly isn't allowed in 64-bit MSVC. Sadness.
+	return FastRSqrt(a);
 #elif POSIX
 	__m128  xx = _mm_load_ss( &a );
 	__m128  xr = _mm_rsqrt_ss( xx );
@@ -180,7 +187,7 @@ float FASTCALL _SSE_VectorNormalize (Vector& vec)
 		r[ 0 ] = vec.x * recipSqrt;
 		r[ 1 ] = vec.y * recipSqrt;
 		r[ 2 ] = vec.z * recipSqrt;
-#elif defined __e2k__
+#elif defined(__e2k__) || defined(__arm__) || defined(__aarch64__)
 		float rsqrt = _SSE_RSqrtAccurate( v[0] * v[0] + v[1] * v[1] + v[2] * v[2] );
 		r[0] = v[0] * rsqrt;
 		r[1] = v[1] * rsqrt;
@@ -502,7 +509,7 @@ float FastCos( float x )
 		movss   x,    xmm0
 		
 	}
-#elif defined( _WIN64 ) || defined( __e2k__ )
+#elif defined( _WIN64 ) || defined( __e2k__ ) || defined(__arm__) || defined(__aarch64__)
 	return cosf( x );
 #elif POSIX
 	

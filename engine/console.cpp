@@ -1587,8 +1587,6 @@ void CConPanel::Paint()
 //-----------------------------------------------------------------------------
 void CConPanel::PaintBackground()
 {
-	// Rendering this information is not interesting and gives away server IP when streaming
-#if 0
 	if ( !Con_IsVisible() )
 		return;
 
@@ -1620,7 +1618,6 @@ void CConPanel::PaintBackground()
 		int x = wide - DrawTextLen( m_hFont, unicode ) - 2;
 		DrawText( m_hFont, x, tall + 1, unicode );
 	}
-#endif
 }
 
 //-----------------------------------------------------------------------------

@@ -15,7 +15,6 @@
 #include "engine/IEngineSound.h"
 #include "radio_status.h"
 #include "bot/shared_util.h"
-#include "ihudlcd.h"
 #include "voice_status.h"
 #include <vgui/IScheme.h>
 
@@ -23,7 +22,15 @@
 #include "tier0/memdbgon.h"
 
 // [hpe:jason]  Do not disable this element! It needs to be around to forward various HudChat messages to the new Scaleform UI
-DECLARE_HUDELEMENT_FLAGS( CHudChat, HUDELEMENT_SS_FULLSCREEN_ONLY );
+//DECLARE_HUDELEMENT_FLAGS( CHudChat, HUDELEMENT_SS_FULLSCREEN_ONLY );
+DECLARE_HUDELEMENT(CHudChat);
+
+#if !defined( INCLUDE_SCALEFORM ) && !defined( INCLUDE_ROCKETUI )
+DECLARE_HUD_MESSAGE(CHudChat, SayText);
+DECLARE_HUD_MESSAGE(CHudChat, SayText2);
+DECLARE_HUD_MESSAGE(CHudChat, RadioText);
+DECLARE_HUD_MESSAGE(CHudChat, TextMsg);
+#endif
 
 //=====================
 //CHudChatLine
@@ -79,7 +86,149 @@ void CHudChat::CreateChatLines( void )
 void CHudChat::Init( void )
 {
 	BaseClass::Init();
+
+#if !defined( INCLUDE_SCALEFORM ) && !defined( INCLUDE_ROCKETUI )
+	HOOK_HUD_MESSAGE(CHudChat, TextMsg);
+	HOOK_HUD_MESSAGE(CHudChat, RadioText);
+	HOOK_HUD_MESSAGE(CHudChat, SayText);
+	HOOK_HUD_MESSAGE(CHudChat, SayText2);
+#endif
 }
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *fmt - 
+//			... - 
+//-----------------------------------------------------------------------------
+void CHudChat::ChatPrintf(int iPlayerIndex, int iFilter, const char* fmt, ...)
+{
+#if defined( _PS3 ) && !defined( NO_STEAM )
+	if (!steamapicontext->SteamFriends() || steamapicontext->SteamFriends()->GetUserRestrictions())
+		return; // user not eligible to chat
+#endif
+
+	if (CDemoPlaybackParameters_t const* pParameters = engine->GetDemoPlaybackParameters())
+	{
+		if (pParameters->m_bAnonymousPlayerIdentity)
+			return; // cannot print potentially personal details
+	}
+
+	va_list marker;
+	char msg[4096];
+
+	va_start(marker, fmt);
+	Q_vsnprintf(msg, sizeof(msg), fmt, marker);
+	va_end(marker);
+
+	// Strip any trailing '\n'
+	if (strlen(msg) > 0 && msg[strlen(msg) - 1] == '\n')
+	{
+		msg[strlen(msg) - 1] = 0;
+	}
+
+	// Strip leading \n characters ( or notify/color signifiers ) for empty string check
+	char* pmsg = msg;
+	while (*pmsg && (*pmsg == '\n' || (*pmsg > 0 && *pmsg < COLOR_MAX)))
+	{
+		pmsg++;
+	}
+
+	if (!*pmsg)
+		return;
+
+	// [jason] Forward message to Scaleform for display
+	if (iFilter != CHAT_FILTER_NONE)
+	{
+		if (!(iFilter & GetFilterFlags()))
+			return;
+	}
+
+	//CS15ForwardStatusMsg(pmsg, iPlayerIndex);
+
+	// Now strip just newlines, since we want the color info for printing
+	pmsg = msg;
+	while (*pmsg && (*pmsg == '\n'))
+	{
+		pmsg++;
+	}
+
+	if (!*pmsg)
+		return;
+
+	CBaseHudChatLine* line = (CBaseHudChatLine*)FindUnusedChatLine();
+	if (!line)
+	{
+		line = (CBaseHudChatLine*)FindUnusedChatLine();
+	}
+
+	if (!line)
+	{
+		return;
+	}
+
+	if (iFilter != CHAT_FILTER_NONE)
+	{
+#ifdef PORTAL2
+		if (iFilter & (CHAT_FILTER_JOINLEAVE | CHAT_FILTER_TEAMCHANGE))
+			// In Portal 2 we don't want to show join/leave or teamchange messages
+			return;
+#endif
+		if (!(iFilter & GetFilterFlags()))
+			return;
+	}
+
+	line->SetText("");
+
+	int iNameStart = 0;
+	int iNameLength = 0;
+
+	player_info_t sPlayerInfo;
+	if (iPlayerIndex == 0)
+	{
+		Q_memset(&sPlayerInfo, 0, sizeof(player_info_t));
+		Q_strncpy(sPlayerInfo.name, "Console", sizeof(sPlayerInfo.name));
+	}
+	else
+	{
+		engine->GetPlayerInfo(iPlayerIndex, &sPlayerInfo);
+	}
+
+	int bufSize = (strlen(pmsg) + 1) * sizeof(wchar_t);
+	wchar_t* wbuf = static_cast<wchar_t*>(stackalloc(bufSize));
+	if (wbuf)
+	{
+		Color clrNameColor = GetClientColor(iPlayerIndex);
+
+		line->SetExpireTime();
+
+		g_pVGuiLocalize->ConvertANSIToUnicode(pmsg, wbuf, bufSize);
+
+		// find the player's name in the unicode string, in case there is no color markup
+		const char* pName = sPlayerInfo.name;
+
+		if (pName)
+		{
+			wchar_t wideName[MAX_PLAYER_NAME_LENGTH];
+			g_pVGuiLocalize->ConvertANSIToUnicode(pName, wideName, sizeof(wideName));
+
+			const wchar_t* nameInString = wcsstr(wbuf, wideName);
+
+			if (nameInString)
+			{
+				iNameStart = (nameInString - wbuf);
+				iNameLength = wcslen(wideName);
+			}
+		}
+
+		line->SetVisible(false);
+		line->SetNameStart(iNameStart);
+		line->SetNameLength(iNameLength);
+		line->SetNameColor(clrNameColor);
+
+		line->InsertAndColorizeText(wbuf, iPlayerIndex);
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // Purpose: Overrides base reset to not cancel chat at round restart
@@ -111,7 +260,7 @@ bool CHudChat::MsgFunc_RadioText( const CCSUsrMsg_RadioText &msg )
 
 	char ansiString[512];
 	g_pVGuiLocalize->ConvertUnicodeToANSI( ConvertCRtoNL( szBuf[5] ), ansiString, sizeof( ansiString ) );
-	ChatPrintf( client, CHAT_FILTER_TEAMCHANGE, "%s", ansiString );
+	ChatPrintf( client, CHAT_FILTER_TEAMCHANGE, "%c%s", COLOR_USEOLDCOLORS, ansiString );
 
 	CLocalPlayerFilter filter;
 	C_BaseEntity::EmitSound( filter, SOUND_FROM_LOCAL_PLAYER, "HudChat.Message" );
@@ -178,9 +327,9 @@ bool CHudChat::MsgFunc_SayText2( const CCSUsrMsg_SayText2 &msg )
 		}
 
 		// print raw chat text
-		ChatPrintf( client, iFilter, "%s", ansiString );
+		ChatPrintf( client, iFilter, "%c%s", COLOR_USEOLDCOLORS, ansiString );
 
-		Msg( "%s\n", RemoveColorMarkup(ansiString) );
+		//Msg( "%s\n", RemoveColorMarkup(ansiString) );
 
 		if ( playChatSound )
 		{
@@ -257,9 +406,9 @@ Color CHudChat::GetClientColor( int clientIndex )
 	{
 		return g_ColorGreen;
 	}
-	else if( g_PR )
+	else if( GetCSResources() )
 	{
-		switch ( g_PR->GetTeam( clientIndex ) )
+		switch ( GetCSResources()->GetTeam( clientIndex ) )
 		{
 		case 2	: return g_ColorRed;
 		case 3	: return g_ColorBlue;
@@ -299,7 +448,6 @@ Color CHudChat::GetTextColorForClient( TextColor colorNum, int clientIndex )
 			}
 		}
 		break;
-
 
 	default:
 		c = g_ColorYellow;

@@ -1,0 +1,100 @@
+//-----------------------------------------------------------------------------
+//	HK_BASE.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		"..\..\..\.."
+$Macro OUTLIBDIR	"$LIBCOMMON"
+$Include "$SRCDIR\vpc_scripts\source_lib_base.vpc"
+
+$Configuration	"Debug"
+{
+	$General
+	{
+		$CharacterSet						"Use Multi-Byte Character Set"
+	}
+
+	$General [$WIN32]
+	{
+		$OutputDirectory					"$SRCDIR\ivp\obj\x86_debug\hk_base"
+		$IntermediateDirectory				"$SRCDIR\ivp\obj\x86_debug\hk_base"
+	}
+
+	$General [$WIN64]
+	{
+		$OutputDirectory					"$SRCDIR\ivp\obj\x64_debug\hk_base"
+		$IntermediateDirectory				"$SRCDIR\ivp\obj\x64_debug\hk_base"
+	}
+
+	$Compiler
+	{
+		$AdditionalIncludeDirectories		"$BASE;$SRCDIR\ivp\havana\havok;$SRCDIR\ivp\ivp_utility;$SRCDIR\ivp\havana"
+        $PreprocessorDefinitions			"$BASE;VPHYSICS_EXPORTS;HAVANA_CONSTRAINTS;HAVOK_MOPP"
+		$Create/UsePrecompiledHeader		"Not Using Precompiled Headers"
+		$Create/UsePCHThroughFile			"hk_base/base.h"
+	}
+
+	$Compiler [$WINDOWS]
+	{
+		$BasicRuntimeChecks					"Both (/RTC1, equiv. to /RTCsu)"
+		$WarningLevel						"Level 3 (/W3)"
+	}
+}
+
+$Configuration	"Release"
+{
+	$General
+	{
+		$CharacterSet						"Use Multi-Byte Character Set"
+	}
+
+	$General [$WIN32]
+	{
+		$OutputDirectory					"$SRCDIR\ivp\obj\x86_release\hk_base"
+		$IntermediateDirectory				"$SRCDIR\ivp\obj\x86_release\hk_base"
+	}
+
+	$General [$WIN64]
+	{
+		$OutputDirectory					"$SRCDIR\ivp\obj\x64_release\hk_base"
+		$IntermediateDirectory				"$SRCDIR\ivp\obj\x64_release\hk_base"
+	}
+
+	$Compiler
+	{
+		$AdditionalIncludeDirectories		"$BASE;$SRCDIR\ivp\havana\havok;$SRCDIR\ivp\ivp_utility;$SRCDIR\ivp\havana"
+		$PreprocessorDefinitions			"$BASE;VPHYSICS_EXPORTS;HAVANA_CONSTRAINTS;HAVOK_MOPP"
+		$Create/UsePrecompiledHeader		"Not Using Precompiled Headers"
+		$Create/UsePCHThroughFile			"hk_base/base.h"
+	}
+
+	$Compiler [$WINDOWS]
+	{
+		$InlineFunctionExpansion			"Only __inline (/Ob1)"
+		$WarningLevel						"Level 3 (/W3)"
+	}
+}
+
+$Project "hk_base"
+{
+	$Folder	"memory"
+	{
+		$File	"memory\memory.cpp"
+		$File	"memory\memory.h"
+		$File	"memory\memory.inl"
+		$File	"memory\memory_util.cpp"
+		$File	"memory\memory_util.h"
+	}
+
+	$Folder	"array"
+	{
+		$File	"array\array.cpp"
+		$File	"array\array.h"
+		$File	"array\array.inl"
+	}
+
+	$File	"stdafx.h"
+	$File	"base.h"
+	$File	"base_types.h"
+}

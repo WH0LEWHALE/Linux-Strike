@@ -59,8 +59,6 @@ $Project "Client (CSGO)"
 		
 		$File	"c_team_objectiveresource.cpp"
 		$File	"c_team_objectiveresource.h"
-		$File	"$SRCDIR\game\shared\bannedwords.h"
-		$File	"$SRCDIR\game\shared\bannedwords.cpp"
 		$File	"hud_voicestatus.cpp"
 		$File	"$SRCDIR\game\shared\predicted_viewmodel.cpp"
 		$File	"$SRCDIR\game\shared\predicted_viewmodel.h"

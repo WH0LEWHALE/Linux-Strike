@@ -24,7 +24,7 @@ CHudSubtitles::CHudSubtitles( const char *pElementName ) :
 	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
-	SetScheme( "basemodui_scheme" );
+	SetScheme( "ClientScheme" );
 	SetProportional( true );
 
 	int nScreenWide, nScreenTall;

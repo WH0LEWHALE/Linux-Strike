@@ -11,11 +11,7 @@
 
 #include "igamesystem.h"
 #ifndef _PS3
-#ifdef WIN32
-#include <typeinfo.h>
-#else
 #include <typeinfo>
-#endif
 #endif
 #include "cdll_int.h"
 #ifndef _PS3

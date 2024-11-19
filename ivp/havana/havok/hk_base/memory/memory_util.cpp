@@ -2,7 +2,7 @@
 #include <hk_base/memory/memory_util.h>
 
 
-void hk_Memory_Util::print_statistics( hk_Memory *mem, hk_Console *out )
+void hk_Memory_Util::print_statistics( hk_Memory *mem )
 {
 	const char *enum_to_string[HK_MEMORY_CLASS_MAX];
 	{
@@ -61,15 +61,15 @@ void hk_Memory_Util::print_statistics( hk_Memory *mem, hk_Console *out )
 		}
 	}
 
-	out->printf( "\nMemory Summary\n" );
-	out->printf(   "**************\n" );
+	ivp_message( "\nMemory Summary\n" );
+	ivp_message(   "**************\n" );
 
-	out->printf( "\n%32s: Bytes allocated %i, max bytes allocated %i\n","SUMMARY", current_mem, max_mem );
+	ivp_message( "\n%32s: Bytes allocated %i, max bytes allocated %i\n","SUMMARY", current_mem, max_mem );
 
 
 	{ // details per type
-		out->printf( "\nDetails per type\n" );
-		out->printf(   "****************\n" );
+		ivp_message( "\nDetails per type\n" );
+		ivp_message(   "****************\n" );
 		for (int i = 0; i< HK_MEMORY_CLASS_MAX; i++)
 		{
 			if ( i == HK_MEMORY_CLASS_DUMMY) continue;
@@ -83,7 +83,7 @@ void hk_Memory_Util::print_statistics( hk_Memory *mem, hk_Console *out )
 			if (!type_name){
 				type_name = "hk_Memory::print_statistics does not know type";
 			}
-			out->printf( "%32s: blocks: %4i  size: %5i  max_size %5i  avg_size %5i  allocs %6i\n",
+			ivp_message( "%32s: blocks: %4i  size: %5i  max_size %5i  avg_size %5i  allocs %6i\n",
 				type_name,
 				s.m_blocks_in_use, s.m_size_in_use, 
 				s.m_max_size_in_use, (s.m_blocks_in_use) ? s.m_size_in_use / s.m_blocks_in_use + 1 : 0, 
@@ -92,8 +92,8 @@ void hk_Memory_Util::print_statistics( hk_Memory *mem, hk_Console *out )
 	}
 
 	{ // details per size
-		out->printf( "\nDetails per size\n" );
-		out->printf(   "****************\n" );
+		ivp_message( "\nDetails per size\n" );
+		ivp_message(   "****************\n" );
 
 		for (int i = 0; i < HK_MEMORY_MAX_ROW; i++)
 		{
@@ -101,7 +101,7 @@ void hk_Memory_Util::print_statistics( hk_Memory *mem, hk_Console *out )
 			for ( hk_Memory::hk_Memory_Elem *el = mem->m_free_list[i]; el; el = el->m_next ){
 				free_blocks ++;
 			}
-			out->printf( "%32s  blocks %4i  size %5i  free_elems %4i  total %6i\n",
+			ivp_message( "%32s  blocks %4i  size %5i  free_elems %4i  total %6i\n",
 				"", 
 				mem->m_blocks_in_use[i],
 				mem->m_row_to_size[i],

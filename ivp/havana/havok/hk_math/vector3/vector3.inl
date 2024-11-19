@@ -1,12 +1,4 @@
-#ifdef HK_PS2
-#	include <hk_math/vector3/vector3ps2.inl>
-#else	//HK_PS2
-
 /* constructor / assignment */
-
-inline hk_Vector3::hk_Vector3()
-{
-}
 
 inline hk_Vector3::hk_Vector3(hk_real a, hk_real b, hk_real c)
 	: x(a), y(b), z(c)
@@ -310,13 +302,14 @@ hk_real hk_Vector3::dot(const hk_Vector3& a) const
 
 hk_real hk_Vector3::length() const
 {
-	return hk_Math::sqrt((x * x) + ( y * y ) + ( z * z ));
+	return sqrt((x * x) + ( y * y ) + ( z * z ));
 }
 
 hk_real hk_Vector3::length_inv() const
 {
 	hk_real l2 = (x*x) + (y*y) + (z*z);
-	return l2 ? hk_Math::sqrt_inv(l2) : 0;
+	//return l2 ? hk_Math::sqrt_inv(l2) : 0;
+	return l2 ? hk_Math::fast_rsqrt(l2) : 0;
 }
 
 hk_real hk_Vector3::length_squared() const
@@ -335,7 +328,7 @@ hk_real hk_Vector3::distance_squared_to( const hk_Vector3& v) const
 
 hk_real hk_Vector3::distance_to( const hk_Vector3& v) const
 {
-	return hk_Math::sqrt( distance_squared_to(v));
+	return sqrt( distance_squared_to(v));
 }
 
 void hk_Vector3::normalize()
@@ -370,6 +363,4 @@ inline Const hkVector3ExpressionMinus operator- (const hk_Vector3& a, const hk_V
 {
 	return hkVector3ExpressionMinus(a,b);
 }
-
-#endif //HK_PS2
 

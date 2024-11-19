@@ -17,7 +17,7 @@
 #include <ivp_material.hxx>
 #include <ivp_impact.hxx> 
 #include <ivp_mindist_intern.hxx>
-//#include <ivp_friction.hxx>
+#include <ivp_friction.hxx>
 #include <ivp_hull_manager.hxx>
 #include "ivp_mindist_macros.hxx"
 #include <ivp_listener_collision.hxx>
@@ -1154,16 +1154,6 @@ void IVP_Impact_Solver_Long_Term::do_impact_of_two_objects(IVP_Mindist *mindist,
     }
 #endif
 
-//lwss add
-void IVP_Contact_Point::recompute_friction()
-{
-    IVP_Environment *environment = this->l_friction_system->l_environment;
-    IVP_U_Memory *memory = environment->short_term_mem;
-    memory->start_memory_transaction();
-    this->recalc_friction_s_vals(); // this doesn't take an IVP_Environment* ??
-    memory->end_memory_transaction();
-}
-//lwss end
 void IVP_Contact_Point::get_material_info(IVP_Material *mtl[2]) {
     int k;
     for(k=0;k<2;k++) {
@@ -1176,6 +1166,13 @@ void IVP_Contact_Point::get_material_info(IVP_Material *mtl[2]) {
 	}
 	IVP_ASSERT(mtl[k]);
     }
+}
+
+void IVP_Contact_Point::recompute_friction() {
+	IVP_Environment* env = get_synapse(0)->get_object()->get_environment();
+	env->sim_unit_mem->start_memory_transaction();
+	recalc_friction_s_vals();
+	env->sim_unit_mem->end_memory_transaction();
 }
 
 void IVP_Impact_Solver::get_cos_sin_for_impact(IVP_FLOAT friction_val,IVP_FLOAT percent_energy_conservation,IVP_FLOAT *cos_val,IVP_FLOAT *sin_val) {

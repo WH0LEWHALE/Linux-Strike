@@ -64,7 +64,6 @@ class IMaterialSystem2;
 class IMaterialSystemHardwareConfig;
 class IMdlLib;
 class INetworkSystem;
-class IP4;
 class IQueuedLoader;
 class IResourceAccessControl;
 class IPrecacheSystem;
@@ -169,9 +168,6 @@ DECLARE_TIER2_INTERFACE( IVBAllocTracker, g_VBAllocTracker );
 
 #define COLORCORRECTION_INTERFACE_VERSION		"COLORCORRECTION_VERSION_1"
 DECLARE_TIER2_INTERFACE( IColorCorrectionSystem, colorcorrection );
-
-#define P4_INTERFACE_VERSION					"VP4002"
-DECLARE_TIER2_INTERFACE( IP4, p4 );
 
 #define MDLLIB_INTERFACE_VERSION				"VMDLLIB001"
 DECLARE_TIER2_INTERFACE( IMdlLib, mdllib );

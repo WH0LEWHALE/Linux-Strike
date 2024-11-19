@@ -14,8 +14,6 @@ include(${CMAKE_MODULE_PATH}/source_lib_base.cmake)
 
 add_definitions(-DDMSERIALIZERS_LIB)
 
-target_compile_options(${OUTLIBNAME} PRIVATE -fpermissive)
-
 target_sources(${OUTLIBNAME} PRIVATE "dmebaseimporter.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "dmserializers.cpp")
 target_sources(${OUTLIBNAME} PRIVATE "importactbusy.cpp")

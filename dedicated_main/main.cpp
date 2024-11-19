@@ -144,10 +144,10 @@ int main( int argc, char *argv[] )
 		return -1;
 	}
 
-	void *vstdlib = dlopen( "libvstdlib" DLL_EXT_STRING, RTLD_NOW );
+	void *vstdlib = dlopen( "vstdlib" DLL_EXT_STRING, RTLD_NOW );
 	if ( !vstdlib )
 	{
-		printf( "Failed to open %s (%s)\n", "libvstdlib" DLL_EXT_STRING, dlerror());
+		printf( "Failed to open %s (%s)\n", "vstdlib" DLL_EXT_STRING, dlerror());
 		return -1;
 	}
 

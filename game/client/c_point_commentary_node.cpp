@@ -408,7 +408,7 @@ CHudCommentary::CHudCommentary( const char *name ) : vgui::Panel( NULL, "HudComm
 	m_bShouldPaint = true;
 	m_bSoundStarted = false;
 
-	SetScheme( "basemodui_scheme" );
+	SetScheme( "ClientScheme" );
 }
 
 void CHudCommentary::ApplySchemeSettings( vgui::IScheme *pScheme )

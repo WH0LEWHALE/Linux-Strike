@@ -2,7 +2,7 @@
 
 #include <ivp_physics.hxx>
 
-#if !defined(WIN32) && !defined(PSXII) && !defined(GEKKO)
+#if !defined(WIN32) && !defined(GEKKO) && !defined(PLATFORM_BSD)
 #	include <alloca.h>
 #endif
 
@@ -22,10 +22,6 @@
 #include <ivp_time.hxx>
 
 IVP_U_Vector<IVP_Core> IVP_Controller_Independent::empty_list;
-
-#ifdef WIN32
-extern long p_get_time();
-#endif
 
 //the list of cores is valid, calculate the rest
 void IVP_Simulation_Unit::sim_unit_calc_redundants() {
@@ -889,30 +885,6 @@ sim_units_1:
 sim_units_0:
 
     ;
-
-
-#if 0 && defined(WIN32)
-  unsigned long time = p_get_time();
-
-  //BLOCKING
-  if( (time > 957460357 /*4may*/ + 60*60*24* (31+26) )) {
-    IVP_Time now_time=env->get_current_time();
-    // IVP_BLOCKING 
-    if(this->nb-now_time < 0.0) {
-        this->nb=now_time+9.73;
-	IVP_Time_Event_N *n_event=new IVP_Time_Event_N(env->get_current_time());
-	env->get_time_manager()->insert_event(n_event,env->get_current_time());
-	
-	P_DELETE(env->get_time_manager()->event_manager);
-	env->get_time_manager()->event_manager=new IVP_Event_Manager_D();
-	env->get_time_manager()->event_manager->mode=1;
-	for(int i=0;i<15;i++) {
-	    IVP_Time_Event_D *d_event=new IVP_Time_Event_D(env->get_current_time());
-	    env->get_time_manager()->insert_event(d_event,env->get_current_time());
-	}
-    }    
-  }
-#endif
 }
 
 void IVP_Sim_Units_Manager::reset_time( IVP_Time offset){

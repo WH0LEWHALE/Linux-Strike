@@ -63,8 +63,8 @@ extern void longjmp( jmp_buf, int ) __attribute__((noreturn));
 #undef JPEGLIB_USE_STDIO
 
 
-#include "../thirdparty/libpng-1.5.2/png.h"
-#include "../thirdparty/libpng-1.5.2/pngstruct.h"
+#include "../thirdparty/libpng-1.5.30/png.h"
+#include "../thirdparty/libpng-1.5.30/pngstruct.h"
 
 #include <setjmp.h>
 
@@ -909,7 +909,7 @@ fail:
     /* setjmp() must be called in every function that calls a PNG-reading
      * libpng function */
 
-    if ( setjmp( png_ptr->png_jmpbuf) ) 
+	if(setjmp(png_jmpbuf(png_ptr)))
 	{
         errcode = CE_ERROR_PARSING_SOURCE;
         goto fail;
@@ -2025,7 +2025,7 @@ fail:
     }
 
 	// We'll use the default setjmp / longjmp error handling.
-    if ( setjmp( png_ptr->png_jmpbuf ) ) 
+	if(setjmp(png_jmpbuf(png_ptr)))
 	{
 		// Error "writing".  But since we're writing to a memory bufferm,
 		// that just means we must have run out of memory

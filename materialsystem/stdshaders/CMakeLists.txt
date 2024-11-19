@@ -15,7 +15,7 @@ set(STDSHADERSDIR ${CMAKE_CURRENT_SOURCE_DIR})
 include(${CMAKE_MODULE_PATH}/detect_platform.cmake)
 include(${CMAKE_MODULE_PATH}/source_dll_base.cmake)
 
-if( WINDOWS OR POSIX )
+if( WIN32 OR POSIX )
     include_directories(fxctmp9)
     include_directories(vshtmp9)
 endif()
@@ -215,9 +215,7 @@ endif()
 target_sources(${OUTBINNAME} PRIVATE "${STDSHADERSDIR}/writez_dx9.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${STDSHADERSDIR}/writestencil_dx9.cpp")
 
-
-target_link_libraries(${OUTBINNAME} mathlib_client shaderlib_client libvstdlib_client)
-
+target_link_libraries(${OUTBINNAME} mathlib_client shaderlib_client vstdlib_client tier1_client)
 
 #This is missing some of the shader-building code... See stdshader_dx9.vpc.
 #Looks like they have some sort of perl converter for their shading language, haven't looked at it much.

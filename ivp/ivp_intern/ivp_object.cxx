@@ -68,6 +68,8 @@ void IVP_Real_Object::set_pinned(IVP_BOOL is_pinned)
 	 */
 	core->inv_rot_inertia.set(0.0f, 0.0f, 0.0f);
 	core->inv_rot_inertia.hesse_val = 0.0f;
+	core->speed_change.set_to_zero();
+	core->rot_speed_change.set_to_zero();
 
 	/**
 	 * Reset collision detection
@@ -153,6 +155,23 @@ void IVP_Real_Object::recompile_values_changed() {
 
 void IVP_Real_Object::recompile_material_changed() {
     this->get_core()->values_changed_recalc_redundants();
+}
+
+void IVP_Real_Object::force_grow_friction_system() {
+    IVP_Movement_Type movement_state_temp;
+    IVP_Movement_Type movement_state_temp2;
+
+    movement_state_temp = flags.object_movement_state;
+    flags.object_movement_state = IVP_Movement_Type::IVP_MT_GET_MINDIST;
+    movement_state_temp2 = physical_core->movement_state;
+    physical_core->movement_state = IVP_Movement_Type::IVP_MT_GET_MINDIST;
+
+    physical_core->environment->mindist_manager->recheck_ov_element(this);
+
+    flags.object_movement_state = movement_state_temp;
+    physical_core->movement_state = movement_state_temp2;
+
+    physical_core->grow_friction_system();
 }
 
 void IVP_Real_Object::enable_collision_detection(IVP_BOOL enable){
@@ -269,12 +288,12 @@ void IVP_Real_Object::update_exact_mindist_events_of_object() {
     IVP_Synapse_Real *syn, *syn_next;	// minimal dist may remove itself from list
     for (syn = this->get_first_exact_synapse(); syn; syn = syn_next){
 	syn_next= syn->get_next();
-	IVP_Mindist *mindist = syn->get_mindist();    
+	IVP_Mindist *mindist = syn->get_mindist();
 	IVP_Core *core0 = mindist->get_synapse(0)->get_object()->physical_core;
 	IVP_Core *core1 = mindist->get_synapse(1)->get_object()->physical_core;
 	//at least one core has already right time code
 	if(core0->mindist_event_already_done != core1->mindist_event_already_done) {	  /// #+# OS: vector for recalc mindists
-	  mindist->recalc_mindist();			// should not be needed as the current position has not changed
+	  mindist->recalc_mindist(); // should not be needed as the current position has not changed
 	  if (mindist->recalc_result == IVP_MDRR_OK){ 
 	    mindist->update_exact_mindist_events(IVP_FALSE, IVP_EH_BIG_DELAY);	// check length, do not check for hull, update time manager ...
 	  }
@@ -287,6 +306,7 @@ IVP_BOOL IVP_Real_Object::disable_simulation() {
     if(core->physical_unmoveable) {
         return IVP_TRUE;
     }
+
     if(core->is_in_wakeup_vec) {
         core->environment->remove_revive_core(core);
     }
@@ -622,35 +642,6 @@ void IVP_Real_Object::unlink_contact_points(IVP_BOOL silent) {
     }
 }
 
-//lwss add
-void IVP_Real_Object::unlink_contact_points_for_object(IVP_Real_Object *object)
-{
-    IVP_Synapse_Friction *fr_synapse;
-    fr_synapse = this->get_first_friction_synapse();
-    while( fr_synapse )
-    {
-        IVP_Contact_Point *fr_mindist = fr_synapse->get_contact_point();
-        IVP_Friction_System *fr_sys = fr_mindist->l_friction_system;
-
-        if( fr_synapse->get_object() == object ) // TODO: there is another OR if-clause here.. unsure which one it is. matches another obj
-        {
-            fr_sys->delete_friction_distance( fr_mindist );
-            if(fr_sys->friction_dist_number==0)
-            {
-                P_DELETE(fr_sys);
-            }
-        }
-        fr_synapse = fr_synapse->get_next();
-    }
-}
-
-void IVP_Real_Object::force_grow_friction_system()
-{
-    //lwss hack
-    //TODO: this just allocates memory early? leave for now
-}
-//lwss end
-
 void IVP_Real_Object::clear_internal_references() {
     // first clear actuators
     IVP_Anchor *my_anchor;
@@ -900,6 +891,26 @@ void IVP_Real_Object::init_object_core(IVP_Environment *i_environment, const IVP
     core->transform_PSI_matrizes_core(&m_object_f_core);
     IVP_Event_Sim es( i_environment, i_environment->get_next_PSI_time() - i_environment->get_current_time());
     core->calc_next_PSI_matrix_zero_speed( &es );
+}
+
+void IVP_Real_Object::unlink_contact_points_for_object( IVP_Real_Object *other_object ){
+    // then delete static friction datas @@@OS, loop only once + flag 
+    IVP_Synapse_Friction *fr_synapse = get_first_friction_synapse();
+    if( !fr_synapse ) return;
+
+    do {
+	IVP_Contact_Point *fr_mindist=fr_synapse->get_contact_point();
+        IVP_Friction_System *fr_sys=fr_mindist->l_friction_system;
+
+        fr_synapse = fr_synapse->get_next();
+
+        if( fr_mindist->get_synapse(0)->l_obj == other_object ||
+            fr_mindist->get_synapse(1)->l_obj == other_object )
+            fr_sys->delete_friction_distance(fr_mindist);
+
+        if(fr_sys->friction_dist_number==0)
+            P_DELETE(fr_sys);
+    } while ( fr_synapse != NULL );
 }
 
 

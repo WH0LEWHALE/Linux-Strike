@@ -10,13 +10,14 @@
 #ifndef _IVP_REAL_OBJECT_INCLUDED
 #define _IVP_REAL_OBJECT_INCLUDED
 
-#ifndef WIN32
-#	pragma interface
-#endif
-
 #ifndef IVP_U_MINLIST_INCLUDED
 #	include <ivu_min_list.hxx>
 #endif
+
+#ifndef IVP_ACTUATOR_INCLUDED
+#   include <ivp_actuator.hxx>
+#endif
+
 // resolve forward references 
 class IVP_Template_Phantom;
 class IVP_SurfaceManager;
@@ -30,7 +31,6 @@ class IVP_Radar;
 class IVP_Template_Anchor;
 class IVP_Hull_Manager;
 class IVP_Synapse_Friction;
-class IVP_Anchor;
 
 #define IVP_NO_COLL_GROUP_STRING_LEN 8
 
@@ -96,6 +96,7 @@ protected:
     IVP_Real_Object_Fast_Static(IVP_Cluster *father, const IVP_Template_Object *templ): IVP_Object( father, templ){;};
 public:
     const IVP_U_Float_Point *get_shift_core_f_object() const { return &shift_core_f_object; };
+
 };
 
 // add dynamics
@@ -131,17 +132,12 @@ class IVP_Real_Object: public IVP_Real_Object_Fast {
     friend class IVP_Controller_Phantom;
     friend class IVP_Example_Boundingboxes;
     
-//private: //lwss- make public
-public:
+private:
     friend class IVP_Merge_Core;
     IVP_Anchor *anchors;			// Linked list of all anchors @@@ remove anchor concept
 
     friend class IVP_Object_Attach;
     void unlink_contact_points(IVP_BOOL silent); //FALSE means wake up the cores
-    //lwss add
-    void unlink_contact_points_for_object( IVP_Real_Object *object );
-    void force_grow_friction_system();
-    //lwss end
     void clear_internal_references();
 
     friend class IVP_Mindist_Manager;
@@ -162,6 +158,7 @@ protected:
 public:
     virtual void set_new_m_object_f_core( const IVP_U_Matrix *new_m_object_f_core );	 /* specifies new objects coordinate system in core space */
     void init_object_core(IVP_Environment *env, const IVP_Template_Real_Object *tpop);
+    void unlink_contact_points_for_object( IVP_Real_Object *other_object );
 protected:
 
     IVP_Real_Object(IVP_Cluster *father,IVP_SurfaceManager *, const IVP_Template_Real_Object *,
@@ -383,6 +380,8 @@ public:
     
     void recompile_values_changed();
     void recompile_material_changed();
+
+    void force_grow_friction_system();
 };
 
 #endif

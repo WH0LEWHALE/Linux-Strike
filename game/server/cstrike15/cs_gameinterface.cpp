@@ -18,7 +18,6 @@
 #include "cs_gamerules.h"
 #include "gametypes.h"
 #include "engine/inetsupport.h"
-#include "dedicated_server_ugc_manager.h"
 #include "cs_player.h"
 #include "server_log_http_dispatcher.h"
 
@@ -35,7 +34,6 @@
 //
 // Convars
 //
-ConVar sv_workshop_allow_other_maps( "sv_workshop_allow_other_maps", "1", FCVAR_RELEASE, "When hosting a workshop collection, users can play other workshop map on this server when it is empty and then mapcycle into this server collection." );
 static ConVar tv_allow_camera_man_steamid( "tv_allow_camera_man_steamid", "", FCVAR_RELEASE, "Allows tournament production cameraman to run csgo.exe -interactivecaster on SteamID 7650123456XXX and be the camera man." );
 
 // #define SVGC_RESERVATION_DEBUG 1
@@ -167,19 +165,6 @@ void CServerGameClients::NetworkIDValidated( const char *pszUserName, const char
 	/** Removed for partner depot **/
 }
 
-
-
-//
-// Order workshop maps by MRU
-//
-static int Helper_SortWorkshopMapsMRU( const DedicatedServerUGCFileInfo_t * const *a, const DedicatedServerUGCFileInfo_t * const *b )
-{
-	if ( (*a)->m_dblPlatFloatTimeReceived != (*b)->m_dblPlatFloatTimeReceived )
-		return ( (*a)->m_dblPlatFloatTimeReceived > (*b)->m_dblPlatFloatTimeReceived ) ? -1 : 1;
-	else
-		return 0;
-}
-
 //
 // Matchmaking game data buffer to set into SteamGameServer()->SetGameData
 //
@@ -196,67 +181,6 @@ void CServerGameDLL::GetMatchmakingGameData( char *buf, size_t bufSize )
 	len = strlen( buf );
 	buf += len;
 	bufSize -= len;
-
-
-	if ( gpGlobals && !StringIsEmpty( gpGlobals->mapGroupName.ToCStr() ) )
-	{
-		const CUtlStringList* mapsInGroup = g_pGameTypes->GetMapGroupMapList( gpGlobals->mapGroupName.ToCStr() );
-		if ( mapsInGroup && g_pGameTypes->IsWorkshopMapGroup( gpGlobals->mapGroupName.ToCStr() ) )
-		{
-			if ( sv_workshop_allow_other_maps.GetBool() && ( bufSize >= 7 ) )
-			{	// Advertise support for other maps
-				Q_strncpy( buf, "wks:1,", 7 );
-				buf += 6;
-				bufSize -= 7;
-			}
-
-			CUtlVector< PublishedFileId_t > arrAdvertisedFileIds;
-			FOR_EACH_VEC( *mapsInGroup, i )
-			{
-				PublishedFileId_t id = DedicatedServerWorkshop().GetUGCMapPublishedFileID((*mapsInGroup)[i]);
-				CFmtStr szIdAsHexString( "%llx", id );
-				size_t len = szIdAsHexString.Length();
-
-				if ( bufSize <= len + 1 )
-				{
-					Warning( "GameData: Too many community maps installed, not advertising for map id \"%llu (0x%s)\"\n", id, szIdAsHexString.Access() );
-					continue;
-				}
-
-				Q_strncpy( buf, szIdAsHexString.Access(), len + 1 );
-				buf += len;
-				*( buf ++ ) = ',';
-				bufSize -= len + 1;
-
-				arrAdvertisedFileIds.AddToTail( id );
-			}
-
-			// Advertise maps that have been recently checked and downloaded from Workshop
-			if ( sv_workshop_allow_other_maps.GetBool() )
-			{
-				CUtlVector<const DedicatedServerUGCFileInfo_t *> arrInfoMaps;
-				DedicatedServerWorkshop().GetWorkshopMasWithValidUgcInformation( arrInfoMaps );
-				arrInfoMaps.Sort( Helper_SortWorkshopMapsMRU );
-				FOR_EACH_VEC( arrInfoMaps, iInfoMap )
-				{
-					PublishedFileId_t id = arrInfoMaps[iInfoMap]->fileId;
-					if ( arrAdvertisedFileIds.Find( id ) != arrAdvertisedFileIds.InvalidIndex() )
-						continue; // already advertised
-
-					CFmtStr szIdAsHexString( "%llx", id );
-					size_t len = szIdAsHexString.Length();
-
-					if ( bufSize <= len + 1 )
-						break;	// Advertise only as much downloaded stuff as can fit
-
-					Q_strncpy( buf, szIdAsHexString.Access(), len + 1 );
-					buf += len;
-					*( buf ++ ) = ',';
-					bufSize -= len + 1;
-				}
-			}
-		}
-	}
 
 	// Trim the last comma if anything was written
 	if ( buf > bufBase )

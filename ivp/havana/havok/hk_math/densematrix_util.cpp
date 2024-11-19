@@ -20,8 +20,8 @@ void hk_Dense_Matrix_Util::mult( const hk_Dense_Matrix& m, const hk_Dense_Vector
 	const int rows = m.get_num_rows();
 	const int cols = m.get_num_cols();
 
-	HK_ASSERT( cols == in.get_size() );
-	HK_ASSERT( in.get_size() == out.get_size() );
+	IVP_ASSERT( cols == in.get_size() );
+	IVP_ASSERT( in.get_size() == out.get_size() );
 
 	out.set_zero();
 
@@ -53,115 +53,6 @@ void hk_Dense_Matrix_Util::mult( const hk_Dense_Matrix& m, const hk_real * in, h
 		out[r] = sum;
 	}
 }
-
-
-/*
- * INVERT
- */
-
-// matrix invert with pivoting - we exchange rows if the pivot
-// is less than the tolerance
-/*
-hk_result hk_Dense_Matrix_Util::invert(hk_Dense_Matrix& m, hk_real tolerance)
-{
-	const int num_rows = m.get_num_rows();
-	const int num_cols = m.get_num_cols();
-	const int lda_size = m.get_lda();
-
-	HK_ASSERT( num_cols == num_rows );
-	HK_ASSERT( tolerance>= 0.0f );
-
-	HK_BREAKPOINT(); // this inverter does not work
-
-	int* permute = hkAllocate<int>( num_cols, HK_MEMORY_CLASS_UNKNOWN);
-
-	for(int cur_row=0; cur_row<num_rows; ++cur_row)
-	{
-		// find best pivot
-
-		hk_real f_pivot = 0;	// hkMath::fabs pivot
-		int i_pivot;			// index pivot
-		{
-			for( int i=cur_row; i<num_cols; ++i)
-			{
-				hk_real fp = hk_Math::fabs(m(i,cur_row));
-
-				if(fp > f_pivot)
-				{
-					i_pivot = i;
-					f_pivot = fp;
-				}
-			}
-
-			if( f_pivot < tolerance)
-			{
-				return HK_FAULT;
-			}
-		}
-
-		// permute rows
-
-		{
-			permute[cur_row] = i_pivot;
-			if(i_pivot != cur_row )
-			{
-				for( int i=0; i<num_cols; ++i)
-				{
-					hk_real t_ri = m(cur_row,i);
-					m(cur_row,i) = m(i_pivot, i);
-					m(i_pivot,i) = t_ri;
-				}
-			}
-		}
-
-		// scale this row
-		{
-			hk_real inv_pivot = 1.0f / m(cur_row,cur_row);
-			m(cur_row,cur_row) = 1.0f;
-			for( int i=0; i<num_cols; ++i)
-			{
-				m(cur_row, i) *= inv_pivot;
-			}
-		}
-
-		// add to all other rows bar itself
-		{
-			for(int i=0; i<num_rows; ++i)
-			{
-				if( i != cur_row )
-				{
-					hk_real factor = m(i, cur_row);
-					m(i, cur_row) = 0;
-
-					for( int j=0; j<num_cols; ++j)
-					{
-						m(i,j) -= m(cur_row,j)*factor;
-					}
-				}
-			}
-		}
-	}
-
-	// now permute columns back
-	for(int i=num_rows-2; i>=0; --i)
-	{
-		int perm = permute[i];
-		if( perm != i )
-		{
-			for(int j=i+1; j<num_cols; j++)
-			{
-				hk_real t_jx = m(j,perm);
-				m(j,perm) = m(j,i);
-				m(j,i) = t_jx;
-			}
-		}
-	}
-
-	hkDeallocate(permute);
-
-	return HK_OK;
-}
-*/
 
 hk_result hk_Dense_Matrix_Util::invert_6x6(hk_Fixed_Dense_Matrix<6>& m, hk_real tolerance)
 {
@@ -236,7 +127,7 @@ hk_result hk_Dense_Matrix_Util::invert_3x3_symmetric(hk_Dense_Matrix& m, hk_real
 
     hk_real D = ((hk_Vector3 *)co0)->dot(r0);	// main determinant
     
-    if( hk_Math::fabs(D)< tolerance * tolerance * tolerance ){
+    if( fabs(D) < tolerance * tolerance * tolerance ){
 		return HK_FAULT;  // cannot invert, may happen
     }
 
@@ -287,13 +178,13 @@ hk_result hk_Dense_Matrix_Util::solve(
 	int rows = m.get_num_rows();
 	int cols = m.get_num_cols();
 
-	HK_ASSERT(rows==cols);
-	HK_ASSERT(rows==v.get_size());
+	IVP_ASSERT(rows==cols);
+	IVP_ASSERT(rows==v.get_size());
   
 	for(int elim_row=0; elim_row<rows; elim_row++)
 	{
 		hk_real pivot = m(elim_row,elim_row);
-		hk_real fpivot = hk_Math::fabs(pivot);
+		hk_real fpivot = fabs(pivot);
 	
 		// pivot too small, try to find another
 		if( fpivot < tolerance )
@@ -301,11 +192,11 @@ hk_result hk_Dense_Matrix_Util::solve(
 			int swap_row = -1;
 			for(int i=elim_row+1; i<rows; i++)
 			{
-				if( hk_Math::fabs(m(i,elim_row)) > fpivot)
+				if( fabs(m(i,elim_row)) > fpivot)
 				{
 					swap_row = i;
 					pivot = m(i,elim_row);
-					fpivot = hk_Math::fabs(pivot);
+					fpivot = fabs(pivot);
 				}
 			}
 
@@ -363,11 +254,11 @@ void hk_Dense_Matrix_Util::print(const hk_Dense_Matrix &m)
 {
 	for (int row = 0; row < m.get_num_rows(); row ++)
 	{
-		hkprintf("%2i: ", row);
+		ivp_message("%2i: ", row);
 		for (int col = 0; col < m.get_num_cols(); col ++)
 		{
-			hkprintf("%3.3f, ", m( row,col));
+			ivp_message("%3.3f, ", m( row,col));
 		}
-		hkprintf("\n");
+		ivp_message("\n");
 	}
 }

@@ -94,7 +94,7 @@ void C_EntityFreezing::ClientThink( void )
 #elif defined(LINUX)
 #elif defined( __clang__ )
 	asm("nop");
-#elif defined( _WIN32 ) && !defined( WIN64 )
+#elif defined( _WIN32 ) && !defined( _WIN64 )
 	__asm nop;
 #endif
 	//C_BaseAnimating *pAnimating = GetMoveParent() ? GetMoveParent()->GetBaseAnimating() : NULL;

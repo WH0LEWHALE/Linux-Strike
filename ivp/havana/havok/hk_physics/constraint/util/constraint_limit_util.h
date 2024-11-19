@@ -41,14 +41,14 @@ public:
 			if ( d_alpha > HK_PI ) {
 				d_alpha -= HK_PI * 2.0f;
 				// don't reset the reference position, and adjust alpha to be in the correct range if it has flipped over
-//				limit.m_ref_position -= HK_PI * 2.0f;
+//				limit.m_ref_position -= IVP_PI * 2.0f;
 				alpha += HK_PI * 2.0f;
 			}
 
 			if ( d_alpha < -HK_PI ) {
 				d_alpha += HK_PI * 2.0f;
 				// don't reset the reference position, and adjust alpha to be in the correct range if it has flipped over
-//				limit.m_ref_position += HK_PI * 2.0f;
+//				limit.m_ref_position += IVP_PI * 2.0f;
 				alpha -= HK_PI * 2.0f;
 			}
 
@@ -59,8 +59,8 @@ public:
 
 			impulse = angular_correction_per_psi * virtual_mass;
 
-			if ( hk_Math::fabs( impulse ) * pi.get_inv_delta_time() > limit.m_joint_friction ){
-				hk_real factor = limit.m_joint_friction/ hk_Math::fabs( impulse ) * pi.get_delta_time();
+			if ( fabs( impulse ) * pi.get_inv_delta_time() > limit.m_joint_friction ){
+				hk_real factor = limit.m_joint_friction/ fabs( impulse ) * pi.get_delta_time();
 
 				impulse *= factor;
 				limit.m_ref_position -= (1.0f - factor) * d_alpha;
@@ -99,7 +99,7 @@ public:
 		hk_real cos_alpha = axis_Att_ws.dot( cos_axis_Ref_ws );
 			
 		// don't reset the reference position
-		hk_real proposed_ref_position = hk_Math::atan2( sin_alpha, cos_alpha );
+		hk_real proposed_ref_position = atan2( sin_alpha, cos_alpha );
 		
 		if(proposed_ref_position < 0.0f && limit.m_ref_position > 0.0f)
 		{
@@ -170,8 +170,8 @@ public:
 
 			impulse = correction_per_psi * virtual_mass;
 
-			if ( hk_Math::fabs( impulse ) * pi.get_inv_delta_time() > limit.m_joint_friction ){
-				hk_real factor = limit.m_joint_friction/ hk_Math::fabs( impulse ) * pi.get_delta_time();
+			if ( fabs( impulse ) * pi.get_inv_delta_time() > limit.m_joint_friction ){
+				hk_real factor = limit.m_joint_friction/ fabs( impulse ) * pi.get_delta_time();
 
 				impulse *= factor;
 				limit.m_ref_position += (1.0f - factor) * d_alpha;
@@ -262,8 +262,8 @@ public:
 
 			impulse = correction_per_psi * virtual_mass;
 
-			if ( hk_Math::fabs( impulse ) * pi.get_inv_delta_time() > limit.m_joint_friction ){
-				hk_real factor = limit.m_joint_friction/ hk_Math::fabs( impulse ) * pi.get_delta_time();
+			if ( fabs( impulse ) * pi.get_inv_delta_time() > limit.m_joint_friction ){
+				hk_real factor = limit.m_joint_friction/ fabs( impulse ) * pi.get_delta_time();
 
 				impulse *= factor;
 				limit.m_ref_position += (1.0f - factor) * d_alpha;

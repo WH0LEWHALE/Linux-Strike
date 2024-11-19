@@ -45,7 +45,7 @@ struct CpuIdResult_t
 
 static bool cpuid( unsigned long function, CpuIdResult_t &out )
 {
-#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ ) || defined(PLATFORM_ARM)
 	return false;
 #elif defined(GNUC)
 	unsigned long out_eax,out_ebx,out_ecx,out_edx;
@@ -124,7 +124,7 @@ static bool cpuid( unsigned long function, CpuIdResult_t &out )
 
 static bool cpuidex( unsigned long function, unsigned long subfunction, CpuIdResult_t &out )
 {
-#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ ) || defined( PLATFORM_ARM )
 	return false;
 #elif defined(GNUC)
 	unsigned long out_eax, out_ebx, out_ecx, out_edx;
@@ -218,7 +218,7 @@ static CpuIdResult_t cpuidex( unsigned long function, unsigned long subfunction 
 //-----------------------------------------------------------------------------
 static bool IsWin98OrOlder()
 {
-#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ ) || defined( POSIX )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ ) || defined( PLATFORM_ARM ) || defined( POSIX )
 	return false;
 #else
 	bool retval = false;
@@ -262,7 +262,7 @@ static bool IsWin98OrOlder()
 
 static bool CheckMMXTechnology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( PLATFORM_ARM )
 	return false;
 #elif defined( __e2k__ )
 	#if defined( __MMX__ )
@@ -277,7 +277,7 @@ static bool CheckMMXTechnology(void)
 
 static bool CheckSSETechnology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( PLATFORM_ARM )
 	return true;
 #elif defined( __e2k__ )
 	#if defined( __SSE__ )
@@ -297,7 +297,7 @@ static bool CheckSSETechnology(void)
 
 static bool CheckSSE2Technology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( PLATFORM_ARM )
 	return false;
 #elif defined( __e2k__ )
 	#if defined( __SSE2__ )
@@ -312,7 +312,7 @@ static bool CheckSSE2Technology(void)
 
 bool CheckSSE3Technology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( PLATFORM_ARM )
 	return false;
 #elif defined(__e2k__ )
 	#if defined( __SSE3__ )
@@ -327,7 +327,7 @@ bool CheckSSE3Technology(void)
 
 bool CheckSSSE3Technology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( PLATFORM_ARM )
 	return false;
 #elif defined( __e2k__ )
 	#if defined( __SSSE3__ )
@@ -344,7 +344,7 @@ bool CheckSSSE3Technology(void)
 
 bool CheckSSE41Technology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( PLATFORM_ARM )
 	return false;
 #elif defined( __e2k__ )
 	#if defined( __SSE4_1__ )
@@ -362,7 +362,7 @@ bool CheckSSE41Technology(void)
 
 bool CheckSSE42Technology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( PLATFORM_ARM )
 	return false;
 #elif defined( __e2k__ )
 	#if defined( __SSE4_2__ )
@@ -383,7 +383,7 @@ bool CheckSSE42Technology(void)
 
 bool CheckAVXTechnology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( PLATFORM_ARM )
 	return false;
 #elif defined( __e2k__ )
 	#if defined( __AVX__ )
@@ -398,7 +398,7 @@ bool CheckAVXTechnology(void)
 
 bool CheckSSE4aTechnology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( PLATFORM_ARM )
 	return false;
 #elif defined( __e2k__ )
 	#if defined( __SSE4A__ )
@@ -417,28 +417,9 @@ bool CheckSSE4aTechnology(void)
 #endif
 }
 
-static bool Check3DNowTechnology(void)
-{
-#if defined( _X360 ) || defined( _PS3 )
-	return false;
-#elif defined( __e2k__ )
-	#if defined( __3dNOW__ )
-		return true;
-	#else
-		return false;
-	#endif
-#else
-	if ( cpuid( 0x80000000 ).eax > 0x80000000L )
-    {
-		return ( cpuid( 0x80000001 ).eax & ( 1 << 31 ) ) != 0;
-    }
-    return false;
-#endif
-}
-
 static bool CheckCMOVTechnology(void)
 {
-#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ ) || defined( PLATFORM_ARM )
 	return false;
 #else
 	return ( cpuid( 1 ).edx & ( 1 << 15 ) ) != 0;
@@ -447,7 +428,7 @@ static bool CheckCMOVTechnology(void)
 
 static bool CheckFCMOVTechnology(void)
 {
-#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ ) || defined( PLATFORM_ARM )
 	return false;
 #else
 	return ( cpuid( 1 ).edx & ( 1 << 16 ) ) != 0;
@@ -459,6 +440,8 @@ static bool CheckRDTSCTechnology(void)
 #if defined( _X360 ) || defined( _PS3 )
 	return false;
 #elif defined( __e2k__ )
+	return true;
+#elif defined( PLATFORM_ARM )
 	return true;
 #else
 	return ( cpuid( 1 ).edx & 0x10 ) != 0;
@@ -486,6 +469,8 @@ const tchar* GetProcessorVendorId()
 	return "PPC";
 #elif defined( __e2k__ )
 	return "MCST";
+#elif defined( PLATFORM_ARM )
+	return "ARM";
 #else
 	if ( s_bCpuVendorIdInitialized )
 	{
@@ -530,6 +515,8 @@ const tchar* GetProcessorBrand()
 #elif defined( __e2k__ )
 	return __builtin_cpu_name();
 	// e.g. "elbrus-8c"
+#elif defined( PLATFORM_ARM )
+	return "Unknown ARM Board";
 #else
 	if ( s_bCpuBrandInitialized )
 	{
@@ -565,7 +552,7 @@ static bool HTSupported(void)
 	// not entirtely sure about the semantic of HT support, it being an intel name
 	// are we asking about HW threads or HT?
 	return true;
-#elif defined( __e2k__ )
+#elif defined( __e2k__ ) || defined(PLATFORM_ARM)
 	return false;
 #else
 	enum {
@@ -945,7 +932,6 @@ const CPUInformation& GetCPUInformation()
 	pi.m_bSSE4a = CheckSSE4aTechnology();
 	pi.m_bSSE41 = CheckSSE41Technology();
 	pi.m_bSSE42 = CheckSSE42Technology();
-	pi.m_b3DNow = Check3DNowTechnology();
 	pi.m_bAVX	= CheckAVXTechnology();
 	pi.m_szProcessorID = ( tchar* )GetProcessorVendorId(); // MCST
 	pi.m_szProcessorBrand = ( tchar* )GetProcessorBrand(); // e.g. "elbrus-8c"
@@ -968,7 +954,6 @@ const CPUInformation& GetCPUInformation()
 		pi.m_bSSE4a = CheckSSE4aTechnology();
 		pi.m_bSSE41 = ( cpuid1.ecx >> 19 ) & 1;
 		pi.m_bSSE42 = ( cpuid1.ecx >> 20 ) & 1;
-		pi.m_b3DNow = Check3DNowTechnology();
 		pi.m_bAVX	= ( cpuid1.ecx >> 28 ) & 1;
 		pi.m_szProcessorID = ( tchar* )GetProcessorVendorId();
 		pi.m_szProcessorBrand = ( tchar* )GetProcessorBrand();

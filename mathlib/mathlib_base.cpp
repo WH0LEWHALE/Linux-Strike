@@ -3991,7 +3991,7 @@ bool CalcLineToLineIntersectionSegment(
 volatile static char const *pDebugString;
 #endif
 
-void MathLib_Init( float gamma, float texGamma, float brightness, int overbright, bool bAllow3DNow, bool bAllowSSE, bool bAllowSSE2, bool bAllowMMX )
+void MathLib_Init( float gamma, float texGamma, float brightness, int overbright, bool bAllowSSE, bool bAllowSSE2, bool bAllowMMX )
 {
 	if ( s_bMathlibInitialized )
 		return;
@@ -4005,7 +4005,7 @@ void MathLib_Init( float gamma, float texGamma, float brightness, int overbright
 
 	// FIXME: Hook SSE into VectorAligned + Vector4DAligned
 
-#if !defined( _GAMECONSOLE )
+#if !defined( _GAMECONSOLE ) && !defined(PLATFORM_ARM)
 	// Grab the processor information:
 	const CPUInformation& pi = GetCPUInformation();
 
@@ -4015,7 +4015,6 @@ void MathLib_Init( float gamma, float texGamma, float brightness, int overbright
 		Error( "SSE and SSE2 are required." );
 	}
 #endif //!360
-
 
 	s_bMathlibInitialized = true;
 

@@ -6,9 +6,6 @@
 class hk_Constraint_Limit_BP
 {
 	public:
-
-		HK_DECLARE_NONVIRTUAL_CLASS_ALLOCATOR(HK_MEMORY_CLASS_CONSTRAINT, hk_Constraint_Limit_BP)
-
 		hk_Constraint_Limit_BP()
 		{
 			m_limit_is_enabled = HK_FALSE;
@@ -41,8 +38,8 @@ class hk_Constraint_Limit_BP
 
 	public:
 
-		hk_bool m_limit_is_enabled;
-		hk_bool	m_friction_is_enabled;
+		bool m_limit_is_enabled;
+		bool m_friction_is_enabled;
 
 		hk_real m_limit_min;
 		hk_real m_limit_max;

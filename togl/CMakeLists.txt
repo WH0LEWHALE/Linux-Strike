@@ -59,4 +59,4 @@ endif()
 #// Link
 #//-----------------------------------------------------------------------------
 
-target_link_libraries(${OUTBINNAME} tier2_client libvstdlib_client mathlib_client )
+target_link_libraries(${OUTBINNAME} tier2_client vstdlib_client mathlib_client )

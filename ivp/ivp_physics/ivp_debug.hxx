@@ -1,7 +1,5 @@
 // Copyright (C) Ipion Software GmbH 1999-2000. All rights reserved.
 
-class IVP_Mindist;
-
 class IVP_Draw_Vector_Debug
 {
 public:

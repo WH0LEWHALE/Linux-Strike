@@ -12,9 +12,6 @@
 #ifdef WIN32
 #	pragma warning( disable : 4244 ) 
 #endif
-#ifndef WIN32
-#	pragma interface
-#endif
 
 class IVP_U_Straight;
 class IVP_U_Hesse;
@@ -43,9 +40,9 @@ class IVP_U_Float_Point3 {
 public:
     IVP_FLOAT k[3];
     inline void set(const IVP_FLOAT p[3]);
-#if !defined(IVP_NO_DOUBLE)
+
     inline void set(const IVP_DOUBLE p[3]);
-#endif
+
 
 	inline void byte_swap() {   ivp_byte_swap4( (uint&) k[0] );
 								ivp_byte_swap4( (uint&) k[1] ); 
@@ -61,9 +58,7 @@ public:
     };
 #endif
 
-#if !defined(IVP_NO_DOUBLE)
     inline void set(const IVP_U_Point *p);
-#endif
     inline void set(const IVP_FLOAT p[3]);
     inline void set(const IVP_U_Float_Point *p);
     inline void set(IVP_FLOAT k0, IVP_FLOAT k1, IVP_FLOAT k2);			
@@ -82,22 +77,16 @@ public:
     inline void add_multiple(const IVP_U_Float_Point *v1, const IVP_U_Float_Point *v2, IVP_DOUBLE factor2);
     
     inline void set_multiple(const IVP_U_Quat *q_source,IVP_DOUBLE f);		// this = q_source.xyz * f
-#if !defined(IVP_NO_DOUBLE)
     inline void set_multiple(const IVP_U_Point *v,IVP_DOUBLE f);		// this = q_source.xyz * f
-#endif
     inline void set_multiple(const IVP_U_Float_Point *v,IVP_DOUBLE f);		// this = q_source.xyz * f
     inline void set_pairwise_mult(const IVP_U_Float_Point *v1, const IVP_U_Float_Point *v2);    // this->k[i] = v1->k[i] * v2->k[i]
 
-#if !defined(IVP_NO_DOUBLE)
     inline void subtract(const IVP_U_Point *v1, const IVP_U_Point *v2);		// this = v1 - v2
-#endif
     inline void subtract(const IVP_U_Float_Point *v1, const IVP_U_Float_Point *v2);		// this = v1 - v2
     inline void subtract(const IVP_U_Float_Point *v2);				// this = this - v2;
 
     inline void inline_subtract_and_mult(const IVP_U_Float_Point *v1,const IVP_U_Float_Point *v2, IVP_DOUBLE factor); // this = (v1-v2) * factor
-#if !defined(IVP_NO_DOUBLE)
     inline void inline_subtract_and_mult(const IVP_U_Point *v1,const IVP_U_Point *v2, IVP_DOUBLE factor); // this = (v1-v2) * factor
-#endif 
     inline IVP_DOUBLE dot_product(const IVP_U_Float_Point *v2) const;
 
     inline void inline_calc_cross_product(const IVP_U_Float_Point *v1, const IVP_U_Float_Point *v2); // this = v1 x v2
@@ -123,13 +112,11 @@ public:
     IVP_RETURN_TYPE fast_normize();	// normize vector (0.1f% error)
     void print(const char *comment = 0) const;
 
-    IVP_U_Float_Point(){;};
+    IVP_U_Float_Point() = default;
     IVP_U_Float_Point(IVP_DOUBLE x, IVP_DOUBLE y,IVP_DOUBLE z){ k[0] = (IVP_FLOAT)x; k[1] = (IVP_FLOAT)y; k[2] = (IVP_FLOAT)z;};
     IVP_U_Float_Point(const IVP_U_Float_Point *p);
 
-#if !defined(IVP_NO_DOUBLE)
     IVP_U_Float_Point(const IVP_U_Point *p);
-#endif
 
 	inline void byte_swap() {   ivp_byte_swap4( (uint&) k[0] );
 								ivp_byte_swap4( (uint&) k[1] ); 
@@ -154,11 +141,6 @@ public:
  *			run best on Pentium and Pentium II CPU.
  ********************************************************************************/
 
-#if defined(IVP_NO_DOUBLE)
-class IVP_U_Point: public IVP_U_Float_Point {
-public:
-
-#else
 class IVP_U_Point {
 public:
     IVP_DOUBLE k[3];
@@ -230,7 +212,6 @@ public:
 											 * this = p1 * s + p0 * (1.0f-s) */
     void set_interpolate(const IVP_U_Float_Point *p0,const IVP_U_Float_Point *p1, IVP_DOUBLE s);	/* linear interpolation between p0 and p1:
 												 * this = p1 * s + p0 * (1.0f-s) */
-#endif
     
     /***** The following function change 'this' ****/ 
     // INTERN_START
@@ -262,7 +243,7 @@ public:
     
     void print(const char *comment = 0);
 
-    IVP_U_Point(){;};
+    IVP_U_Point() = default;
     inline IVP_U_Point(const IVP_U_Float_Point &p);
     IVP_U_Point(IVP_DOUBLE x, IVP_DOUBLE y,IVP_DOUBLE z){ k[0] = x; k[1] = y; k[2] = z;};
 
@@ -278,10 +259,14 @@ public:
 						    const IVP_DOUBLE a2_in, const IVP_DOUBLE b2_in,
 						    IVP_DOUBLE *i_a1_out, IVP_DOUBLE *i_b1_out,
 						    IVP_DOUBLE *i_a2_out, IVP_DOUBLE *i_b2_out);
+
+    static inline IVP_FLOAT clamp( IVP_FLOAT r, IVP_FLOAT mn, IVP_FLOAT mx) {
+        return ((r<mn) ? mn : ((r>mx) ? mx : r));
+    }
+
     static inline IVP_FLOAT approx5_sin(IVP_FLOAT angle);  // fifth order approximation
     static inline IVP_FLOAT approx5_cos(IVP_FLOAT angle);  // fifth order approximation of cos
 
-    
     static inline IVP_FLOAT save_acosf(IVP_FLOAT x);	// slow and save acos
 
     static inline IVP_FLOAT fast_asin(IVP_FLOAT x);          // for documentation see ivu_linear_macros.hxx
@@ -293,33 +278,6 @@ public:
     static IVP_FLOAT isqrt_float(IVP_FLOAT quad); //   "
     static IVP_DOUBLE isqrt_double(IVP_DOUBLE quad); //   "
 
-    static inline int int_div_2(int a); //workaround for compiler bug in CodeWarrior1.6
-
-#if defined(IVP_NO_DOUBLE) && !defined(SUN)
-    static IVP_DOUBLE fabsd(IVP_DOUBLE f){ return fabsf(f); };
-#ifdef PSXII
-    static IVP_DOUBLE ivp_sqrtf(IVP_DOUBLE x){ 
-		__asm__ __volatile__ (" \
-		.set noreorder \
-			sqrt.s	%0, %0 \
-		.set reorder \
-		" : "+f" (x) :); \
-		return x; \
-	}
-#else	    
-    static IVP_DOUBLE ivp_sqrtf(IVP_DOUBLE f){ return sqrtf(f); };
-#endif
-    static IVP_DOUBLE sqrtd(IVP_DOUBLE f){ return ivp_sqrtf(f); };
-    static IVP_DOUBLE ivp_sinf(IVP_DOUBLE f) { return sinf(f); };
-    static IVP_DOUBLE ivp_cosf(IVP_DOUBLE f) { return cosf(f); };
-    static IVP_DOUBLE sind(IVP_DOUBLE f) { return sinf(f); };
-    static IVP_DOUBLE cosd(IVP_DOUBLE f) { return cosf(f); };
-    static IVP_DOUBLE acosd(IVP_DOUBLE f){ return acosf(f); };
-    static IVP_DOUBLE asind(IVP_DOUBLE f){ return asinf(f); };
-    static IVP_DOUBLE atand(IVP_DOUBLE f){ return atanf(f); };
-    static IVP_DOUBLE ivp_expf(IVP_DOUBLE f) { return expf(f); };
-    static IVP_DOUBLE atan2d(IVP_DOUBLE f1, IVP_DOUBLE f2){ return atan2f(f1,f2); };
-#else
     static IVP_DOUBLE fabsd(IVP_DOUBLE f){ return fabs(f); };
     static IVP_DOUBLE ivp_sqrtf(IVP_DOUBLE f){ return sqrt(f); };
     static IVP_DOUBLE sqrtd(IVP_DOUBLE f){ return sqrt(f); };
@@ -332,7 +290,6 @@ public:
     static IVP_DOUBLE atand(IVP_DOUBLE f){ return atan(f); };
     static IVP_DOUBLE ivp_expf(IVP_DOUBLE f) { return exp(f); };
     static IVP_DOUBLE atan2d(IVP_DOUBLE f1, IVP_DOUBLE f2){ return atan2(f1,f2); };
-#endif
 };
 
 
@@ -353,9 +310,8 @@ public:
     void proj_on_plane(const IVP_U_Point *p, IVP_U_Point *result) const;	// sets result to a point on the plane and nearest to p
     void mult_hesse(IVP_DOUBLE factor);						// scale the hesse
     void normize();								// normize hesse (->super.calc_quad_length() == 1.0f)
-#if !defined(IVP_NO_DOUBLE)    
+
     inline IVP_DOUBLE get_dist(const IVP_U_Point *p) const;				// get the distance between a point and the plane
-#endif
     inline IVP_DOUBLE get_dist(const IVP_U_Float_Point *p) const;			// get the distance between a point and the plane
     IVP_RETURN_TYPE calc_intersect_with(const IVP_U_Straight *straight,		// calc the intersection between a straight and the plane
 					IVP_U_Point *point_out) const; 
@@ -385,7 +341,7 @@ public:
     // get the distance between a point and the plane
     inline IVP_DOUBLE get_dist(const IVP_U_Float_Point *p) const;				// get the distance between a point and the plane
 
-    IVP_U_Float_Hesse(){;};
+    IVP_U_Float_Hesse() = default;
     IVP_U_Float_Hesse(IVP_DOUBLE xi, IVP_DOUBLE yi, IVP_DOUBLE zi, IVP_DOUBLE val) { k[0]=(IVP_FLOAT)xi; k[1]=(IVP_FLOAT)yi; k[2]=(IVP_FLOAT)zi; hesse_val=val; }
 
 	void byte_swap() { ivp_byte_swap4( (uint&) hesse_val ); IVP_U_Float_Point::byte_swap(); }
@@ -415,20 +371,14 @@ public:
     void mimult3(const IVP_U_Matrix3 *mb, IVP_U_Matrix3 *m_out )const; 	// m_out = (this^-1) * mb, note: in place operation allowed
     void mi2mult3(const IVP_U_Matrix3 *mb, IVP_U_Matrix3 *m_out )const; // m_out = this * (mb^-1), note: in place operation allowed
 
-#if !defined(IVP_NO_DOUBLE)
     inline void inline_vmult3(const IVP_U_Point *p_in, IVP_U_Point * p_out ) const;  	           // p_out = this * p_in
     	   void vmult3 (const IVP_U_Point *p_in, IVP_U_Point * p_out ) const;  	                // p_out = this * p_in
-#endif
 
     inline void inline_vmult3 (const IVP_U_Float_Point *p_in, IVP_U_Float_Point * p_out ) const;   // p_out = this * p_in
            void vmult3 (const IVP_U_Float_Point *p_in, IVP_U_Float_Point * p_out ) const; 	// p_out = this * p_in 
 
-	   
-
-#if !defined(IVP_NO_DOUBLE)
     inline void inline_vimult3(const IVP_U_Point *p_in, IVP_U_Point * p_out ) const; 	                // p_out = (this^-1) * p_in 
-    	   void vimult3(const IVP_U_Point *p_in, IVP_U_Point * p_out ) const; 	                // p_out = (this^-1) * p_in 
-#endif    
+    	   void vimult3(const IVP_U_Point *p_in, IVP_U_Point * p_out ) const; 	                // p_out = (this^-1) * p_in    
 
     inline void inline_vimult3( const IVP_U_Float_Point *p_in, IVP_U_Float_Point * p_out ) const;   // assembler version
            void vimult3(const IVP_U_Float_Point *p_in, IVP_U_Float_Point * p_out ) const; 	// p_out = (this^-1) * p_in
@@ -508,22 +458,18 @@ public:
     void rotate(IVP_COORDINATE_INDEX axis, IVP_FLOAT angle, IVP_U_Matrix *m_out);  // m_out = this * I.init_rotated()
     void rotate_invers(IVP_COORDINATE_INDEX axis, IVP_FLOAT angle, IVP_U_Matrix *m_out);
     
-#if !defined(IVP_NO_DOUBLE)
     inline void inline_vmult4 ( const IVP_U_Point *p_in, IVP_U_Point * p_out) const;	// p_out = this * p_in
     inline void inline_vmult4 ( const IVP_U_Float_Point *p_in, IVP_U_Point * p_out) const;	// p_out = this * p_in
     void vmult4 ( const IVP_U_Point *p_in, IVP_U_Point * p_out) const;			// p_out = this * p_in
     void vmult4 ( const IVP_U_Float_Point *p_in, IVP_U_Point * p_out) const;			// p_out = this * p_in
-#endif
     inline void inline_vmult4 ( const IVP_U_Float_Point *p_in, IVP_U_Float_Point * p_out) const;	// p_out = this * p_in (e.g. object space to core space)
     void vmult4 ( const IVP_U_Float_Point *p_in, IVP_U_Float_Point * p_out) const;			// p_out = this * p_in
 
-
-#if !defined(IVP_NO_DOUBLE)
     inline void inline_vimult4( const IVP_U_Point *p_in, IVP_U_Point * p_out ) const;			// p_out = (this^-1) * p_in
     inline void inline_vimult4( const IVP_U_Point *p_in, IVP_U_Float_Point * p_out ) const;	// p_out = (this^-1) * p_in
     void vimult4( const IVP_U_Point *p_in, IVP_U_Float_Point * p_out ) const;			// p_out = (this^-1) * p_in			   
     void vimult4( const IVP_U_Point *p_in, IVP_U_Point * p_out ) const;			// p_out = (this^-1) * p_in			   
-#endif
+
     inline void inline_vimult4( const IVP_U_Float_Point *p_in, IVP_U_Float_Point * p_out ) const;	// p_out = (this^-1) * p_in    
     void vimult4( const IVP_U_Float_Point *p_in, IVP_U_Float_Point * p_out ) const;			// p_out = (this^-1) * p_in			   
 
@@ -603,7 +549,7 @@ public:
 
     inline IVP_DOUBLE inline_estimate_q_diff_to(const IVP_U_Float_Quat *reference) const;	// roughly estimate the quad alpha
 
-    IVP_U_Quat(){};  // not initialized quat
+    IVP_U_Quat() = default;  // not initialized quat
     IVP_U_Quat(const IVP_U_Point &p){ this->set_fast_multiple(&p,1.0f); }; // init by a rotation
     IVP_U_Quat( const IVP_U_Matrix3 *m) { this->set_quaternion(m); }
     // INTERN_START
@@ -621,32 +567,13 @@ public:
     //log
     // INTERN_END
 
-	inline void byte_swap() { 
-	#if defined(IVP_NO_DOUBLE)
-		ivp_byte_swap4( (uint&) x);
-		ivp_byte_swap4( (uint&) y);
-		ivp_byte_swap4( (uint&) z);
-		ivp_byte_swap4( (uint&) w);
-	#else
-		IVP_ASSERT( 0 && "No byte swap for double yet");
-	#endif
-	}
-
-
 } IVP_ALIGN_16;
 
-
-
-#if defined(IVP_NO_DOUBLE)
-class IVP_U_Float_Quat: public IVP_U_Quat {
-    public:	
-
-#else
 
 class IVP_U_Float_Quat {
 public:
     IVP_FLOAT x,y,z,w;
-#endif
+
     inline void set(const IVP_U_Quat *source);
 
 	inline void byte_swap() { 

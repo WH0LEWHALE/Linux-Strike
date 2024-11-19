@@ -617,35 +617,6 @@ message CMsgSetItemPositions
 // };
 
 //
-// k_EMsgGC_ReportAbuse
-//
-message CMsgGCReportAbuse
-{
-	optional fixed64 target_steam_id = 1; // who is the user accusing?
-
-	optional string description = 4; // in the user's own words
-	optional uint64 gid = 5; // meaning depends on content type
-
-	// If accusing a player:
-	optional uint32 abuse_type = 2; // EAbuseReportType
-	optional uint32 content_type = 3; // ECommunityContentType
-
-	// If accusing a game server:
-	optional fixed32 target_game_server_ip = 6;
-	optional uint32 target_game_server_port = 7;
-};
-
-//
-// k_EMsgGC_ReportAbuseResponse
-//
-message CMsgGCReportAbuseResponse
-{
-	optional fixed64 target_steam_id = 1; // target to which this reply is in reference
-	optional uint32 result = 2; // EResult
-	optional string error_message = 3; // Diagnostic error message (not localized, for debugging purposes only)
-};
-
-//
 // k_EMsgGCNameItemNotification
 //
 message CMsgGCNameItemNotification
@@ -751,13 +722,6 @@ message CMsgGCStorePurchaseFinalizeResponse
 	repeated uint64 item_ids = 2;		// If successful, list of uint64's that represent the purchased items
 };
 
-// k_EMsgGCBannedWordListRequest
-message CMsgGCBannedWordListRequest
-{
-	optional uint32			ban_list_group_id = 1;				// The group code to request the word list from (English, Chinese, etc)
-	optional uint32			word_id = 2;						// The most recent word ID that we want to request (the response will include this ID if present)
-};
-
 // k_EMsgGCRequestAnnouncements
 message CMsgGCRequestAnnouncements
 {
@@ -771,38 +735,6 @@ message CMsgGCRequestAnnouncementsResponse
 	optional string				nextmatch_title = 3;		// nextmatch title
 	optional string				nextmatch = 4;				// nextmatch
 
-};
-
-enum GC_BannedWordType
-{
-	GC_BANNED_WORD_DISABLE_WORD	= 0;							// This word is disabled. It may be followed by an enable later
-	GC_BANNED_WORD_ENABLE_WORD	= 1;							// This word is enabled
-};
-
-message CMsgGCBannedWord
-{
-	optional uint32				word_id = 1;					// The ID of this word
-	optional GC_BannedWordType	word_type = 2;					// Enable, disable, or what
-	optional string				word = 3;						// The actual text of the word
-};
-
-// k_EMsgGCBannedWordListResponse
-message CMsgGCBannedWordListResponse
-{
-	optional uint32				ban_list_group_id = 1;			// The ban list group code to request the word list from (English, Chinese, etc)
-	repeated CMsgGCBannedWord	word_list = 2;					// The list of banned word updates relevant for this group
-};
-
-// k_EMsgGCToGCBannedWordListBroadcast
-message CMsgGCToGCBannedWordListBroadcast
-{
-	optional CMsgGCBannedWordListResponse	broadcast = 1;		// The banned word message to broadcast
-};
-
-// k_EMsgGCToGCBannedWordListUpdated
-message CMsgGCToGCBannedWordListUpdated
-{
-	optional uint32	group_id = 1;		// The id of the group that has been updated
 };
 
 message CSOEconDefaultEquippedDefinitionInstanceClient

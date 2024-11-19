@@ -31,22 +31,26 @@ class hk_Ragdoll_Constraint : public hk_Constraint
 		void init_ragdoll_constraint(const hk_Ragdoll_Constraint_BP *, hk_Local_Constraint_System *sys = HK_NULL);
 		//: update all parameters of the ragdoll constraint,
 
-		//lwss add
-		const hk_Transform get_transform(int index) { return m_transform_os_ks[index]; }
-		void update_transforms(const hk_Transform& zero, const hk_Transform& one)
-        {
-            m_transform_os_ks[0] = zero;
-            m_transform_os_ks[1] = one;
-        }
-        void update_friction( float friction )
-        {
-		    bool isZero = (friction == 0.0);
-		    float value = fabs( friction );
-		    //lwss hack - uhh I think it has more members?
-        }
-		//lwss end
 		void write_to_blueprint( hk_Ragdoll_Constraint_BP * );
 
+		virtual const char* get_constraint_type()
+		{
+			return "ragdoll";
+		}
+
+		virtual int get_constraint_dof()
+		{
+			return 3;
+		}
+
+		inline hk_Transform get_transform(int x) const
+		{
+			return m_transform_os_ks[x];
+		}
+
+		void update_transforms(const hk_Transform& os_ks_0, const hk_Transform& os_ks_1);
+
+		void update_friction(hk_real max_angular_impulse);
 	protected:
 
 		void apply_angular_part(hk_PSI_Info& pi, hk_Ragdoll_Constraint_Work&,
@@ -60,6 +64,7 @@ class hk_Ragdoll_Constraint : public hk_Constraint
 
 		hk_real m_strength;
 		hk_real m_tau;
+		unsigned char              m_axisMap[3];
 		bool m_constrainTranslation;
 
 };
