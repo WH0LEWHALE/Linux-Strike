@@ -13,14 +13,12 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
  - Bots will now aim more accurately.
  - Fixed Molotov issue. <br>
  - Cant Create Mixer issues fixed, now game can find sounds.
+ - Fixed some breakable constrains fly away.
+ - New Open Source VPhysics 
 
 <h1 align="center"> TO-DO </h1>
 
-- Fix some breakable constrains fly away.
-   - **EX:** Window Frames
-- Game crashing at **militia** and **train**, should fixed
 - Underwater effects are missing or needs to be fixed
-- Some in-game UI enhancements
 - Remove code/item leftovers.
 
 **<p align="center">
