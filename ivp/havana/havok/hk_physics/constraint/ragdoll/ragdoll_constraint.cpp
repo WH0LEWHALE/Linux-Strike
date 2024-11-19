@@ -166,6 +166,7 @@ void hk_Ragdoll_Constraint::apply_angular_part( hk_PSI_Info &pi, hk_Ragdoll_Cons
 	hk_real twist_factor = work.get_twist_axis_length();
 	// TODO: this is why ragdolls are flinging and spasming
 	// We need to comment some lines till we fix the RigidBody or the problem which causes this.
+	// Ragdolls should look weird sometimes on the ground, dont mind it its better than flying ragdolls.
 	// 	hk_Constraint_Limit_Util::do_angular_limit( pi, b0, work.twist_axis_ws, work.joint_angles( HK_LIMIT_TWIST ), b1, m_limits[HK_LIMIT_TWIST], tau_factor * twist_factor, strength_factor * twist_factor );
 
 	// planar parts
