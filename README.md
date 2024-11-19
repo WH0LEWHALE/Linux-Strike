@@ -18,7 +18,7 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 
 - Fix some breakable constrains fly away.
    - **EX:** Window Frames
-- Game crashing at **militia** and **train** , should fixed
+- Game crashing at **militia** and **train**, should fixed
 - Underwater effects are missing or needs to be fixed
 - Some in-game UI enhancements
 - Remove code/item leftovers.
