@@ -14,7 +14,7 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
  - Fixed Molotov flame issue
  - Cant Create Mixer issues fixed, now game can find sounds
  - Fixed some breakable constrains fly away
- - A lot of changes made into the ivp and vphysics.
+ - A lot of changes made into the ivp, vphysics and gameplay in general.
 
 <h1 align="center"> TO-DO </h1>
 
