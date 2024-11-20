@@ -19,7 +19,8 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 <h1 align="center"> TO-DO </h1>
 
 - Underwater effects are missing or needs to be fixed
-- Remove code/item leftovers.
+- Remove code/item leftovers
+- Ragdolls are weird.
 
 **<p align="center">
 If you want to contribute to our repo, don't even hesitate.<br>
