@@ -16,7 +16,7 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
  - Fixed some breakable constrains fly away
  - A lot of changes made into the ivp, vphysics and gameplay in general.
 
-<h1 align="center"> TO-DO </h1>
+<h1 align="center"> TO-DO & Bugs </h1>
 
 - Underwater effects are missing or needs to be fixed
 - Remove code/item leftovers
