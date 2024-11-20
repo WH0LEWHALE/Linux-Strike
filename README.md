@@ -20,7 +20,7 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 
 - Underwater effects are missing or needs to be fixed
 - Remove code/item leftovers
-- Ragdolls are weird.
+- Ragdolls behaves weird.
 
 **<p align="center">
 If you want to contribute to our repo, don't even hesitate.<br>
