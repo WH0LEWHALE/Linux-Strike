@@ -141,8 +141,8 @@ hk_result hk_Ragdoll_Constraint_BP_Builder::initialize_from_limited_ball_socket_
 				// now we now the twist axis
 
 				// next search for the bigger of the rest axis
-				int l_axis = (axis_of_min_inertia == 2)? 0 : axis_of_min_inertia+1; // axis with the lower diff
-				int u_axis = (axis_of_min_inertia == 0)? 2 : axis_of_min_inertia-1; // axis with the higher diff
+				int l_axis = (axis_of_min_inertia == 1)? 0 : axis_of_min_inertia+1; // axis with the lower diff
+				int u_axis = (axis_of_min_inertia == 0)? 1 : axis_of_min_inertia-1; // axis with the higher diff
 				if ( limit_diff[ l_axis] > limit_diff[ u_axis ])
 				{
 					int x = l_axis; l_axis = u_axis; u_axis = x;

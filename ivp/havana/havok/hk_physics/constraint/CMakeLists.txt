@@ -16,10 +16,11 @@ include_directories(${SRCDIR}/ivp)
 include_directories(${SRCDIR}/ivp/ivp_utility)
 include_directories(${SRCDIR}/ivp/ivp_controller)
 
-add_definitions(-D_LIB -DHAVANA_CONSTRAINTS -DIVP_VERSION_SDK)
+
 
 if( LINUXALL )
     target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
+    add_definitions(-D_LIB -DHAVANA_CONSTRAINTS -DIVP_VERSION_SDK)
 endif()
 
 target_sources(${OUTLIBNAME} PRIVATE constraint.cpp)

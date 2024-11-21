@@ -53,8 +53,9 @@ class hk_Ragdoll_Constraint_Work
 
 		hk_VM_Query_Builder< hk_VMQ_Storage<1> > query_engine_angle[3];
 
+        // yungdoom: did some changes over here.
 		inline hk_real get_twist_axis_length(){
-			return twist_axis_ws.w;
+			return .0f // twist_axis_ws.w;
 		}
 };
 
@@ -164,10 +165,8 @@ void hk_Ragdoll_Constraint::apply_angular_part( hk_PSI_Info &pi, hk_Ragdoll_Cons
 	hk_Rigid_Body* b1 = get_rigid_body(1);
 	// twist first
 	hk_real twist_factor = work.get_twist_axis_length();
-	// TODO: this is why ragdolls are flinging and spasming
-	// We need to comment some lines till we fix the RigidBody or the problem which causes this.
-	// Ragdolls should look weird sometimes on the ground, dont mind it its better than flying ragdolls.
-	// 	hk_Constraint_Limit_Util::do_angular_limit( pi, b0, work.twist_axis_ws, work.joint_angles( HK_LIMIT_TWIST ), b1, m_limits[HK_LIMIT_TWIST], tau_factor * twist_factor, strength_factor * twist_factor );
+
+	hk_Constraint_Limit_Util::do_angular_limit( pi, b0, work.twist_axis_ws, work.joint_angles( HK_LIMIT_TWIST ), b1, m_limits[HK_LIMIT_TWIST], tau_factor * twist_factor, strength_factor * twist_factor );
 
 	// planar parts
 	int i = 2; do {
@@ -231,8 +230,8 @@ int	hk_Ragdoll_Constraint::setup_and_step_constraint(
 		// planes setup
 		work.joint_angles( HK_LIMIT_CONE )   = work.twist_axis_Ref_ws.dot( work.twist_axis_Att_ws );
 		work.joint_angles( HK_LIMIT_PLANES ) = work.plane_Axis_Ref_ws.dot( work.twist_axis_Att_ws );
-        // Commented out till Rigidbody or the problem which causes this gets fixed. 
-		// this->apply_angular_part(pi, work, tau_factor, strength_factor );
+
+		 this->apply_angular_part(pi, work, tau_factor, strength_factor );
 	}
 
 	if ( m_constrainTranslation )
@@ -300,8 +299,7 @@ void hk_Ragdoll_Constraint::step_constraint( hk_PSI_Info& pi, void *mem, hk_real
 	hk_Rigid_Body *b1 = get_rigid_body(1);
 	hk_Ragdoll_Constraint_Work& work = *(hk_Ragdoll_Constraint_Work*)mem;
 
-	// Commented out till Rigidbody or the problem which causes this gets fixed. 
-	//this->apply_angular_part(pi, work, tau_factor, strength_factor );
+	 this->apply_angular_part(pi, work, tau_factor, strength_factor );
 
 	if ( m_constrainTranslation )
 	{ /* step LINEAR */
