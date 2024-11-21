@@ -55,7 +55,7 @@ class hk_Ragdoll_Constraint_Work
 
         // yungdoom: did some changes over here.
 		inline hk_real get_twist_axis_length(){
-			return .0f // twist_axis_ws.w;
+			return .0f; // twist_axis_ws.w;
 		}
 };
 
