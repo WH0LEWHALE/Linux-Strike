@@ -80,7 +80,7 @@ class hk_Constraint_Limit: public hk_Constraint_Limit_BP
 			m_limit_tau = bp.m_limit_tau;		
 			m_joint_friction = bp.m_joint_friction * eps;		
 			m_desired_velocity = bp.m_desired_velocity * eps;		
-			if ( m_limit_max - m_limit_min > HK_PI * 2.0f){
+			if ( m_limit_max - m_limit_min > IVP_PI * 2.0f){
 				m_limit_is_enabled = HK_FALSE;
 			}
 		}

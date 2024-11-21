@@ -99,14 +99,14 @@ inline hk_real hk_VecFPU::fpu_large_dot_product(hk_real *base_a, hk_real *base_b
 	return result_sum;
     } else {
 	hk_real sum=0.0f;
-	for(int i=0;i<size;i++) {
+	for(int i=size-1;i>=0;i--) {
 	    sum += base_a[i] * base_b[i];
 	}
 	return sum;
     } 
 #else
     hk_real sum=0.0f;
-    for(int i=0;i<size;i++) {
+    for(int i=size-1;i>=0;i--) {
 	sum += base_a[i] * base_b[i];
     }
     return sum;

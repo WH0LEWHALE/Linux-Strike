@@ -43,7 +43,6 @@ target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_mindist_event.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_mindist_mcases.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_mindist_minimize.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_mindist_recursive.cxx)
-set_source_files_properties(../ivp_collision/ivp_mindist_recursive.cxx PROPERTIES COMPILE_FLAGS -O0)
 
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_oo_watcher.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_range_manager.cxx)

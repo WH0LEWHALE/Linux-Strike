@@ -55,7 +55,7 @@ class hk_Ragdoll_Constraint_Work
 
         // yungdoom: did some changes over here.
 		inline hk_real get_twist_axis_length(){
-			return .0f; // twist_axis_ws.w;
+			return .0f //twist_axis_ws.w;
 		}
 };
 
@@ -165,8 +165,8 @@ void hk_Ragdoll_Constraint::apply_angular_part( hk_PSI_Info &pi, hk_Ragdoll_Cons
 	hk_Rigid_Body* b1 = get_rigid_body(1);
 	// twist first
 	hk_real twist_factor = work.get_twist_axis_length();
-
-	hk_Constraint_Limit_Util::do_angular_limit( pi, b0, work.twist_axis_ws, work.joint_angles( HK_LIMIT_TWIST ), b1, m_limits[HK_LIMIT_TWIST], tau_factor * twist_factor, strength_factor * twist_factor );
+	hk_Constraint_Limit_Util::do_angular_limit( pi, b0, work.twist_axis_ws, work.joint_angles( HK_LIMIT_TWIST ), b1,
+		m_limits[ HK_LIMIT_TWIST], tau_factor * twist_factor, strength_factor * twist_factor );
 
 	// planar parts
 	int i = 2; do {
@@ -231,7 +231,7 @@ int	hk_Ragdoll_Constraint::setup_and_step_constraint(
 		work.joint_angles( HK_LIMIT_CONE )   = work.twist_axis_Ref_ws.dot( work.twist_axis_Att_ws );
 		work.joint_angles( HK_LIMIT_PLANES ) = work.plane_Axis_Ref_ws.dot( work.twist_axis_Att_ws );
 
-		 this->apply_angular_part(pi, work, tau_factor, strength_factor );
+		this->apply_angular_part(pi, work, tau_factor, strength_factor );
 	}
 
 	if ( m_constrainTranslation )
@@ -299,7 +299,7 @@ void hk_Ragdoll_Constraint::step_constraint( hk_PSI_Info& pi, void *mem, hk_real
 	hk_Rigid_Body *b1 = get_rigid_body(1);
 	hk_Ragdoll_Constraint_Work& work = *(hk_Ragdoll_Constraint_Work*)mem;
 
-	 this->apply_angular_part(pi, work, tau_factor, strength_factor );
+	this->apply_angular_part(pi, work, tau_factor, strength_factor );
 
 	if ( m_constrainTranslation )
 	{ /* step LINEAR */

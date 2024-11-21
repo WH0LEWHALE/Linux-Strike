@@ -9,7 +9,7 @@
 class hk_Matrix3
 {
 	public:
-		inline hk_Matrix3();
+		inline hk_Matrix3() = default;
 			//: Empty default constructor
 		inline ~hk_Matrix3() {}
 			//:: Empty default destructor

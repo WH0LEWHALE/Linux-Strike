@@ -38,18 +38,18 @@ public:
 			hk_real d_alpha = limit.m_ref_position - alpha;
 			limit.m_ref_position += limit.m_desired_velocity * pi.get_delta_time();
 
-			if ( d_alpha > HK_PI ) {
-				d_alpha -= HK_PI * 2.0f;
+			if ( d_alpha > IVP_PI ) {
+				d_alpha -= IVP_PI * 2.0f;
 				// don't reset the reference position, and adjust alpha to be in the correct range if it has flipped over
 //				limit.m_ref_position -= IVP_PI * 2.0f;
-				alpha += HK_PI * 2.0f;
+				alpha += IVP_PI * 2.0f;
 			}
 
-			if ( d_alpha < -HK_PI ) {
-				d_alpha += HK_PI * 2.0f;
+			if ( d_alpha < -IVP_PI ) {
+				d_alpha += IVP_PI * 2.0f;
 				// don't reset the reference position, and adjust alpha to be in the correct range if it has flipped over
 //				limit.m_ref_position += IVP_PI * 2.0f;
-				alpha -= HK_PI * 2.0f;
+				alpha -= IVP_PI * 2.0f;
 			}
 
 			const hk_real friction_tau = 0.8f * tau_factor;
@@ -103,17 +103,17 @@ public:
 		
 		if(proposed_ref_position < 0.0f && limit.m_ref_position > 0.0f)
 		{
-			if((limit.m_ref_position - proposed_ref_position) > HK_PI)
+			if((limit.m_ref_position - proposed_ref_position) > IVP_PI)
 			{
-				limit.m_ref_position = proposed_ref_position + 2.0f * HK_PI;
+				limit.m_ref_position = proposed_ref_position + 2.0f * IVP_PI;
 			}
 		}
 
 		if(proposed_ref_position > 0.0f && limit.m_ref_position < 0.0f)
 		{
-			if((proposed_ref_position - limit.m_ref_position) > HK_PI)
+			if((proposed_ref_position - limit.m_ref_position) > IVP_PI)
 			{
-				limit.m_ref_position = proposed_ref_position - 2.0f * HK_PI;
+				limit.m_ref_position = proposed_ref_position - 2.0f * IVP_PI;
 			}
 		}
 	}

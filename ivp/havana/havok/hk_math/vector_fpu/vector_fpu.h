@@ -2,20 +2,12 @@
 #define HK_VECTOR_FPU_INCLUDED
 
 #define hk_VecFPU_SIZE_DOUBLE 2
-#ifndef PLATFORM_64BITS
 #define hk_VecFPU_MEM_MASK_DOUBLE 0xfffffff0 //16Byte per Block
-#else
-#define hk_VecFPU_MEM_MASK_DOUBLE 0xfffffffffffffff0  // 16Byte per Block
-#endif
 #define hk_VecFPU_MASK_DOUBLE 0xfffffffe
 #define hk_VecFPU_MEMSHIFT_DOUBLE 3 //8 Bytes per Floating Point Number
 
 #define hk_VecFPU_SIZE_FLOAT 4
-#ifndef PLATFORM_64BITS
 #define hk_VecFPU_MEM_MASK_FLOAT 0xfffffff0 //16Byte per Block
-#else
-#define hk_VecFPU_MEM_MASK_FLOAT 0xfffffffffffffff0  // 16Byte per Block
-#endif
 #define hk_VecFPU_MASK_FLOAT 0xfffffffc
 #define hk_VecFPU_MEMSHIFT_FLOAT 2 //4 Bytes per Floating Point Number
 
@@ -29,11 +21,12 @@
     #define IVP_VECFPU_MEM_MASK 0xfffffff0 //16Byte per Block
     #define IVP_VECFPU_MEMSHIFT 3 //8 Bytes per Floating Point Number
 #else
-  #define IVP_VECFPU_SIZE 4 // taken from vphysics retail
-    //#define IVP_VECFPU_LD 0 //unused
-    #define IVP_VECFPU_MASK 0xfffffffc // taken from vphysics retail
-    #define IVP_VECFPU_MEM_MASK 0xfffffffffffffff0 // taken from vphysics retail
-    #define IVP_VECFPU_MEMSHIFT 2 // taken from vphysics retail
+    #define IVP_VECFPU_SIZE 4  
+    #define IVP_VECFPU_LD 2
+    #define IVP_VECFPU_MASK 0xfffffffc 
+
+    #define IVP_VECFPU_MEM_MASK 0xffffffe0 //32Byte
+    #define IVP_VECFPU_MEMSHIFT 3 //8 Bytes per Floating Point Number
 #endif
 #endif
 

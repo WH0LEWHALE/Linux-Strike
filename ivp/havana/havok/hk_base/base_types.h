@@ -33,8 +33,6 @@
 #	define HK_IF_CHECK(a) if (0)
 #endif
 
-#define HK_DECLARE_NONVIRTUAL_CLASS_ALLOCATOR(a,b)
-
 // simple commonly used types
 typedef float hk_real;
 typedef double hk_double;

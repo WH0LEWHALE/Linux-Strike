@@ -16,11 +16,10 @@ include_directories(${SRCDIR}/ivp)
 include_directories(${SRCDIR}/ivp/ivp_utility)
 include_directories(${SRCDIR}/ivp/ivp_controller)
 
-
+add_definitions(-D_LIB -DHAVANA_CONSTRAINTS -DIVP_VERSION_SDK)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
-    add_definitions(-D_LIB -DHAVANA_CONSTRAINTS -DIVP_VERSION_SDK)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition -fno-strict-aliasing)
 endif()
 
 target_sources(${OUTLIBNAME} PRIVATE constraint.cpp)
@@ -28,7 +27,6 @@ target_sources(${OUTLIBNAME} PRIVATE ball_socket/ball_socket_constraint.cpp)
 target_sources(${OUTLIBNAME} PRIVATE limited_ball_socket/limited_ball_socket_constraint.cpp)
 target_sources(${OUTLIBNAME} PRIVATE ragdoll/ragdoll_constraint.cpp)
 target_sources(${OUTLIBNAME} PRIVATE ragdoll/ragdoll_constraint_bp_builder.cpp)
-set_source_files_properties(ragdoll/ragdoll_constraint_bp_builder.cpp PROPERTIES COMPILE_FLAGS -O1)
 target_sources(${OUTLIBNAME} PRIVATE hinge/hinge_constraint.cpp)
 target_sources(${OUTLIBNAME} PRIVATE hinge/hinge_bp_builder.cpp)
 target_sources(${OUTLIBNAME} PRIVATE breakable_constraint/breakable_constraint.cpp)

@@ -15,7 +15,7 @@ include_directories(${SRCDIR}/ivp/havana/havok)
 add_definitions(-D_LIB)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition -fno-strict-aliasing)
 endif()
 
 target_sources(${OUTLIBNAME} PRIVATE quaternion/quaternion.cpp)

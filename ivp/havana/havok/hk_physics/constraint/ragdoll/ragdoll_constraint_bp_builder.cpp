@@ -75,8 +75,8 @@ hk_result hk_Ragdoll_Constraint_BP_Builder::initialize_from_limited_ball_socket_
 			r.m_transform_os_ks[0].get_column(2) = m0.get_column( axis );
 			r.m_transform_os_ks[1].get_column(2) = m1.get_column( axis );
 
-			if( limit_diff[axis] > HK_PI && limit_diff[axis] < HK_PI*2.f )
-				limit_diff[axis] = HK_PI;
+			if( limit_diff[axis] > IVP_PI && limit_diff[axis] < IVP_PI*2.f )
+				limit_diff[axis] = IVP_PI;
 
 			r.m_limits[ HK_LIMIT_CONE ].set_limits( -limit_diff[axis] * 0.5f, limit_diff[axis] * 0.5f);
 
