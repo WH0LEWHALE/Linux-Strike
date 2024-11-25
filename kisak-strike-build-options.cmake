@@ -1,6 +1,6 @@
 # Welcome to the Kisak-Strike options file
 # Options here can be freely changed, however it is recommended to set the options via command line.
-# Example: cmake .. -DUSE_ROCKETUI=1 -DUSE_IPYHS_PHYSICS=1 -DDEDICATED=0
+# Example: cmake .. -DUSE_ROCKETUI=1 -DUSE_IPHYS_PHYSICS=1 -DDEDICATED=0
 
 # UI Options
 option(USE_ROCKETUI "Use New Open Source Kisak-Strike RmlUI" OFF)
