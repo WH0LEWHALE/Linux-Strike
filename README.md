@@ -14,12 +14,12 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
  - Cant Create Mixer issues fixed, now game can find sounds
  - Fixed some breakable constrains fly away
  - A lot of changes made into the ivp, vphysics and gameplay in general.
- - Ragdolls was weird, now everything works as intended.
+ - Ragdolls was behaving weird, now everything works as intended.
 
 <h1 align="center"> TO-DO & Bugs </h1>
 
 - Underwater effects are missing or needs to be fixed
-- Remove code/item leftovers
+- Remove code/item leftovers and clean-up the unnecessary stuff.
 
 **<p align="center">
 If you want to contribute to our repo, don't even hesitate.<br>
