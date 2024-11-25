@@ -14,13 +14,13 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
  - Fixed Molotov flame issue
  - Cant Create Mixer issues fixed, now game can find sounds
  - Fixed some breakable constrains fly away
- - A lot of changes made into the ivp, vphysics and gameplay in general.
+ - A lot of changes made into the ivp, vphysics and gameplay in general
  - Ragdolls was behaving weird, now everything works as intended.
+ - Added Bullet Physics Back for testing purposes
 
 <h1 align="center"> TO-DO </h1>
 
 - Underwater blur effect are missing, its not really important
-- Add Bullet Physics Back for testing purposes
 - Remove code/item leftovers and clean-up the unnecessary stuff.
 
 **<p align="center">
