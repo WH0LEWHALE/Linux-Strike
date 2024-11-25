@@ -17,7 +17,7 @@ include_directories(${SRCDIR}/engine)
 add_definitions(-DDEDICATED -DLAUNCHERONLY)
 
 if( USE_IPHYS_PHYSICS )
-    add_definitions(-DUSE_KISAK_PHYSICS)
+    add_definitions(-DUSE_IPHYS_PHYSICS)
 elseif( USE_BULLET_PHYSICS )
     add_definitions(-DUSE_BULLET_PHYSICS)
 endif()

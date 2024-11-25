@@ -1,3 +1,8 @@
 {
-    "C_Cpp.dimInactiveRegions": false
+    "C_Cpp.dimInactiveRegions": false,
+    "files.associations": {
+        "*.inc": "cpp",
+        "chrono": "cpp",
+        "typeinfo": "cpp"
+    }
 }

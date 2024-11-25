@@ -110,7 +110,7 @@ add_subdirectory(game/server) #CSGO Server
 add_subdirectory(matchmaking) #Does all 4 matchmaking projects
 
 if( USE_IPHYS_PHYSICS )
-    add_definitions(-DUSE_KISAK_PHYSICS)
+    add_definitions(-DUSE_IPHYS_PHYSICS)
     message("Using Open-Source Linux-Strike Physics rebuild!\n")
     add_subdirectory(ivp/havana/havok/hk_base)
     add_subdirectory(ivp/havana/havok/hk_math)

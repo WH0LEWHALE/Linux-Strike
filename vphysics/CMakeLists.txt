@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.16)
 project(vphysics_client)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH ${SRCDIR}/cmake)
-set(OUTBINNAME "vphysics_client")
+set(OUTBINNAME "iphys_client")
 set(OUTBINDIR ${SRCDIR}/../game/bin)
 
 include(${CMAKE_MODULE_PATH}/detect_platform.cmake)
