@@ -3,6 +3,7 @@
 <h1 align="center"> Linux-Strike </h1>
 
 * Linux Strike: Mint Offensive(LS:MO) is a CS:GO port aimed towards Linux enthusiasts.<br>
+*Powered by [IPHYS](#introducing-iphys)*
 It can be built 100% Open-Source with optional Closed-source components.<br>
 * See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/P0L3NARUBA/Linux-Strike/wiki
 
