@@ -1,9 +1,0 @@
-[submodule "ivp"]
-	path = ivp
-	url = https://github.com/P0L3NARUBA/iphys
-	branch = main
-
-[submodule "vphysics"]
-	path = vphysics
-	url = https://github.com/P0L3NARUBA/iphys
-	branch = main

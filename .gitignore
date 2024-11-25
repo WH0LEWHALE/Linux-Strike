@@ -29,10 +29,6 @@ bld/
 # Idea IDE
 .idea/
 
-# Physics
-.ivp/
-.vphysics/
-
 # Ignore cmake-build, but keep placeholder.
 cmake-build/*
 cmake-dev-test/*
