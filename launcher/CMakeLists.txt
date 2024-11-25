@@ -37,7 +37,7 @@ elseif( USE_ROCKETUI )
     add_definitions(-DINCLUDE_ROCKETUI)
 endif()
 
-if( USE_KISAK_PHYSICS )
+if( USE_IPHYS_PHYSICS )
     add_definitions(-DUSE_IPHYS_PHYSICS)
 elseif( USE_BULLET_PHYSICS )
     add_definitions(-DUSE_BULLET_PHYSICS)

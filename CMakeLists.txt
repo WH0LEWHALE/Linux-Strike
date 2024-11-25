@@ -111,7 +111,7 @@ add_subdirectory(matchmaking) #Does all 4 matchmaking projects
 
 if( USE_IPHYS_PHYSICS )
     add_definitions(-DUSE_KISAK_PHYSICS)
-    message("Using Open-Source Kisakstrike Physics rebuild!\n")
+    message("Using Open-Source Linux-Strike Physics rebuild!\n")
     add_subdirectory(ivp/havana/havok/hk_base)
     add_subdirectory(ivp/havana/havok/hk_math)
     add_subdirectory(ivp/havana/havok/hk_physics/constraint)
@@ -143,8 +143,6 @@ elseif( USE_BULLET_PHYSICS )
     endif()
     add_subdirectory(thirdparty/bullet3)
     add_subdirectory(vphysics_bullet)
-else()
-    message("Using Valve Standard VPhysics .so blob!\n")
 endif()
 
 if( DEDICATED )

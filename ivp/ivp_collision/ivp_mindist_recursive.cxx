@@ -79,13 +79,15 @@ void IVP_Mindist_Recursive::do_impact(){
 		const IVP_Compact_Ledgetree_Node *n0 = l0->get_ledgetree_node();
 		const IVP_Compact_Ledgetree_Node *n1 = l1->get_ledgetree_node();
 		// tyabus: Crashes on de_mirage and other maps if n0 and n1 are not checked
-		IVP_DOUBLE rad0 = n0 ? n0->radius : P_FLOAT_MAX;
-		IVP_DOUBLE rad1 = n1 ? n1->radius : P_FLOAT_MAX;
-		if ( rad0 > rad1 ){
+        /*
+		if ((n0 && n1) && n0->radius > n1->radius) {
 		    recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
 		}else{
 		    recursive_status = IVP_MR_SECOND_SYNAPSE_RECURSIVE;
 		}
+  		*/
+		//temp test
+		recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
 	    }
 	    break;
 	default: CORE;
@@ -146,17 +148,19 @@ void IVP_Mindist_Recursive::exact_mindist_went_invalid(IVP_Mindist_Manager *mm){
 		const IVP_Compact_Ledgetree_Node *n1 = l1->get_ledgetree_node();
 
 		// tyabus: Crashes on de_mirage and other maps if n0 and n1 are not checked
-	IVP_DOUBLE rad0 = n0 ? n0->radius : P_FLOAT_MAX;
-	IVP_DOUBLE rad1 = n1 ? n1->radius : P_FLOAT_MAX;
-	if ( rad0 > rad1 ){
-
+		/*
+		if ( ( n0 && n1 ) && n0->radius > n1->radius )
+		{
 			recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
 		}
 		else
 		{
 			recursive_status = IVP_MR_SECOND_SYNAPSE_RECURSIVE;
 		}
-    }
+		*/
+		// temp test
+		recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
+	}	
     mm->remove_exact_mindist(this);
     //mindists.ensure_capacity(16);
 
