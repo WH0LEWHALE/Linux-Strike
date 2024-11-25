@@ -17,9 +17,9 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
  - A lot of changes made into the ivp, vphysics and gameplay in general.
  - Ragdolls was behaving weird, now everything works as intended.
 
-<h1 align="center"> TO-DO & Bugs </h1>
+<h1 align="center"> TO-DO </h1>
 
-- Underwater effects are missing or needs to be fixed
+- Underwater blur effect are missing, its not really important
 - Remove code/item leftovers and clean-up the unnecessary stuff.
 
 **<p align="center">
