@@ -79,6 +79,9 @@
 #elif defined(__PPC__)
 #define GOOGLE_PROTOBUF_ARCH_PPC 1
 #define GOOGLE_PROTOBUF_ARCH_32_BIT 1
+#elif defined(__e2k__)
+#define GOOGLE_PROTOBUF_ARCH_E2K 1
+#define GOOGLE_PROTOBUF_ARCH_64_BIT 1
 #elif defined(__GNUC__)
 # if (((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7)) || (__GNUC__ > 4))
 // We fallback to the generic Clang/GCC >= 4.7 implementation in atomicops.h
