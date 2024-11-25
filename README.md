@@ -20,6 +20,7 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 <h1 align="center"> TO-DO </h1>
 
 - Underwater blur effect are missing, its not really important
+- Add Bullet Physics Back for testing purposes
 - Remove code/item leftovers and clean-up the unnecessary stuff.
 
 **<p align="center">
