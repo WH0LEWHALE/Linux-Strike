@@ -49,7 +49,7 @@ target_sources(${OUTBINNAME} PRIVATE "Physics_VehicleControllerCustom.cpp")
 target_sources(${OUTBINNAME} PRIVATE "StdAfx.cpp")
 
 #Linker
-target_link_libraries(${OUTBINNAME} libtier0_client tier1_client tier2_client libvstdlib_client mathlib_client )
+target_link_libraries(${OUTBINNAME} libtier0_client tier1_client tier2_client vstdlib_client mathlib_client )
 
 #Bullet Links
 target_link_libraries(${OUTBINNAME} BulletDynamics BulletSoftBody BulletCollision LinearMath)
