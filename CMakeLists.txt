@@ -143,6 +143,8 @@ elseif( USE_BULLET_PHYSICS )
     endif()
     add_subdirectory(thirdparty/bullet3)
     add_subdirectory(vphysics_bullet)
+else()
+message("How dare you,\nUsing Closed-Source Physics made by Valve")
 endif()
 
 if( DEDICATED )
