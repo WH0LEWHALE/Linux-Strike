@@ -35,6 +35,7 @@ Just fork the Repository and start modifying the code as your liking.</p>**
 <p align="center">
 A new vphysics alternative and has every cool feature has been added to this physics engine.<br>
 This ivp modification is already inside of this source, what are you waiting for? Grab the repository and start the adventure!
+Inspired by [kisak-physics](https://github.com/yungDoom/kisak-physics)
 </p>
 
 
