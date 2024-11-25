@@ -272,7 +272,11 @@ bool CSys::LoadModules( CDedicatedAppSystemGroup *pAppSystemGroup )
  		{ g_pszengine,								CVAR_QUERY_INTERFACE_VERSION },
 		{ "materialsystem" DLL_EXT_STRING,		MATERIAL_SYSTEM_INTERFACE_VERSION },
 		{ "studiorender" DLL_EXT_STRING,		STUDIO_RENDER_INTERFACE_VERSION },
-        { "vphysics" DLL_EXT_STRING,			VPHYSICS_INTERFACE_VERSION },
+#if defined( USE_IPHYS_PHYSICS )
+		{ "vphysics" DLL_EXT_STRING,			VPHYSICS_INTERFACE_VERSION },
+#elif defined( USE_BULLET_PHYSICS )
+        { "bulletvphysics" DLL_EXT_STRING,			VPHYSICS_INTERFACE_VERSION },
+#endif
 		{ "datacache" DLL_EXT_STRING,			DATACACHE_INTERFACE_VERSION },
 		{ "datacache" DLL_EXT_STRING,			MDLCACHE_INTERFACE_VERSION },
 		{ "datacache" DLL_EXT_STRING,			STUDIO_DATA_CACHE_INTERFACE_VERSION },
