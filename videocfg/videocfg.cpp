@@ -71,7 +71,7 @@ static VideoConfigSetting_t s_pVideoConfigSettingsWhitelist[] =
 	{ "setting.mat_vsync",										true,		true,		true },
 	{ "setting.mat_triplebuffered",								true,		true,		true },
 	{ "setting.mat_grain_scale_override",						true,		true,		true },
-//	{ "setting.mat_monitorgamma",								true,		true,		true },
+	{ "setting.mat_monitorgamma",								true,		true,		true },
 	{ "setting.gpu_mem_level",									true,		true,		true,	true },
 	{ "setting.mem_level",										true,		true,		true },
 	{ "setting.videoconfig_version",							true,		true,		true },
