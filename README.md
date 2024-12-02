@@ -24,7 +24,7 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 
 **<p align="center">
 If you want to contribute to our repo, don't even hesitate.<br>
-Just fork the Repository and start modifying the code as your liking.</p>**
+Just fork the Repository and start modifying the code as your liking(s).</p>**
 
 <h1 align="center"> License(s) </h1>
 
