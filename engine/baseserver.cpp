@@ -1704,23 +1704,6 @@ void CBaseServer::ReplyChallenge( const ns_address &adr, bf_read &inmsg )
 		if ( bAllowDC )
 			bAllowDC = serverGameDLL->ShouldAllowDirectConnect();	// let the ongoing game overrule direct connect
 
-		if ( bAllowDC )
-		{
-			//
-			// Game server must be logged on with a persistent GSLT unless LAN case
-			//
-			static const bool s_bAllowLanWhitelist = !CommandLine()->FindParm( "-ignorelanwhitelist" );
-			bool bWhitelistedClient = bIsLocalConnection															// localhost/loopback
-				|| ( s_bAllowLanWhitelist && (
-					adr.IsReservedAdr()																				// LAN RFC 1918
-				|| ( ( adr.GetAddressType() == NSAT_NETADR ) && ( adr.GetIP() == Steam3Server().GetPublicIP() ) )	// same public IP (pinhole NAT or same host in DMZ)
-				) );	
-			bool bPersistentGameServerAccount = !sv_lan.GetBool() && !Steam3Server().BLanOnly()
-				&& Steam3Server().GetGSSteamID().IsValid() && Steam3Server().GetGSSteamID().BPersistentGameServerAccount();
-			if ( IsDedicated() && !bWhitelistedClient && !bPersistentGameServerAccount )
-				bAllowDC = false;	// just fail direct connect
-		}
-
 		if ( IsExclusiveToLobbyConnections() && !GetReservationCookie() )
 		{
 			// Server is in the state when it requires lobby connection, but

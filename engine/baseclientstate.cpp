@@ -1074,6 +1074,15 @@ void CBaseClientState::ConnectInternal( const char *pchPublicAddress, char const
 #endif
 #endif
 
+	if( V_strstr( pchPublicAddress, "[" ) && V_strstr( pchPublicAddress, "]" ) )
+	{
+		CSteamID SteamID( pchPublicAddress );
+		if( SteamID.IsValid() )
+		{
+			m_ListenServerSteamID = SteamID.ConvertToUint64();
+		}
+	}
+
 	m_Remote.RemoveAll();
 	m_Remote.AddRemote( pchPublicAddress, "public" );
 	m_Remote.AddRemote( pchPrivateAddress, "private" );

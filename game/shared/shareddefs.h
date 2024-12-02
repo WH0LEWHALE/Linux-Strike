@@ -127,6 +127,9 @@ inline float FractionUnDucked( int msecs )
 
 #define MAX_ITEMS				5	// hard coded item types
 
+#define MAX_FOV			110
+#define MIN_FOV			80
+
 #define WEAPON_NOCLIP			-1	// clip sizes set to this tell the weapon it doesn't use a clip
 
 #define	MAX_AMMO_TYPES	32		// ???

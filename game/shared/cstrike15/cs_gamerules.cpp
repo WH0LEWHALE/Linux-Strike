@@ -16322,6 +16322,14 @@ void CCSGameRules::ClientSettingsChanged( CBasePlayer *pPlayer )
         }
 
 		//pCSPlayer->UpdateAppearanceIndex();
+
+		const char *pszFov = engine->GetClientConVarValue( pPlayer->entindex(), "fov_desired" );
+		if( pszFov )
+		{
+			int iFov = atoi( pszFov );
+			iFov = clamp( iFov, MIN_FOV, MAX_FOV );
+			pCSPlayer->SetDefaultFOV( iFov );
+		}
 		
 		pCSPlayer->InitTeammatePreferredColor();
 	}

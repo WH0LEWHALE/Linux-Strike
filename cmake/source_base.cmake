@@ -35,6 +35,11 @@ if( USE_TRACY )
     endif()
 endif()
 
+# Release asserts
+if( RELEASE_ASSERTS )
+    add_definitions(-DRELEASE_ASSERTS)
+endif()
+
 #CMAKE FILLS THESE IN BY DEFAULT. NUKE THEM!
 set(CMAKE_CXX_FLAGS_RELEASE "")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "")

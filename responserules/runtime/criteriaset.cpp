@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -429,7 +429,7 @@ int CriteriaSet::InterceptWorldSetContexts( CriteriaSet * RESTRICT pFrom, Criter
 		return 0;
 	}
 
-#ifdef DEBUG
+#if defined( _DEBUG ) || defined( RELEASE_ASSERTS )
 	// save this off for later error checking.
 	const int nPrefixedContexts = pFrom->m_nNumPrefixedContexts;
 #endif

@@ -1049,7 +1049,7 @@ void DecodeDataRLE( const uint32* pRLEStart, uint rleCount, SurfaceHandle_t surf
 	const uint32 *pRLE = pRLEStart;
 	const uint32 *pEndOfData = pRLE + rleCount;
 
-#if _DEBUG
+#if defined( _DEBUG ) || defined( RELEASE_ASSERTS )
 	const uint32* pOutStart = pOutput;
 #endif
 

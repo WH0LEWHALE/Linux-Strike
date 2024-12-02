@@ -1397,7 +1397,7 @@ void ConstructStringVArgsInternal_Impl(T *unicodeOutput, int unicodeBufferSizeIn
 	
 #endif
 
-#ifdef _DEBUG
+#if defined( _DEBUG ) || defined( RELEASE_ASSERTS )
 	int curArgIdx = 0;
 #endif
 

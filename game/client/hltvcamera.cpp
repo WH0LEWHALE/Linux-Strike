@@ -696,7 +696,7 @@ void C_HLTVCamera::Accelerate( Vector& wishdir, float wishspeed, float accel )
 	}
 }
 
-extern ConVar fov_cs_debug; 
+
 // movement code is a copy of CGameMovement::FullNoClipMove()
 void C_HLTVCamera::CalcRoamingView(Vector& eyeOrigin, QAngle& eyeAngles, float& fov)
 {
@@ -707,8 +707,7 @@ void C_HLTVCamera::CalcRoamingView(Vector& eyeOrigin, QAngle& eyeAngles, float& 
 	{
 		eyeOrigin = m_vCamOrigin;
 		eyeAngles = m_aCamAngle;
-		//fov = m_flFOV;
-		fov = fov_cs_debug.GetInt() > 0 ? m_flFOV : CSGameRules()->DefaultFOV();
+		fov = m_flFOV;
 
 		if ( (m_vecSpecLerpIdealPos == m_vCamOrigin && m_angSpecLerpIdealAng == m_aCamAngle) || m_flSpecLerpEndTime <= gpGlobals->curtime )
 		{
@@ -818,8 +817,7 @@ void C_HLTVCamera::CalcRoamingView(Vector& eyeOrigin, QAngle& eyeAngles, float& 
 
 	eyeOrigin = m_vCamOrigin;
 	eyeAngles = m_aCamAngle;
-	//fov = m_flFOV;
-	fov = fov_cs_debug.GetInt() > 0 ? m_flFOV : CSGameRules()->DefaultFOV();
+	fov = m_flFOV;
 }
 
 void C_HLTVCamera::CalcFixedView(Vector& eyeOrigin, QAngle& eyeAngles, float& fov)

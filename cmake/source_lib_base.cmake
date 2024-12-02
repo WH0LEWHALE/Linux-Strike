@@ -6,9 +6,10 @@ include("${CMAKE_MODULE_PATH}/source_base.cmake")
 add_definitions(-DCSTRIKE15)
 
 MacroRequired(SRCDIR)
+MacroRequired(PLATSUBDIR)
 
-MacroRequired(OUTLIBDIR "${SRCDIR}/lib/public${PLATSUBDIR}")
-MacroRequired(OUTLIBCOMMONDIR "${SRCDIR}/lib/common${PLATSUBDIR}")
+set(OUTLIBDIR "${SRCDIR}/lib/public${PLATSUBDIR}")
+set(OUTLIBCOMMONDIR "${SRCDIR}/lib/common${PLATSUBDIR}")
 
 
 if(POSIX)
@@ -20,10 +21,6 @@ elseif(WIN32)
 elseif(UNIX AND APPLE)
 	set( _STATICLIB_EXT ".a")
 	include("${CMAKE_MODULE_PATH}/source_lib_posix_base.cmake")
-elseif(X360)
-    message(FATAL_ERROR "TODO X360 cmake support")# lol like this will ever happen
-elseif(PS3)
-    message(FATAL_ERROR "TODO PS3 cmake support")
 else()
     message(FATAL_ERROR "Couldn't find platform for library base")
 endif()

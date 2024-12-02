@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2008, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2008, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: "Steam" based pseudo socket support (PC only)
 //
@@ -959,12 +959,7 @@ int CSteamSocketMgr::recvfrom( int s, char * buf, int len, int flags, ns_address
 			return 0;
 		if ( sv.IsActive() )
 			return 0;
-		// Otherwise check how many players are connected to our session, if nobody is connected
-		// then do no P2P communication with nobody
-		if ( !g_pMatchFramework || !g_pMatchFramework->GetMatchSession() ||
-			( g_pMatchFramework->GetMatchSession()->GetSessionSettings()->GetInt( "members/numMachines", 0 ) < 2 ) ||
-			Q_stricmp( g_pMatchFramework->GetMatchSession()->GetSessionSettings()->GetString( "server/server" ), "listen" ) )
-			return 0;
+
 		break;
 	case NS_SERVER:
 		// Dedicated servers don't do P2P communication
@@ -972,11 +967,6 @@ int CSteamSocketMgr::recvfrom( int s, char * buf, int len, int flags, ns_address
 			return 0;
 		// If we are not running a listen server then there shouldn't be any P2P communication
 		if ( !sv.IsActive() )
-			return 0;
-		// Otherwise check how many players are connected to our session, if nobody is connected
-		// then do no P2P communication with nobody
-		if ( !g_pMatchFramework || !g_pMatchFramework->GetMatchSession() ||
-			( g_pMatchFramework->GetMatchSession()->GetSessionSettings()->GetInt( "members/numMachines", 0 ) < 2 ) )
 			return 0;
 		break;
 	default:

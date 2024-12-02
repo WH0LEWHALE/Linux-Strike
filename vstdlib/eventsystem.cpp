@@ -65,7 +65,7 @@ private:
 	CTSQueue< QueuedEvent_t > m_Queue;
 	CInterlockedInt m_nRefCount;
 
-#ifdef _DEBUG
+#if defined( _DEBUG ) || defined( RELEASE_ASSERTS )
 	bool m_bIsProcessingEvents;
 	bool m_bIsDiscardingEvents;
 #endif
@@ -77,7 +77,7 @@ private:
 //-----------------------------------------------------------------------------
 CEventQueue::CEventQueue()
 {
-#ifdef _DEBUG
+#if defined( _DEBUG ) || defined( RELEASE_ASSERTS )
 	m_bIsProcessingEvents = false;
 	m_bIsDiscardingEvents = false;
 #endif
@@ -146,7 +146,7 @@ void CEventQueue::ProcessEvents( )
 	Assert( !m_bIsProcessingEvents );
 	Assert( !m_bIsDiscardingEvents );
 
-#ifdef _DEBUG
+#if defined( _DEBUG ) || defined( RELEASE_ASSERTS )
 	m_bIsProcessingEvents = true;
 #endif
 
@@ -194,7 +194,7 @@ void CEventQueue::ProcessEvents( )
 		}
 	}
 
-#ifdef _DEBUG
+#if defined( _DEBUG ) || defined( RELEASE_ASSERTS )
 	m_bIsProcessingEvents = false;
 #endif
 }

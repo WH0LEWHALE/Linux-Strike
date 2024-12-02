@@ -97,40 +97,40 @@ void CStudioRender::InitDebugMaterials( void )
 {
 
 	// Four Wireframe Materials: ( ZBuffer, DisplacementMapped )
-	m_pMaterialWireframe[0][0] = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugmrmwireframe", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialWireframe[0][0] = g_pMaterialSystem->FindMaterial( "debug/debugmrmwireframe", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialWireframe[0][0]->IncrementReferenceCount();
 
-	m_pMaterialWireframe[1][0] = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugmrmwireframezbuffer", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialWireframe[1][0] = g_pMaterialSystem->FindMaterial( "debug/debugmrmwireframezbuffer", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialWireframe[1][0]->IncrementReferenceCount();
 
-	m_pMaterialWireframe[0][1] = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugmrmwireframedisplaced", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialWireframe[0][1] = g_pMaterialSystem->FindMaterial( "debug/debugmrmwireframedisplaced", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialWireframe[0][1]->IncrementReferenceCount();
 
-	m_pMaterialWireframe[1][1] = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugmrmwireframezbufferdisplaced", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialWireframe[1][1] = g_pMaterialSystem->FindMaterial( "debug/debugmrmwireframezbufferdisplaced", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialWireframe[1][1]->IncrementReferenceCount();
 
-	m_pMaterialMRMNormals = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugmrmnormals", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialMRMNormals = g_pMaterialSystem->FindMaterial( "debug/debugmrmnormals", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialMRMNormals->IncrementReferenceCount();
 
-	m_pMaterialTangentFrame = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugvertexcolor", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialTangentFrame = g_pMaterialSystem->FindMaterial( "debug/debugvertexcolor", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialTangentFrame->IncrementReferenceCount();
 
-	m_pMaterialTranslucentModelHulls = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugtranslucentmodelhulls", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialTranslucentModelHulls = g_pMaterialSystem->FindMaterial( "debug/debugtranslucentmodelhulls", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialTranslucentModelHulls->IncrementReferenceCount();
 
-	m_pMaterialSolidModelHulls = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugsolidmodelhulls", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialSolidModelHulls = g_pMaterialSystem->FindMaterial( "debug/debugsolidmodelhulls", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialSolidModelHulls->IncrementReferenceCount();
 
-	m_pMaterialAdditiveVertexColorVertexAlpha = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/additivevertexcolorvertexalpha", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialAdditiveVertexColorVertexAlpha = g_pMaterialSystem->FindMaterial( "debug/additivevertexcolorvertexalpha", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialAdditiveVertexColorVertexAlpha->IncrementReferenceCount();
 
-	m_pMaterialModelBones = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugmodelbones", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialModelBones = g_pMaterialSystem->FindMaterial( "debug/debugmodelbones", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialModelBones->IncrementReferenceCount();
 
-	m_pMaterialModelEnvCubemap = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/env_cubemap_model", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialModelEnvCubemap = g_pMaterialSystem->FindMaterial( "debug/env_cubemap_model", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialModelEnvCubemap->IncrementReferenceCount();
 	
-	m_pMaterialWorldWireframe = g_pMaterialSystem->FindMaterial( "//platform/materials/debug/debugworldwireframe", TEXTURE_GROUP_OTHER, true );
+	m_pMaterialWorldWireframe = g_pMaterialSystem->FindMaterial( "debug/debugworldwireframe", TEXTURE_GROUP_OTHER, true );
 	m_pMaterialWorldWireframe->IncrementReferenceCount();
 
 	KeyValues *pVMTKeyValues = new KeyValues( "DepthWrite" );

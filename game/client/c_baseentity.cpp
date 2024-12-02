@@ -6824,7 +6824,7 @@ void C_BaseEntity::ToolRecordEntities()
 	}
 }
 
-#ifdef _DEBUG
+#if defined( _DEBUG ) || defined( RELEASE_ASSERTS )
 static entity_list_ids_t s_nSuppressChanges = NUM_ENTITY_LISTS;
 #endif
 
