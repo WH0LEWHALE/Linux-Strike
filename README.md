@@ -3,7 +3,6 @@
 <h1 align="center"> Linux-Strike </h1>
 
 * Linux Strike: Mint Offensive(LS:MO) is a CS:GO port aimed towards Linux enthusiasts.<br>
-*Powered by [IPHYS](#introducing-iphys)*<br>
 It can be built 100% Open-Source with optional Closed-source components.<br>
 * See the wiki page of repository for everything about Compiling Linux Strike and more: https://github.com/P0L3NARUBA/Linux-Strike/wiki
 
@@ -26,17 +25,6 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
 **<p align="center">
 If you want to contribute to our repo, don't even hesitate.<br>
 Just fork the Repository and start modifying the code as your liking.</p>**
-
-<div align="center">
-<img width="400" height="300" src="https://github.com/user-attachments/assets/f69e94de-4415-49ec-8c0a-3b17147c21ec">
-</div>
-
-<h1 align="center">Introducing..... IPHYS!</h1>
-
-<p align="center">
-A new vphysics alternative and has every cool feature has been added to this physics engine.<br>
-This ivp modification is already inside of this source, what are you waiting for? Grab the repository and start the adventure!
-</p>
 
 <h1 align="center"> License(s) </h1>
 
