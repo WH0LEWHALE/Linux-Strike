@@ -1,6 +1,9 @@
 ![New Project (1)](https://github.com/WH0LEWHALE/Linux-Strike/assets/76629678/9e820a54-dffc-4a6b-b231-1a304fd5e252)
 
 [![CI-Workflow](https://github.com/P0L3NARUBA/Linux-Strike/actions/workflows/kstrike-compile.yml/badge.svg)](https://github.com/P0L3NARUBA/Linux-Strike/actions/workflows/kstrike-compile.yml)
+![Made For](https://img.shields.io/badge/Made_For-Linux_Based_OS-white?style=flat&logo=linux&logoColor=white)
+![Works Best On](https://img.shields.io/badge/Works%20Best_On-AMD_Graphics_Card-red?style=flat&logo=counterstrike&logoColor=white)
+
 
 <h1 align="center"> Linux-Strike </h1>
 
