@@ -1,5 +1,7 @@
 ![New Project (1)](https://github.com/WH0LEWHALE/Linux-Strike/assets/76629678/9e820a54-dffc-4a6b-b231-1a304fd5e252)
 
+[![CI-Workflow](https://github.com/P0L3NARUBA/Linux-Strike/actions/workflows/kstrike-compile.yml/badge.svg)](https://github.com/P0L3NARUBA/Linux-Strike/actions/workflows/kstrike-compile.yml)
+
 <h1 align="center"> Linux-Strike </h1>
 
 * Linux Strike: Mint Offensive(LS:MO) is a CS:GO port aimed towards Linux enthusiasts.<br>
