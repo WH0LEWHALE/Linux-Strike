@@ -1,4 +1,4 @@
-#pragma once lol
+#pragma once
 if(DEFINED common_functions_cmake)
     return() #return exits entire file
 endif()
