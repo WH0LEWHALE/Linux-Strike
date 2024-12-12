@@ -1,6 +1,6 @@
 # Welcome to the Kisak-Strike options file
 # Options here can be freely changed, however it is recommended to set the options via command line.
-# Example: cmake .. -DUSE_ROCKETUI=1 -DUSE_IPHYS_PHYSICS=1 -DDEDICATED=0
+# Example: cmake .. -DUSE_ROCKETUI=1 -DUSE_IPHYS=1 -DDEDICATED=0
 
 # UI Options
 option(USE_ROCKETUI "Use New Open Source Kisak-Strike RmlUI" OFF)
@@ -8,7 +8,7 @@ option(USE_SCALEFORM "Use In-Complete Proprietary Flash UI with blob ( Not Recom
 # There is also a 3rd option, which is nothing. Nothing will enable base VGUI UI which is also incomplete.
 
 # Physics Options
-option(USE_IPHYS_PHYSICS "Use the Open Source Physics Re-Build made for linux-strike from various leaked sources" OFF)
+option(USE_IPHYS "Use the Open Source Physics Re-Build made for linux-strike from various leaked sources" OFF)
 option(USE_BULLET_PHYSICS "Use Open Source Bullet3 Physics Engine(zlib)" OFF)
 option(USE_BULLET_PHYSICS_THREADED "Use Multi-Threading for the Bullet Physics Engine. Use convar 'bt_threadcount' to set." OFF)
 # 4th option is to have both of these OFF, the closed source blob from Valve will be used instead.

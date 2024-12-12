@@ -735,7 +735,7 @@ bool CSourceAppSystemGroup::Create()
 		{ LAUNCHER_APPSYSTEM( "filesystem_stdio" ),		XBOXINSTALLER_INTERFACE_VERSION },
 #endif
 		{ LAUNCHER_APPSYSTEM( "inputsystem" ),			INPUTSYSTEM_INTERFACE_VERSION },
-#if defined( USE_IPHYS_PHYSICS )
+#if defined( USE_IPHYS )
         { LAUNCHER_APPSYSTEM( "iphys" ),				VPHYSICS_INTERFACE_VERSION },
 #elif defined( USE_BULLET_PHYSICS )
         { LAUNCHER_APPSYSTEM( "bulletvphysics" ),			VPHYSICS_INTERFACE_VERSION },
