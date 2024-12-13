@@ -29,8 +29,6 @@ if( POSIX )
     #OpenGL rendering imp
     target_sources(${OUTBINNAME} PRIVATE rocketrenderGL.cpp)
     target_link_libraries(${OUTBINNAME} SDL2)
-else()
-    message(FATAL_ERROR "not implemented for operating system that you're using.")
 endif()
 
 #target_link_libraries(${OUTBINNAME} ${SRCDIR}/thirdparty/RmlUi/build/libRmlCore.so)
