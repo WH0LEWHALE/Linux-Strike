@@ -23,9 +23,10 @@ It can be built 100% Open-Source with optional Closed-source components.<br>
  - Cant Create Mixer issues fixed, now game can find sounds
  - Fixed some breakable constrains fly away
  - A lot of changes made into the ivp, vphysics and gameplay in general
- - Ragdolls was behaving weird, now everything works as intended
+ - Ragdolls are now interactable
  - Added Bullet Physics Back for testing purposes
  - Also lots of stuff got fixed and we added a lot of other large variety of things.
+ 
 
 <h1 align="center"> TO-DO </h1>
 
