@@ -9,7 +9,7 @@
 
 <h1 align="center"> Linux-Strike </h1>
 
-### This is a dev branch, may be unstable & broken
+<h3 align="center"> This is a dev branch, may be unstable & broken </h3>
 
 * Linux Strike: Mint Offensive(LS:MO) is a CS:GO port aimed towards Linux enthusiasts.<br>
 It can be built 100% Open-Source with optional Closed-source components.<br>
