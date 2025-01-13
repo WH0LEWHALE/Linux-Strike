@@ -2,8 +2,6 @@
 
 <div align="center">
 <img src="https://img.shields.io/badge/CI--Workflow-passing-green?logo=github">
-<img src="https://img.shields.io/badge/Made_For-Linux_Based_OS-white?style=flat&logo=linux&logoColor=white">
-<img src="https://img.shields.io/badge/Works%20Best_On-AMD_Graphics_Card-red?style=flat&logo=counterstrike&logoColor=white">
 </div>
 
 
